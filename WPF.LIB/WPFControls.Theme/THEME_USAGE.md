@@ -7,7 +7,7 @@
 테마를 사용할 WPF 프로젝트에 참조를 추가합니다.
 
 ```powershell
-dotnet add WPFControls.UI/WPFControls.UI.csproj reference WPFControls.Theme/WPFControls.Theme.csproj
+dotnet add WPFControls.UI/WPFControls.UI.csproj reference WPF.LIB/WPFControls.Theme/WPFControls.Theme.csproj
 ```
 
 ## 테마 적용
@@ -137,23 +137,28 @@ ListBox는 `ModernListBoxItemStyle`을 `ItemContainerStyle`로 명시하여 항�
 ## 현재 파일 구조
 
 ```text
-WPFControls.Theme/
-├─ Theme/
-│  ├─ LightTheme.xaml
-│  └─ DarkTheme.xaml
-├─ Styles/
-│  ├─ ModernControls.xaml
-│  └─ Controls/
-│     ├─ Window.xaml
-│     ├─ TextBlock.xaml
-│     ├─ TextBox.xaml
-│     ├─ Button.xaml
-│     ├─ ComboBox.xaml
-│     ├─ ScrollBar.xaml
-│     ├─ ListBox.xaml
-│     ├─ DataGrid.xaml
-│     └─ TabControl.xaml
-├─ Controls/
-│  └─ WindowCaptionButton.cs
-└─ ThemeManager.cs
+WPF.LIB/
+├─ WPFControls.MVVM/
+│  ├─ BaseModel.cs
+│  ├─ BaseViewModel.cs
+│  └─ WPFControls.MVVM.csproj
+└─ WPFControls.Theme/
+   ├─ Theme/
+   │  ├─ LightTheme.xaml
+   │  └─ DarkTheme.xaml
+   ├─ Styles/
+   │  ├─ ModernControls.xaml
+   │  └─ Controls/
+   │     ├─ Window.xaml
+   │     ├─ TextBlock.xaml
+   │     ├─ TextBox.xaml
+   │     ├─ Button.xaml
+   │     ├─ ComboBox.xaml
+   │     ├─ ScrollBar.xaml
+   │     ├─ ListBox.xaml
+   │     ├─ DataGrid.xaml
+   │     └─ TabControl.xaml
+   ├─ Controls/
+   │  └─ WindowCaptionButton.cs
+   └─ ThemeManager.cs
 ```

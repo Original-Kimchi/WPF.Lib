@@ -2,7 +2,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Style TargetType="ComboBox">
         <Setter Property="Background" Value="{DynamicResource SurfaceBrush}" />
-        <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
         <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="Padding" Value="10,7" />
@@ -23,6 +23,20 @@
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="36" />
                             </Grid.ColumnDefinitions>
+
+                            <ToggleButton Grid.ColumnSpan="2"
+                                          Background="Transparent"
+                                          BorderThickness="0"
+                                          ClickMode="Press"
+                                          Focusable="False"
+                                          IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                                          Style="{x:Null}">
+                                <ToggleButton.Template>
+                                    <ControlTemplate TargetType="ToggleButton">
+                                        <Border Background="Transparent" />
+                                    </ControlTemplate>
+                                </ToggleButton.Template>
+                            </ToggleButton>
 
                             <ContentPresenter x:Name="SelectionPresenter"
                                               Margin="{TemplateBinding Padding}"
@@ -46,25 +60,19 @@
                                      Style="{x:Null}"
                                      Visibility="Hidden" />
 
-                            <ToggleButton Grid.Column="1"
-                                          Background="Transparent"
-                                          BorderThickness="0"
-                                          ClickMode="Press"
-                                          Focusable="False"
-                                          IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
-                                          Style="{x:Null}">
-                                <Path x:Name="Arrow"
-                                      Width="10"
-                                      Height="6"
-                                      HorizontalAlignment="Center"
-                                      VerticalAlignment="Center"
-                                      Data="M 1,1 L 5,5 L 9,1"
-                                      Stroke="{TemplateBinding Foreground}"
-                                      StrokeEndLineCap="Round"
-                                      StrokeLineJoin="Round"
-                                      StrokeStartLineCap="Round"
-                                      StrokeThickness="1.5" />
-                            </ToggleButton>
+                            <Path x:Name="Arrow"
+                                  Grid.Column="1"
+                                  Width="10"
+                                  Height="6"
+                                  HorizontalAlignment="Center"
+                                  VerticalAlignment="Center"
+                                  Data="M 1,1 L 5,5 L 9,1"
+                                  IsHitTestVisible="False"
+                                  Stroke="{TemplateBinding Foreground}"
+                                  StrokeEndLineCap="Round"
+                                  StrokeLineJoin="Round"
+                                  StrokeStartLineCap="Round"
+                                  StrokeThickness="1.5" />
                         </Grid>
 
                         <Popup x:Name="PART_Popup"
@@ -124,7 +132,7 @@
     </Style>
 
     <Style TargetType="ComboBoxItem">
-        <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
         <Setter Property="Padding" Value="10,8" />
         <Setter Property="HorizontalContentAlignment" Value="Stretch" />
         <Setter Property="Template">

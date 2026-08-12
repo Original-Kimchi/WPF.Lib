@@ -5,10 +5,11 @@
     </ResourceDictionary.MergedDictionaries>
     <Color x:Key="BackgroundColor">#FFF7F8FA</Color>
     <Color x:Key="SurfaceColor">#FFFFFFFF</Color>
-    <Color x:Key="TextPrimaryColor">#FF1F2937</Color>
+    <Color x:Key="ForegroundColor">#FF1F2937</Color>
     <Color x:Key="TextSecondaryColor">#FF6B7280</Color>
     <Color x:Key="BorderColor">#FFD1D5DB</Color>
     <Color x:Key="PrimaryColor">#FF2563EB</Color>
+    <Color x:Key="PrimaryForegroundColor">#FFFFFFFF</Color>
     <Color x:Key="PrimaryHoverColor">#FF1D4ED8</Color>
     <Color x:Key="DangerColor">#FFDC2626</Color>
     <Color x:Key="SurfaceAlternateColor">#FFF9FAFB</Color>
@@ -18,10 +19,11 @@
 
     <SolidColorBrush x:Key="BackgroundBrush" Color="{StaticResource BackgroundColor}" />
     <SolidColorBrush x:Key="SurfaceBrush" Color="{StaticResource SurfaceColor}" />
-    <SolidColorBrush x:Key="TextPrimaryBrush" Color="{StaticResource TextPrimaryColor}" />
+    <SolidColorBrush x:Key="ForegroundBrush" Color="{StaticResource ForegroundColor}" />
     <SolidColorBrush x:Key="TextSecondaryBrush" Color="{StaticResource TextSecondaryColor}" />
     <SolidColorBrush x:Key="BorderBrush" Color="{StaticResource BorderColor}" />
     <SolidColorBrush x:Key="PrimaryBrush" Color="{StaticResource PrimaryColor}" />
+    <SolidColorBrush x:Key="PrimaryForegroundBrush" Color="{StaticResource PrimaryForegroundColor}" />
     <SolidColorBrush x:Key="PrimaryHoverBrush" Color="{StaticResource PrimaryHoverColor}" />
     <SolidColorBrush x:Key="DangerBrush" Color="{StaticResource DangerColor}" />
     <SolidColorBrush x:Key="SurfaceAlternateBrush" Color="{StaticResource SurfaceAlternateColor}" />

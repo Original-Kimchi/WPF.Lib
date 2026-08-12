@@ -2,7 +2,7 @@
 
 ## Project Structure & Module Organization
 
-The repository contains one .NET 8 WPF application. `WPFControls.UI.sln` is the solution entry point, while `WPFControls.UI/` contains the SDK-style project. Application startup lives in `App.xaml` and `App.xaml.cs`; the initial window is defined by `MainWindow.xaml` and its code-behind. Keep each control's XAML and code-behind together and use feature-oriented folders such as `Controls/`, `ViewModels/`, `Converters/`, and `Resources/` as the application grows. There is currently no test project or dedicated asset directory.
+The repository contains a .NET 8 WPF application and a reusable theme library. `WPFControls.UI.sln` is the solution entry point. `WPFControls.UI/` contains the application, while `WPFControls.Theme/Theme/` contains light and dark resource dictionaries. Keep both theme files aligned when adding resource keys. Application startup lives in `App.xaml` and `App.xaml.cs`; the initial window is defined by `MainWindow.xaml` and its code-behind. Keep each control's XAML and code-behind together and use feature-oriented folders such as `Controls/`, `ViewModels/`, and `Converters/` as the application grows. There is currently no test project.
 
 ## Build, Test, and Development Commands
 

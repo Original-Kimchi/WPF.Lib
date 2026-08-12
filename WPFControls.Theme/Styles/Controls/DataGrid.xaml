@@ -42,7 +42,7 @@
                                             <RowDefinition Height="Auto" />
                                         </Grid.RowDefinitions>
 
-                                        <Border Grid.Column="1"
+                                        <Border Grid.Column="1" Grid.ColumnSpan="2"
                                                 Background="{DynamicResource HeaderBrush}"
                                                 CornerRadius="7,7,0,0">
                                             <DataGridColumnHeadersPresenter x:Name="PART_ColumnHeadersPresenter"

@@ -169,11 +169,37 @@
 
                 <Border Margin="0,20,0,0" Padding="24" Background="{DynamicResource SurfaceBrush}" CornerRadius="10">
                     <StackPanel>
+                        <TextBlock FontSize="19" FontWeight="SemiBold" Text="ScrollBar" />
+                        <TextBlock Margin="0,5,0,20"
+                                   Foreground="{DynamicResource TextSecondaryBrush}"
+                                   Text="가로·세로 방향과 Hover/Dragging 상태" />
+                        <Grid Height="110">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="24" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <ScrollBar VerticalAlignment="Center"
+                                       Maximum="100"
+                                       Orientation="Horizontal"
+                                       Value="35"
+                                       ViewportSize="25" />
+                            <ScrollBar Grid.Column="2"
+                                       Maximum="100"
+                                       Orientation="Vertical"
+                                       Value="35"
+                                       ViewportSize="25" />
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <Border Margin="0,20,0,0" Padding="24" Background="{DynamicResource SurfaceBrush}" CornerRadius="10">
+                    <StackPanel>
                         <TextBlock FontSize="19" FontWeight="SemiBold" Text="DataGrid" />
                         <TextBlock Margin="0,5,0,20"
                                    Foreground="{DynamicResource TextSecondaryBrush}"
                                    Text="헤더, 행, 셀, 교차 행과 전체 행 선택" />
-                        <DataGrid Height="275"
+                        <DataGrid Height="250"
                                   AutoGenerateColumns="False"
                                   IsReadOnly="True"
                                   ItemsSource="{Binding Orders}"

@@ -93,9 +93,10 @@ ThemeManager.ApplyTheme(ThemeKind.Light);
 | `Button` | Primary 배경과 전경, Hover/Pressed/Disabled 상태 |
 | `ComboBox` | 전체 영역 클릭, 테마 드롭다운과 화살표, Focus/Open/Disabled 상태 |
 | `ComboBoxItem` | Hover/Selected/Disabled 상태 |
+| `ScrollBar` | 가로·세로 방향, 테마 Track과 Thumb, Hover/Dragging/Disabled 상태 |
 | `ListBox`, `ListBoxItem` | 테마 테두리, Hover/Selected 상태 |
 | `DataGrid` | 헤더, 행, 셀, 교차 행, 전체 행 선택 |
-| `TabControl`, `TabItem` | 탭 배경, Hover/Selected/Disabled 상태 |
+| `TabControl`, `TabItem` | Hover 상태와 Primary 배경의 명확한 Selected 상태, Focus/Disabled 상태 |
 
 다음 명명된 스타일도 제공합니다.
 
@@ -104,6 +105,7 @@ ThemeManager.ApplyTheme(ThemeKind.Light);
 - `WindowCloseButtonStyle`: 닫기 버튼
 - `DataGridCellRightStyle`: 오른쪽 정렬 DataGrid 셀
 - `DataGridCellCenterStyle`: 가운데 정렬 DataGrid 셀
+- `ModernListBoxItemStyle`: ListBox가 명시적으로 사용하는 항목 컨테이너 스타일
 
 ## 선택, 포커스 및 Hover 규칙
 
@@ -116,6 +118,8 @@ ThemeManager.ApplyTheme(ThemeKind.Light);
 - 템플릿 내부의 `ToggleButton` 같은 보조 컨트롤도 시스템 기본 템플릿에 의존하지 않습니다.
 
 현재 ComboBox는 내부의 투명한 ToggleButton이 전체 너비를 덮습니다. 따라서 선택된 항목 영역과 화살표 영역 모두 클릭할 수 있으며, 열림 상태에서도 Windows 기본 선택 색상이 표시되지 않습니다. 편집 가능한 ComboBox의 텍스트 입력 영역은 그대로 유지됩니다.
+
+ListBox는 `ModernListBoxItemStyle`을 `ItemContainerStyle`로 명시하여 항목 생성 시 WPF 기본 컨테이너 스타일이 먼저 적용되지 않도록 합니다. 가로·세로 콘텐츠 정렬도 스타일에서 직접 지정하므로 `ItemsControl` 조상을 찾는 기본 상대 바인딩 오류가 발생하지 않습니다.
 
 ## 테마 확장 규칙
 
@@ -145,6 +149,7 @@ WPFControls.Theme/
 │     ├─ TextBox.xaml
 │     ├─ Button.xaml
 │     ├─ ComboBox.xaml
+│     ├─ ScrollBar.xaml
 │     ├─ ListBox.xaml
 │     ├─ DataGrid.xaml
 │     └─ TabControl.xaml

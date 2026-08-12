@@ -13,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\WPF.LIB\WPFControls.Core\WPFControls.Core.csproj" />
     <ProjectReference Include="..\WPF.LIB\WPFControls.Theme\WPFControls.Theme.csproj" />
   </ItemGroup>
 

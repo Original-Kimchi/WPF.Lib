@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPFControls.UI", "WPFContro
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPFControls.Theme", "WPFControls.Theme\WPFControls.Theme.csproj", "{A8AC8EE4-36E0-47C3-BF22-2AC13DC929AD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPFControls.MVVM", "WPFControls.MVVM\WPFControls.MVVM.csproj", "{E24562C5-4CDA-49B5-985A-A1CB9EEEA0EF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{A8AC8EE4-36E0-47C3-BF22-2AC13DC929AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A8AC8EE4-36E0-47C3-BF22-2AC13DC929AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A8AC8EE4-36E0-47C3-BF22-2AC13DC929AD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E24562C5-4CDA-49B5-985A-A1CB9EEEA0EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E24562C5-4CDA-49B5-985A-A1CB9EEEA0EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E24562C5-4CDA-49B5-985A-A1CB9EEEA0EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E24562C5-4CDA-49B5-985A-A1CB9EEEA0EF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,4 +1,4 @@
-﻿<Application x:Class="WPFControls.UI.App"
+<Application x:Class="WPFControls.UI.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:WPFControls.UI"
@@ -6,7 +6,7 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/WPFControls.Theme;component/Theme/LightTheme.xaml" />
+                <ResourceDictionary Source="/WPF.Lib.Theme;component/Theme/LightTheme.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

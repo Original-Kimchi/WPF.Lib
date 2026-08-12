@@ -1,7 +1,7 @@
 using System.Windows;
 using System.Windows.Controls;
 
-namespace WPFControls.Theme.Controls;
+namespace WPF.Lib.Theme.Controls;
 
 public enum WindowCaptionAction
 {

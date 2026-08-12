@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
@@ -13,8 +13,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\WPF.LIB\WPFControls.Core\WPFControls.Core.csproj" />
-    <ProjectReference Include="..\WPF.LIB\WPFControls.Theme\WPFControls.Theme.csproj" />
+    <ProjectReference Include="..\WPF.Lib\WPF.Lib.Core\WPF.Lib.Core.csproj" />
+    <ProjectReference Include="..\WPF.Lib\WPF.Lib.Theme\WPF.Lib.Theme.csproj" />
   </ItemGroup>
 
 </Project>

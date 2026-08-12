@@ -1,6 +1,6 @@
 using System.Windows;
 
-namespace WPFControls.Theme;
+namespace WPF.Lib.Theme;
 
 public enum ThemeKind
 {
@@ -10,7 +10,7 @@ public enum ThemeKind
 
 public static class ThemeManager
 {
-    private const string ThemePathMarker = "/WPFControls.Theme;component/Theme/";
+    private const string ThemePathMarker = "/WPF.Lib.Theme;component/Theme/";
 
     public static void ApplyTheme(ThemeKind theme)
     {

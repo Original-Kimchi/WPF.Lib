@@ -1,4 +1,4 @@
-namespace WPFControls.Core.Abstractions;
+namespace WPF.Lib.Core.Abstractions;
 
 public interface IDialogService
 {

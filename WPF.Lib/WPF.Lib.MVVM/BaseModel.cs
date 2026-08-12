@@ -1,7 +1,7 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace WPFControls.MVVM;
+namespace WPF.Lib.MVVM;
 
 /// <summary>
 /// Provides property-change notification for bindable models.

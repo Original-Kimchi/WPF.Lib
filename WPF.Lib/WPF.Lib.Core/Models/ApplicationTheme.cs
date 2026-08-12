@@ -1,4 +1,4 @@
-namespace WPFControls.Core.Models;
+namespace WPF.Lib.Core.Models;
 
 public enum ApplicationTheme
 {

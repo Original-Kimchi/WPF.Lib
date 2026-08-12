@@ -1,4 +1,4 @@
-# WPFControls.Core
+# WPF.Lib.Core
 
 WPF 애플리케이션에서 공통으로 사용할 UI 독립 계약과 모델을 제공합니다.
 

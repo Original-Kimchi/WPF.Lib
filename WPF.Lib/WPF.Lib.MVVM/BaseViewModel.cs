@@ -1,4 +1,4 @@
-namespace WPFControls.MVVM;
+namespace WPF.Lib.MVVM;
 
 /// <summary>
 /// Base type for view models that participate in data binding.

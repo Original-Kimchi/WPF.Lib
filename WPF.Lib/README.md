@@ -1,21 +1,21 @@
-# WPF.LIB
+# WPF.Lib
 
-`WPF.LIB`는 WPF 애플리케이션에서 재사용하는 공통 라이브러리 모음입니다. 각 프로젝트는 독립적으로 참조할 수 있으며 .NET 8을 대상으로 합니다.
+`WPF.Lib`는 WPF 애플리케이션에서 재사용하는 공통 라이브러리 모음입니다. 각 프로젝트는 독립적으로 참조할 수 있으며 .NET 8을 대상으로 합니다.
 
 ## 프로젝트
 
 | 프로젝트 | 대상 프레임워크 | 용도 | 문서 |
 |---|---|---|---|
-| `WPFControls.MVVM` | `net8.0` | 데이터 바인딩을 위한 모델 및 뷰 모델 기반 클래스 | [README](WPFControls.MVVM/README.md) |
-| `WPFControls.Theme` | `net8.0-windows` | 라이트/다크 테마, 공통 컨트롤 스타일, 런타임 테마 전환 | [README](WPFControls.Theme/README.md) |
+| `WPF.Lib.MVVM` | `net8.0` | 데이터 바인딩을 위한 모델 및 뷰 모델 기반 클래스 | [README](WPF.Lib.MVVM/README.md) |
+| `WPF.Lib.Theme` | `net8.0-windows` | 라이트/다크 테마, 공통 컨트롤 스타일, 런타임 테마 전환 | [README](WPF.Lib.Theme/README.md) |
 
 ## 프로젝트 참조
 
 저장소 루트에서 필요한 라이브러리만 애플리케이션 프로젝트에 추가합니다.
 
 ```powershell
-dotnet add <애플리케이션.csproj> reference WPF.LIB/WPFControls.MVVM/WPFControls.MVVM.csproj
-dotnet add <애플리케이션.csproj> reference WPF.LIB/WPFControls.Theme/WPFControls.Theme.csproj
+dotnet add <애플리케이션.csproj> reference WPF.Lib/WPF.Lib.MVVM/WPF.Lib.MVVM.csproj
+dotnet add <애플리케이션.csproj> reference WPF.Lib/WPF.Lib.Theme/WPF.Lib.Theme.csproj
 ```
 
 ## 빌드 및 검증

@@ -1,6 +1,6 @@
-using WPFControls.Core.Models;
+using WPF.Lib.Core.Models;
 
-namespace WPFControls.Core.Abstractions;
+namespace WPF.Lib.Core.Abstractions;
 
 public interface IFileDialogService
 {

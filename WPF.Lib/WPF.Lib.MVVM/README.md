@@ -1,4 +1,4 @@
-# WPFControls.MVVM
+# WPF.Lib.MVVM
 
 WPF 데이터 바인딩에 필요한 최소 기반 클래스를 제공하는 .NET 8 클래스 라이브러리입니다. WPF 어셈블리에 직접 의존하지 않으므로 UI와 무관한 모델 및 뷰 모델에서도 사용할 수 있습니다.
 
@@ -23,13 +23,13 @@ WPF 데이터 바인딩에 필요한 최소 기반 클래스를 제공하는 .NE
 저장소 루트에서 다음 명령을 실행합니다.
 
 ```powershell
-dotnet add <애플리케이션.csproj> reference WPF.LIB/WPFControls.MVVM/WPFControls.MVVM.csproj
+dotnet add <애플리케이션.csproj> reference WPF.Lib/WPF.Lib.MVVM/WPF.Lib.MVVM.csproj
 ```
 
 ## 사용 예제
 
 ```csharp
-using WPFControls.MVVM;
+using WPF.Lib.MVVM;
 
 public sealed class CustomerViewModel : BaseViewModel
 {
@@ -55,10 +55,10 @@ if (SetProperty(ref _name, value))
 ## 파일 구조
 
 ```text
-WPFControls.MVVM/
+WPF.Lib.MVVM/
 ├─ BaseModel.cs
 ├─ BaseViewModel.cs
-└─ WPFControls.MVVM.csproj
+└─ WPF.Lib.MVVM.csproj
 ```
 
 ## 확장 지침

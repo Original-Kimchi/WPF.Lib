@@ -1,4 +1,4 @@
-# WPFControls.Theme 사용 가이드
+# WPF.Lib.Theme 사용 가이드
 
 테마 설정, 리소스 키, 컨트롤 스타일 및 확장 방법은 [README.md](README.md)에 통합되어 있습니다.
 

@@ -1,4 +1,4 @@
-# WPFControls.Theme
+# WPF.Lib.Theme
 
 .NET 8 WPF 애플리케이션을 위한 라이트/다크 테마와 공통 컨트롤 스타일을 제공합니다. 테마 리소스를 병합하면 기본 WPF 컨트롤에 암시적 스타일이 적용되며, 실행 중에도 테마를 전환할 수 있습니다.
 
@@ -7,7 +7,7 @@
 저장소 루트에서 프로젝트 참조를 추가합니다.
 
 ```powershell
-dotnet add <애플리케이션.csproj> reference WPF.LIB/WPFControls.Theme/WPFControls.Theme.csproj
+dotnet add <애플리케이션.csproj> reference WPF.Lib/WPF.Lib.Theme/WPF.Lib.Theme.csproj
 ```
 
 `App.xaml`에서 시작 테마 하나를 병합합니다. 각 테마 사전은 `Styles/ModernControls.xaml`을 내부에서 병합하므로 스타일 사전을 따로 추가할 필요가 없습니다.
@@ -16,7 +16,7 @@ dotnet add <애플리케이션.csproj> reference WPF.LIB/WPFControls.Theme/WPFCo
 <Application.Resources>
     <ResourceDictionary>
         <ResourceDictionary.MergedDictionaries>
-            <ResourceDictionary Source="/WPFControls.Theme;component/Theme/LightTheme.xaml" />
+            <ResourceDictionary Source="/WPF.Lib.Theme;component/Theme/LightTheme.xaml" />
         </ResourceDictionary.MergedDictionaries>
     </ResourceDictionary>
 </Application.Resources>
@@ -26,10 +26,10 @@ dotnet add <애플리케이션.csproj> reference WPF.LIB/WPFControls.Theme/WPFCo
 
 ## 런타임 테마 전환
 
-`ThemeManager.ApplyTheme`은 현재 병합된 `WPFControls.Theme` 테마 사전을 제거하고 선택한 테마를 추가합니다.
+`ThemeManager.ApplyTheme`은 현재 병합된 `WPF.Lib.Theme` 테마 사전을 제거하고 선택한 테마를 추가합니다.
 
 ```csharp
-using WPFControls.Theme;
+using WPF.Lib.Theme;
 
 ThemeManager.ApplyTheme(ThemeKind.Dark);
 ThemeManager.ApplyTheme(ThemeKind.Light);
@@ -95,7 +95,7 @@ ThemeManager.ApplyTheme(ThemeKind.Light);
 `WindowCaptionButton`은 가장 가까운 `Window`에 시스템 명령을 실행합니다. `Action`에는 `Minimize`, `MaximizeOrRestore`, `Close`를 지정할 수 있습니다.
 
 ```xaml
-<Window xmlns:theme="clr-namespace:WPFControls.Theme.Controls;assembly=WPFControls.Theme">
+<Window xmlns:theme="clr-namespace:WPF.Lib.Theme.Controls;assembly=WPF.Lib.Theme">
     <theme:WindowCaptionButton Action="Minimize" Content="—" />
 </Window>
 ```
@@ -105,7 +105,7 @@ ThemeManager.ApplyTheme(ThemeKind.Light);
 ## 파일 구조
 
 ```text
-WPFControls.Theme/
+WPF.Lib.Theme/
 ├─ Controls/
 │  └─ WindowCaptionButton.cs
 ├─ Styles/
@@ -124,7 +124,7 @@ WPFControls.Theme/
 │  ├─ DarkTheme.xaml
 │  └─ LightTheme.xaml
 ├─ ThemeManager.cs
-└─ WPFControls.Theme.csproj
+└─ WPF.Lib.Theme.csproj
 ```
 
 ## 확장 지침

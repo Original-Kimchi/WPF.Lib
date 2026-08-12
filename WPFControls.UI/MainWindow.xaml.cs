@@ -1,6 +1,6 @@
 using System.Windows;
 using System.Windows.Controls;
-using WPFControls.Theme;
+using WPF.Lib.Theme;
 
 namespace WPFControls.UI;
 

@@ -2,7 +2,7 @@
 
 ## Project Structure & Module Organization
 
-The repository contains a .NET 8 WPF application and reusable theme and MVVM libraries. `WPFControls.UI.sln` is the solution entry point. `WPFControls.UI/` contains the application, while `WPF.LIB/WPFControls.Theme/` and `WPF.LIB/WPFControls.MVVM/` contain the reusable libraries. Light and dark resource dictionaries live under `WPF.LIB/WPFControls.Theme/Theme/`. Keep both theme files aligned when adding resource keys. Application startup lives in `App.xaml` and `App.xaml.cs`; the initial window is defined by `MainWindow.xaml` and its code-behind. Keep each control's XAML and code-behind together and use feature-oriented folders such as `Controls/`, `ViewModels/`, and `Converters/` as the application grows. There is currently no test project.
+The repository contains a .NET 8 WPF application and reusable theme and MVVM libraries. `WPFControls.UI.sln` is the solution entry point. `WPFControls.UI/` contains the application, while `WPF.Lib/WPF.Lib.Theme/` and `WPF.Lib/WPF.Lib.MVVM/` contain the reusable libraries. Light and dark resource dictionaries live under `WPF.Lib/WPF.Lib.Theme/Theme/`. Keep both theme files aligned when adding resource keys. Application startup lives in `App.xaml` and `App.xaml.cs`; the initial window is defined by `MainWindow.xaml` and its code-behind. Keep each control's XAML and code-behind together and use feature-oriented folders such as `Controls/`, `ViewModels/`, and `Converters/` as the application grows. There is currently no test project.
 
 ## Build, Test, and Development Commands
 

@@ -6,6 +6,7 @@
         Height="720"
         MinWidth="820"
         MinHeight="560"
+        Style="{StaticResource ModernWindowStyle}"
         WindowStartupLocation="CenterScreen"
         Background="{DynamicResource BackgroundBrush}">
     <Grid Margin="32">

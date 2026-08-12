@@ -9,6 +9,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="MaterialDesignThemes" Version="5.3.2" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\WPFControls.Theme\WPFControls.Theme.csproj" />
   </ItemGroup>
 

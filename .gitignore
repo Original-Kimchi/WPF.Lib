@@ -1,0 +1,123 @@
+# Build results
+[Bb]in/
+[Oo]bj/
+[Dd]ebug/
+[Rr]elease/
+[Xx]64/
+[Xx]86/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+[Ll]og/
+[Ll]ogs/
+
+# Visual Studio
+.vs/
+.vscode/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.rsuser
+*.VC.db
+*.VC.opendb
+*.opendb
+*.sdf
+*.cachefile
+Generated\ Files/
+
+# Visual Studio temp files
+*_wpftmp.csproj
+*.tmp
+*.temp
+
+# NuGet
+packages/
+.packages/
+*.nupkg
+*.snupkg
+!ParkRMSPackages/*.nupkg
+project.lock.json
+project.fragment.lock.json
+artifacts/
+*.nuget.props
+*.nuget.targets
+
+# .NET Core
+*.log
+*.lock.json
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Rider
+.idea/
+
+# Resharper
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
+
+# Code Coverage
+*.coverage
+*.coveragexml
+*.coverage.json
+*.lcov
+coverage/
+coverage.cobertura.xml
+
+# Test Results
+TestResults/
+[Tt]est[Rr]esult*/
+BenchmarkDotNet.Artifacts/
+
+# Publish output
+publish/
+PublishProfiles/
+*.pubxml.user
+
+# Debug files
+*.pdb
+*.ilk
+*.dbg
+
+# Backup files
+*~
+*.bak
+*.swp
+*.orig
+
+# Temp folders
+temp/
+tmp/
+.cache/
+
+# Office temp files
+~$*
+
+# Archives (optional - uncomment if needed)
+# *.zip
+# *.7z
+# *.rar
+
+# Personal/Project specific
+*.pdf
+*.xlsx
+*.pptx
+*.docx
+
+.claude/
+claudedocs/
+.cr/
+/nul
+.filenesting.json
+
+# Claude Code temp files
+tmpclaude-*

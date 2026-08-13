@@ -22,6 +22,8 @@ dotnet format WPFControls.UI.sln --verify-no-changes
 
 Use four spaces in C# and XAML; do not use tabs. Retain nullable reference types and implicit usings. Follow standard .NET naming: `PascalCase` for namespaces, types, methods, properties, and named XAML elements; `camelCase` for parameters and locals; `_camelCase` for private fields. Name controls and paired files consistently, for example `NumericInput.xaml` and `NumericInput.xaml.cs`. Prefer bindings and commands over event-heavy code-behind, and keep reusable brushes, styles, and templates in resource dictionaries.
 
+When creating or changing a themed control style, verify it in both light and dark themes. Check foreground/background contrast for the control and all template parts, including selected, hover, focused, disabled, popup, and nested-item states. Template text must inherit or explicitly bind to the appropriate dynamic theme foreground brush; do not rely on the WPF system default foreground.
+
 ## Testing Guidelines
 
 Add tests in a sibling project such as `WPFControls.UI.Tests/`, named after the production assembly. Prefer xUnit unless the solution adopts another framework. Name test classes `<TypeName>Tests` and tests `Method_Scenario_ExpectedResult`. Keep UI-independent behavior in view models or services so it can be tested without launching WPF. New behavior and bug fixes should include focused tests where practical.

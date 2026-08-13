@@ -234,6 +234,134 @@
                         </DataGrid>
                     </StackPanel>
                 </Border>
+
+                <Grid Margin="0,20,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="20" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Border Padding="24" Background="{DynamicResource SurfaceBrush}" CornerRadius="10">
+                        <StackPanel>
+                            <TextBlock FontSize="19" FontWeight="SemiBold" Text="Toggle &amp; Selection" />
+                            <TextBlock Margin="0,5,0,20" Foreground="{DynamicResource TextSecondaryBrush}"
+                                       Text="ToggleButton, CheckBox, RadioButton 상태" />
+                            <WrapPanel Margin="0,0,0,18">
+                                <ToggleButton Margin="0,0,8,0" Content="Default" />
+                                <ToggleButton Margin="0,0,8,0" Content="Selected" IsChecked="True" />
+                                <ToggleButton Content="Disabled" IsEnabled="False" />
+                            </WrapPanel>
+                            <CheckBox Margin="0,0,0,10" Content="Enable notifications" IsChecked="True" />
+                            <CheckBox Margin="0,0,0,16" Content="Disabled option" IsEnabled="False" />
+                            <StackPanel Orientation="Horizontal">
+                                <RadioButton Margin="0,0,18,0" Content="Option A" GroupName="GalleryOptions" IsChecked="True" />
+                                <RadioButton Content="Option B" GroupName="GalleryOptions" />
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                    <Border Grid.Column="2" Padding="24" Background="{DynamicResource SurfaceBrush}" CornerRadius="10">
+                        <StackPanel>
+                            <TextBlock FontSize="19" FontWeight="SemiBold" Text="Password &amp; DatePicker" />
+                            <TextBlock Margin="0,5,0,20" Foreground="{DynamicResource TextSecondaryBrush}"
+                                       Text="보안 입력과 날짜 선택" />
+                            <TextBlock Margin="0,0,0,7" FontWeight="SemiBold" Text="Password" />
+                            <PasswordBox Password="password" />
+                            <TextBlock Margin="0,16,0,7" FontWeight="SemiBold" Text="Date" />
+                            <DatePicker SelectedDateFormat="Long" />
+                            <DatePicker Margin="0,12,0,0" IsEnabled="False" />
+                        </StackPanel>
+                    </Border>
+                </Grid>
+
+                <Grid Margin="0,20,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="20" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Border Padding="24" Background="{DynamicResource SurfaceBrush}" CornerRadius="10">
+                        <StackPanel>
+                            <TextBlock FontSize="19" FontWeight="SemiBold" Text="ProgressBar &amp; Slider" />
+                            <TextBlock Margin="0,5,0,20" Foreground="{DynamicResource TextSecondaryBrush}"
+                                       Text="진행 상태와 범위 값 선택" />
+                            <TextBlock Margin="0,0,0,8" Text="Progress 68%" />
+                            <ProgressBar Value="68" />
+                            <TextBlock Margin="0,20,0,8" Text="Volume" />
+                            <Slider Minimum="0" Maximum="100" Value="42" TickFrequency="10" />
+                        </StackPanel>
+                    </Border>
+                    <Border Grid.Column="2" Padding="24" Background="{DynamicResource SurfaceBrush}" CornerRadius="10">
+                        <StackPanel>
+                            <TextBlock FontSize="19" FontWeight="SemiBold" Text="GroupBox &amp; Expander" />
+                            <TextBlock Margin="0,5,0,12" Foreground="{DynamicResource TextSecondaryBrush}"
+                                       Text="관련 콘텐츠 그룹과 접이식 영역" />
+                            <GroupBox Header="Connection">
+                                <StackPanel>
+                                    <TextBlock Text="Server: localhost" />
+                                    <TextBlock Margin="0,5,0,0" Foreground="{DynamicResource TextSecondaryBrush}" Text="Status: Connected" />
+                                </StackPanel>
+                            </GroupBox>
+                            <Expander Margin="0,14,0,0" Header="Advanced settings" IsExpanded="True">
+                                <TextBlock Text="Additional configuration content" />
+                            </Expander>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+
+                <Grid Margin="0,20,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="20" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Border Padding="24" Background="{DynamicResource SurfaceBrush}" CornerRadius="10">
+                        <StackPanel>
+                            <TextBlock FontSize="19" FontWeight="SemiBold" Text="TreeView" />
+                            <TextBlock Margin="0,5,0,14" Foreground="{DynamicResource TextSecondaryBrush}"
+                                       Text="계층 구조, 확장 및 선택 상태" />
+                            <TreeView Height="180">
+                                <TreeViewItem Header="WPFControls.UI" IsExpanded="True">
+                                    <TreeViewItem Header="Views" IsExpanded="True">
+                                        <TreeViewItem Header="MainView.xaml" IsSelected="True" />
+                                        <TreeViewItem Header="ImageViewerView.xaml" />
+                                    </TreeViewItem>
+                                    <TreeViewItem Header="ViewModels" />
+                                    <TreeViewItem Header="Services" />
+                                </TreeViewItem>
+                            </TreeView>
+                        </StackPanel>
+                    </Border>
+                    <Border Grid.Column="2" Padding="24" Background="{DynamicResource SurfaceBrush}" CornerRadius="10">
+                        <StackPanel>
+                            <TextBlock FontSize="19" FontWeight="SemiBold" Text="Menu &amp; ContextMenu" />
+                            <TextBlock Margin="0,5,0,14" Foreground="{DynamicResource TextSecondaryBrush}"
+                                       Text="메뉴, 하위 메뉴 및 우클릭 메뉴" />
+                            <Menu>
+                                <MenuItem Header="File">
+                                    <MenuItem Header="New" InputGestureText="Ctrl+N" />
+                                    <MenuItem Header="Open" InputGestureText="Ctrl+O" />
+                                    <Separator />
+                                    <MenuItem Header="Exit" />
+                                </MenuItem>
+                                <MenuItem Header="Edit">
+                                    <MenuItem Header="Copy" InputGestureText="Ctrl+C" />
+                                    <MenuItem Header="Paste" InputGestureText="Ctrl+V" />
+                                </MenuItem>
+                            </Menu>
+                            <Border Height="112" Margin="0,16,0,0" Background="{DynamicResource SurfaceAlternateBrush}"
+                                    BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="7">
+                                <Border.ContextMenu>
+                                    <ContextMenu>
+                                        <MenuItem Header="Refresh" />
+                                        <MenuItem Header="Properties" />
+                                    </ContextMenu>
+                                </Border.ContextMenu>
+                                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"
+                                           Foreground="{DynamicResource TextSecondaryBrush}" Text="Right-click here" />
+                            </Border>
+                        </StackPanel>
+                    </Border>
+                </Grid>
             </StackPanel>
         </ScrollViewer>
     </Grid>

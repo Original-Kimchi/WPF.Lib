@@ -113,28 +113,41 @@
                                     </TextBlock>
                                 </Border>
                                 <Canvas Visibility="{Binding IsSelected, Converter={StaticResource BooleanVisibilityConverter}}">
+                                    <Canvas.Resources>
+                                        <Style TargetType="Rectangle">
+                                            <Setter Property="Margin" Value="-5,-5,0,0" />
+                                            <Setter Property="RenderTransformOrigin" Value="0.5,0.5" />
+                                            <Setter Property="RenderTransform">
+                                                <Setter.Value>
+                                                    <ScaleTransform
+                                                        ScaleX="{Binding Model.Scale, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource InverseScaleConverter}}"
+                                                        ScaleY="{Binding Model.Scale, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource InverseScaleConverter}}" />
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Style>
+                                    </Canvas.Resources>
                                     <Rectangle Canvas.Left="{Binding Start.X}" Canvas.Top="{Binding Start.Y}"
-                                               Width="10" Height="10" Margin="-5,-5,0,0" Tag="ResizeStart"
+                                               Width="10" Height="10" Tag="ResizeStart"
                                                Cursor="SizeAll" Fill="White" Stroke="#FF2563EB" StrokeThickness="2"
                                                Visibility="{Binding Kind, Converter={StaticResource KindVisibilityConverter}, ConverterParameter=Line}" />
                                     <Rectangle Canvas.Left="{Binding End.X}" Canvas.Top="{Binding End.Y}"
-                                               Width="10" Height="10" Margin="-5,-5,0,0" Tag="ResizeEnd"
+                                               Width="10" Height="10" Tag="ResizeEnd"
                                                Cursor="SizeAll" Fill="White" Stroke="#FF2563EB" StrokeThickness="2"
                                                Visibility="{Binding Kind, Converter={StaticResource KindVisibilityConverter}, ConverterParameter=Line}" />
                                     <Rectangle Canvas.Left="{Binding Left}" Canvas.Top="{Binding Top}"
-                                               Width="10" Height="10" Margin="-5,-5,0,0" Tag="ResizeTopLeft"
+                                               Width="10" Height="10" Tag="ResizeTopLeft"
                                                Cursor="SizeNWSE" Fill="White" Stroke="#FF2563EB" StrokeThickness="2"
                                                Visibility="{Binding Kind, Converter={StaticResource KindVisibilityConverter}, ConverterParameter='Rectangle,Ellipse'}" />
                                     <Rectangle Canvas.Left="{Binding Left}" Canvas.Top="{Binding End.Y}"
-                                               Width="10" Height="10" Margin="-5,-5,0,0" Tag="ResizeBottomLeft"
+                                               Width="10" Height="10" Tag="ResizeBottomLeft"
                                                Cursor="SizeNESW" Fill="White" Stroke="#FF2563EB" StrokeThickness="2"
                                                Visibility="{Binding Kind, Converter={StaticResource KindVisibilityConverter}, ConverterParameter='Rectangle,Ellipse'}" />
                                     <Rectangle Canvas.Left="{Binding End.X}" Canvas.Top="{Binding Top}"
-                                               Width="10" Height="10" Margin="-5,-5,0,0" Tag="ResizeTopRight"
+                                               Width="10" Height="10" Tag="ResizeTopRight"
                                                Cursor="SizeNESW" Fill="White" Stroke="#FF2563EB" StrokeThickness="2"
                                                Visibility="{Binding Kind, Converter={StaticResource KindVisibilityConverter}, ConverterParameter='Rectangle,Ellipse'}" />
                                     <Rectangle Canvas.Left="{Binding End.X}" Canvas.Top="{Binding End.Y}"
-                                               Width="10" Height="10" Margin="-5,-5,0,0" Tag="ResizeBottomRight"
+                                               Width="10" Height="10" Tag="ResizeBottomRight"
                                                Cursor="SizeNWSE" Fill="White" Stroke="#FF2563EB" StrokeThickness="2"
                                                Visibility="{Binding Kind, Converter={StaticResource KindVisibilityConverter}, ConverterParameter='Rectangle,Ellipse'}" />
                                 </Canvas>

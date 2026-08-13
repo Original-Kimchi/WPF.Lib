@@ -1,0 +1,66 @@
+<UserControl x:Class="WPF.Lib.Controls.Controls.ToastHost"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:models="clr-namespace:WPF.Lib.Controls.Models"
+             HorizontalAlignment="Right"
+             VerticalAlignment="Top">
+    <UserControl.Resources>
+        <Style x:Key="ToastCardStyle" TargetType="Border">
+            <Setter Property="Background" Value="{DynamicResource SurfaceBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="10" />
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect BlurRadius="18" Opacity="0.18" ShadowDepth="4" />
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <DataTemplate DataType="{x:Type models:ToastNotification}">
+            <Border Width="360" Margin="0,0,0,10" Padding="0" Style="{StaticResource ToastCardStyle}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="5" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Border x:Name="Accent" Background="{DynamicResource InfoBrush}" CornerRadius="10,0,0,10" />
+                    <Border x:Name="IconBackground" Grid.Column="1" Width="30" Height="30" Margin="14,15,0,15"
+                            Background="{DynamicResource InfoBrush}" CornerRadius="15">
+                        <TextBlock x:Name="Icon" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                   FontSize="16" FontWeight="Bold" Foreground="White" Text="i" />
+                    </Border>
+                    <StackPanel Grid.Column="2" Margin="12,13,8,13">
+                        <TextBlock FontWeight="SemiBold" Foreground="{DynamicResource ForegroundBrush}"
+                                   Text="{Binding Title}" TextTrimming="CharacterEllipsis" />
+                        <TextBlock Margin="0,3,0,0" Foreground="{DynamicResource TextSecondaryBrush}"
+                                   Text="{Binding Message}" TextWrapping="Wrap" />
+                    </StackPanel>
+                    <Button Grid.Column="3" Width="30" Height="30" Margin="0,9,8,0"
+                            Padding="0" VerticalAlignment="Top" Background="Transparent" BorderThickness="0"
+                            Click="CloseButton_Click" Content="&#x00D7;" Foreground="{DynamicResource TextSecondaryBrush}"
+                            FontSize="20" FontWeight="Normal" Tag="{Binding}" ToolTip="알림 닫기" />
+                </Grid>
+            </Border>
+            <DataTemplate.Triggers>
+                <DataTrigger Binding="{Binding Type}" Value="Success">
+                    <Setter TargetName="Accent" Property="Background" Value="{DynamicResource SuccessBrush}" />
+                    <Setter TargetName="Icon" Property="Text" Value="&#x2713;" />
+                    <Setter TargetName="IconBackground" Property="Background" Value="{DynamicResource SuccessBrush}" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Type}" Value="Warning">
+                    <Setter TargetName="Accent" Property="Background" Value="{DynamicResource WarningBrush}" />
+                    <Setter TargetName="Icon" Property="Text" Value="!" />
+                    <Setter TargetName="IconBackground" Property="Background" Value="{DynamicResource WarningBrush}" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Type}" Value="Error">
+                    <Setter TargetName="Accent" Property="Background" Value="{DynamicResource DangerBrush}" />
+                    <Setter TargetName="Icon" Property="Text" Value="&#x00D7;" />
+                    <Setter TargetName="IconBackground" Property="Background" Value="{DynamicResource DangerBrush}" />
+                </DataTrigger>
+            </DataTemplate.Triggers>
+        </DataTemplate>
+    </UserControl.Resources>
+    <ItemsControl ItemsSource="{Binding Service.Notifications, RelativeSource={RelativeSource AncestorType=UserControl}}" />
+</UserControl>

@@ -12,6 +12,9 @@
     <Color x:Key="PrimaryForegroundColor">#FFFFFFFF</Color>
     <Color x:Key="PrimaryHoverColor">#FF93C5FD</Color>
     <Color x:Key="DangerColor">#FFF87171</Color>
+    <Color x:Key="InfoColor">#FF60A5FA</Color>
+    <Color x:Key="SuccessColor">#FF4ADE80</Color>
+    <Color x:Key="WarningColor">#FFFBBF24</Color>
     <Color x:Key="SurfaceAlternateColor">#FF182234</Color>
     <Color x:Key="HeaderColor">#FF263244</Color>
     <Color x:Key="HoverColor">#FF263A55</Color>
@@ -26,6 +29,9 @@
     <SolidColorBrush x:Key="PrimaryForegroundBrush" Color="{StaticResource PrimaryForegroundColor}" />
     <SolidColorBrush x:Key="PrimaryHoverBrush" Color="{StaticResource PrimaryHoverColor}" />
     <SolidColorBrush x:Key="DangerBrush" Color="{StaticResource DangerColor}" />
+    <SolidColorBrush x:Key="InfoBrush" Color="{StaticResource InfoColor}" />
+    <SolidColorBrush x:Key="SuccessBrush" Color="{StaticResource SuccessColor}" />
+    <SolidColorBrush x:Key="WarningBrush" Color="{StaticResource WarningColor}" />
     <SolidColorBrush x:Key="SurfaceAlternateBrush" Color="{StaticResource SurfaceAlternateColor}" />
     <SolidColorBrush x:Key="HeaderBrush" Color="{StaticResource HeaderColor}" />
     <SolidColorBrush x:Key="HoverBrush" Color="{StaticResource HoverColor}" />

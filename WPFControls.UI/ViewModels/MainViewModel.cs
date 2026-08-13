@@ -3,6 +3,8 @@ using WPF.Lib.Core.Models;
 using WPF.Lib.MVVM;
 using WPF.Lib.MVVM.Commands;
 using Microsoft.Extensions.Logging;
+using WPF.Lib.Controls.Abstractions;
+using WPF.Lib.Controls.Models;
 
 namespace WPFControls.UI.ViewModels;
 
@@ -11,18 +13,25 @@ public sealed class MainViewModel : BaseViewModel
     private readonly IDialogService _dialogService;
     private readonly IThemeService _themeService;
     private readonly ILogger<MainViewModel> _logger;
+    private readonly IToastService _toastService;
     private ApplicationTheme _selectedTheme = ApplicationTheme.Light;
     private string _dialogResult = "결과: 아직 실행하지 않음";
 
     public MainViewModel(
         IDialogService dialogService,
         IThemeService themeService,
+        IToastService toastService,
         ILogger<MainViewModel> logger)
     {
         _dialogService = dialogService;
         _themeService = themeService;
+        _toastService = toastService;
         _logger = logger;
         ShowDialogCommand = new RelayCommand(ShowDialog);
+        ShowInfoToastCommand = new RelayCommand(() => _toastService.Show("새로운 업데이트를 확인할 수 있습니다."));
+        ShowSuccessToastCommand = new RelayCommand(() => _toastService.Show("변경 사항이 저장되었습니다.", ToastType.Success));
+        ShowWarningToastCommand = new RelayCommand(() => _toastService.Show("저장 공간이 얼마 남지 않았습니다.", ToastType.Warning, duration: TimeSpan.FromSeconds(6)));
+        ShowErrorToastCommand = new RelayCommand(() => _toastService.Show("요청을 처리하지 못했습니다.", ToastType.Error, duration: TimeSpan.Zero));
     }
 
     public IReadOnlyList<ApplicationTheme> Themes { get; } = Enum.GetValues<ApplicationTheme>();
@@ -47,6 +56,11 @@ public sealed class MainViewModel : BaseViewModel
     }
 
     public RelayCommand ShowDialogCommand { get; }
+    public RelayCommand ShowInfoToastCommand { get; }
+    public RelayCommand ShowSuccessToastCommand { get; }
+    public RelayCommand ShowWarningToastCommand { get; }
+    public RelayCommand ShowErrorToastCommand { get; }
+    public IToastService ToastService => _toastService;
 
     public IReadOnlyList<Member> Members { get; } =
     [

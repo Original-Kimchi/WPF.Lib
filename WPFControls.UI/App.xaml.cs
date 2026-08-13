@@ -4,6 +4,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using WPF.Lib.Core.Abstractions;
 using WPF.Lib.Logging.Log4Net;
+using WPF.Lib.Controls.Abstractions;
+using WPF.Lib.Controls.Services;
 using WPFControls.UI.Services;
 using WPFControls.UI.ViewModels;
 
@@ -63,6 +65,7 @@ public partial class App : Application
         services.AddSingleton<IDialogService, DialogService>();
         services.AddSingleton<IFileDialogService, FileDialogService>();
         services.AddSingleton<IThemeService, ThemeService>();
+        services.AddSingleton<IToastService, ToastService>();
 
         services.AddSingleton<MainViewModel>();
         services.AddSingleton<ImageViewerViewModel>();

@@ -40,7 +40,35 @@
 
         <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
             <StackPanel Margin="32,0,32,32">
-                <Grid>
+                <Border Padding="24"
+                        Background="{DynamicResource SurfaceBrush}"
+                        CornerRadius="10">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel>
+                            <TextBlock FontSize="19"
+                                       FontWeight="SemiBold"
+                                       Text="Confirmation Dialog" />
+                            <TextBlock Margin="0,5,0,12"
+                                       Foreground="{DynamicResource TextSecondaryBrush}"
+                                       Text="확인, 취소 및 우측 상단 닫기 버튼이 포함된 기본 다이얼로그입니다." />
+                            <TextBlock x:Name="DialogResultText"
+                                       Foreground="{DynamicResource TextSecondaryBrush}"
+                                       Text="결과: 아직 실행하지 않음" />
+                        </StackPanel>
+                        <Button Grid.Column="1"
+                                MinWidth="132"
+                                Margin="24,0,0,0"
+                                VerticalAlignment="Center"
+                                Click="ShowDialog_Click"
+                                Content="다이얼로그 열기" />
+                    </Grid>
+                </Border>
+
+                <Grid Margin="0,20,0,0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="20" />

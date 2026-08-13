@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\WPF.Lib\WPF.Lib.Core\WPF.Lib.Core.csproj" />
+    <ProjectReference Include="..\WPF.Lib\WPF.Lib.MVVM\WPF.Lib.MVVM.csproj" />
     <ProjectReference Include="..\WPF.Lib\WPF.Lib.Theme\WPF.Lib.Theme.csproj" />
   </ItemGroup>
 

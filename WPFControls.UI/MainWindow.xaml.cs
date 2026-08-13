@@ -1,6 +1,9 @@
 using System.Windows;
 using System.Windows.Controls;
+using WPF.Lib.MVVM.Dialogs;
 using WPF.Lib.Theme;
+using WPFControls.UI.Dialogs;
+using WPFControls.UI.ViewModels;
 
 namespace WPFControls.UI;
 
@@ -38,6 +41,28 @@ public partial class MainWindow : Window
         }
 
         ThemeManager.ApplyTheme(theme);
+    }
+
+    private void ShowDialog_Click(object sender, RoutedEventArgs e)
+    {
+        var viewModel = new ConfirmationDialogViewModel(
+            "변경 사항 확인",
+            "선택한 설정을 적용합니다. 계속 진행하려면 확인을 눌러주세요.");
+
+        var dialog = new ConfirmationDialog
+        {
+            Owner = this,
+            DataContext = viewModel
+        };
+
+        dialog.ShowDialog();
+
+        DialogResultText.Text = dialog.Outcome switch
+        {
+            DialogOutcome.Confirmed => "결과: 확인",
+            DialogOutcome.Cancelled => "결과: 취소 또는 닫기",
+            _ => "결과: 없음"
+        };
     }
 
     public sealed record Member(string Initials, string Name, string Email, string Role);

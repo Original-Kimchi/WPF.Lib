@@ -2,6 +2,7 @@ using WPF.Lib.Core.Abstractions;
 using WPF.Lib.Core.Models;
 using WPF.Lib.MVVM;
 using WPF.Lib.MVVM.Commands;
+using Microsoft.Extensions.Logging;
 
 namespace WPFControls.UI.ViewModels;
 
@@ -9,13 +10,18 @@ public sealed class MainViewModel : BaseViewModel
 {
     private readonly IDialogService _dialogService;
     private readonly IThemeService _themeService;
+    private readonly ILogger<MainViewModel> _logger;
     private ApplicationTheme _selectedTheme = ApplicationTheme.Light;
     private string _dialogResult = "결과: 아직 실행하지 않음";
 
-    public MainViewModel(IDialogService dialogService, IThemeService themeService)
+    public MainViewModel(
+        IDialogService dialogService,
+        IThemeService themeService,
+        ILogger<MainViewModel> logger)
     {
         _dialogService = dialogService;
         _themeService = themeService;
+        _logger = logger;
         ShowDialogCommand = new RelayCommand(ShowDialog);
     }
 
@@ -29,6 +35,7 @@ public sealed class MainViewModel : BaseViewModel
             if (SetProperty(ref _selectedTheme, value))
             {
                 _themeService.ApplyTheme(value);
+                _logger.LogInformation("테마를 변경했습니다. Theme: {Theme}", value);
             }
         }
     }
@@ -60,6 +67,7 @@ public sealed class MainViewModel : BaseViewModel
 
     private async void ShowDialog()
     {
+        _logger.LogInformation("확인 다이얼로그를 표시합니다.");
         var confirmed = await _dialogService.ShowConfirmationAsync(
             "변경 사항 확인",
             "선택한 설정을 적용합니다. 계속 진행하려면 확인을 눌러주세요.");

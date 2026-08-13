@@ -11,12 +11,20 @@
   <ItemGroup>
     <PackageReference Include="MaterialDesignThemes" Version="5.3.2" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\WPF.Lib\WPF.Lib.Core\WPF.Lib.Core.csproj" />
+    <ProjectReference Include="..\WPF.Lib\WPF.Lib.Logging.Log4Net\WPF.Lib.Logging.Log4Net.csproj" />
     <ProjectReference Include="..\WPF.Lib\WPF.Lib.MVVM\WPF.Lib.MVVM.csproj" />
     <ProjectReference Include="..\WPF.Lib\WPF.Lib.Theme\WPF.Lib.Theme.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="log4net.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

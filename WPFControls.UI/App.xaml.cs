@@ -61,9 +61,11 @@ public partial class App : Application
 
         services.AddSingleton<IMenuService, MenuService>();
         services.AddSingleton<IDialogService, DialogService>();
+        services.AddSingleton<IFileDialogService, FileDialogService>();
         services.AddSingleton<IThemeService, ThemeService>();
 
         services.AddSingleton<MainViewModel>();
+        services.AddSingleton<ImageViewerViewModel>();
         services.AddSingleton<ShellViewModel>();
 
         services.AddSingleton<MainWindow>();

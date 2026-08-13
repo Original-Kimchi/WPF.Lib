@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\WPF.Lib\WPF.Lib.Controls\WPF.Lib.Controls.csproj" />
     <ProjectReference Include="..\WPF.Lib\WPF.Lib.Core\WPF.Lib.Core.csproj" />
     <ProjectReference Include="..\WPF.Lib\WPF.Lib.Logging.Log4Net\WPF.Lib.Logging.Log4Net.csproj" />
     <ProjectReference Include="..\WPF.Lib\WPF.Lib.MVVM\WPF.Lib.MVVM.csproj" />

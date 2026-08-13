@@ -12,7 +12,13 @@ public sealed class MenuService : IMenuService
             Title: "Main",
             Route: "main",
             Icon: "ViewDashboardOutline",
-            Order: 0)
+            Order: 0),
+        new(
+            Id: "image-viewer",
+            Title: "Image Viewer",
+            Route: "image-viewer",
+            Icon: "ImageOutline",
+            Order: 10)
     ];
 
     public IReadOnlyList<MenuItemDefinition> GetMenus()

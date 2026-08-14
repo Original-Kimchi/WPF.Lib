@@ -86,6 +86,71 @@
 
                     <Border Padding="24" Background="{DynamicResource SurfaceBrush}" CornerRadius="10">
                         <StackPanel>
+                            <TextBlock FontSize="19" FontWeight="SemiBold" Text="NumericUpDown &amp; TimePicker" />
+                            <TextBlock Margin="0,5,0,20"
+                                       Foreground="{DynamicResource TextSecondaryBrush}"
+                                       Text="Bounded numeric and time input controls" />
+                            <TextBlock Margin="0,0,0,7" FontWeight="SemiBold" Text="Quantity" />
+                            <controls:NumericUpDown Width="180"
+                                                    HorizontalAlignment="Left"
+                                                    DecimalPlaces="0"
+                                                    Increment="1"
+                                                    Minimum="0"
+                                                    Maximum="100"
+                                                    Value="{Binding Quantity, Mode=TwoWay}" />
+                            <TextBlock Margin="0,16,0,7" FontWeight="SemiBold" Text="Appointment time" />
+                            <controls:TimePicker HorizontalAlignment="Left"
+                                                 Is24HourMode="True"
+                                                 MinuteStep="5"
+                                                 SelectedTime="{Binding AppointmentTime, Mode=TwoWay}" />
+                        </StackPanel>
+                    </Border>
+
+                    <Border Grid.Column="2" Padding="24" Background="{DynamicResource SurfaceBrush}" CornerRadius="10">
+                        <StackPanel>
+                            <TextBlock FontSize="19" FontWeight="SemiBold" Text="SearchBox &amp; BusyOverlay" />
+                            <TextBlock Margin="0,5,0,20"
+                                       Foreground="{DynamicResource TextSecondaryBrush}"
+                                       Text="Debounced search and blocking progress feedback" />
+                            <controls:SearchBox Placeholder="Search controls..."
+                                                SearchCommand="{Binding SearchCommand}"
+                                                SearchDelay="400"
+                                                SearchOnTextChanged="True"
+                                                Text="{Binding SearchText, Mode=TwoWay}" />
+                            <TextBlock Margin="0,8,0,16"
+                                       Foreground="{DynamicResource TextSecondaryBrush}"
+                                       Text="{Binding SearchResult}" />
+                            <controls:BusyOverlay Height="92"
+                                                  BusyMessage="Loading preview..."
+                                                  IsBusy="{Binding IsBusy}">
+                                <controls:BusyOverlay.Child>
+                                    <Border Padding="16"
+                                            Background="{DynamicResource SurfaceAlternateBrush}"
+                                            BorderBrush="{DynamicResource BorderBrush}"
+                                            BorderThickness="1"
+                                            CornerRadius="7">
+                                        <Grid>
+                                            <TextBlock VerticalAlignment="Center" Text="Preview content" />
+                                            <Button HorizontalAlignment="Right"
+                                                    Command="{Binding ShowBusyCommand}"
+                                                    Content="Show loading" />
+                                        </Grid>
+                                    </Border>
+                                </controls:BusyOverlay.Child>
+                            </controls:BusyOverlay>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+
+                <Grid Margin="0,20,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="20" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Border Padding="24" Background="{DynamicResource SurfaceBrush}" CornerRadius="10">
+                        <StackPanel>
                             <TextBlock FontSize="19" FontWeight="SemiBold" Text="TextBlock &amp; Button" />
                             <TextBlock Margin="0,5,0,20"
                                        Foreground="{DynamicResource TextSecondaryBrush}"

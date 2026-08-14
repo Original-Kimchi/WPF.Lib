@@ -19,6 +19,7 @@
     <Color x:Key="HeaderColor">#FFF3F4F6</Color>
     <Color x:Key="HoverColor">#FFEFF6FF</Color>
     <Color x:Key="SelectionColor">#FFDBEAFE</Color>
+    <Color x:Key="OverlayColor">#990F172A</Color>
 
     <SolidColorBrush x:Key="BackgroundBrush" Color="{StaticResource BackgroundColor}" />
     <SolidColorBrush x:Key="SurfaceBrush" Color="{StaticResource SurfaceColor}" />
@@ -36,4 +37,5 @@
     <SolidColorBrush x:Key="HeaderBrush" Color="{StaticResource HeaderColor}" />
     <SolidColorBrush x:Key="HoverBrush" Color="{StaticResource HoverColor}" />
     <SolidColorBrush x:Key="SelectionBrush" Color="{StaticResource SelectionColor}" />
+    <SolidColorBrush x:Key="OverlayBrush" Color="{StaticResource OverlayColor}" />
 </ResourceDictionary>

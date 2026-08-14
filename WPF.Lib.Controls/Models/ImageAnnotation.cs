@@ -1,4 +1,5 @@
 using System.Windows;
+using System.Windows.Media;
 using WPF.Lib.MVVM;
 
 namespace WPF.Lib.Controls.Models;
@@ -9,6 +10,17 @@ public class ImageAnnotation : BaseModel
     private Point _end;
     private bool _isSelected;
     private AnnotationLabelVisibility _labelVisibility = AnnotationLabelVisibility.WhenSelected;
+    private Brush _stroke = CreateBrush(Color.FromRgb(255, 193, 7));
+    private Brush _fill = CreateBrush(Color.FromArgb(32, 255, 193, 7));
+    private double _strokeThickness = 2;
+    private double _opacity = 1;
+    private DoubleCollection? _strokeDashArray;
+    private PenLineCap _strokeStartLineCap = PenLineCap.Round;
+    private PenLineCap _strokeEndLineCap = PenLineCap.Round;
+    private PenLineJoin _strokeLineJoin = PenLineJoin.Round;
+    private Brush _labelBackground = CreateBrush(Color.FromArgb(204, 17, 24, 39));
+    private Brush _labelForeground = Brushes.White;
+    private double _labelOpacity = 1;
 
     public ImageAnnotation(ImageDrawingMode kind, Point start)
     {
@@ -82,6 +94,72 @@ public class ImageAnnotation : BaseModel
         _ => false
     };
 
+    public virtual Brush Stroke
+    {
+        get => _stroke;
+        set => SetProperty(ref _stroke, value ?? Brushes.Transparent);
+    }
+
+    public virtual Brush Fill
+    {
+        get => _fill;
+        set => SetProperty(ref _fill, value ?? Brushes.Transparent);
+    }
+
+    public virtual double StrokeThickness
+    {
+        get => _strokeThickness;
+        set => SetProperty(ref _strokeThickness, Math.Max(0, value));
+    }
+
+    public virtual double Opacity
+    {
+        get => _opacity;
+        set => SetProperty(ref _opacity, Math.Clamp(value, 0, 1));
+    }
+
+    public virtual DoubleCollection? StrokeDashArray
+    {
+        get => _strokeDashArray;
+        set => SetProperty(ref _strokeDashArray, value);
+    }
+
+    public virtual PenLineCap StrokeStartLineCap
+    {
+        get => _strokeStartLineCap;
+        set => SetProperty(ref _strokeStartLineCap, value);
+    }
+
+    public virtual PenLineCap StrokeEndLineCap
+    {
+        get => _strokeEndLineCap;
+        set => SetProperty(ref _strokeEndLineCap, value);
+    }
+
+    public virtual PenLineJoin StrokeLineJoin
+    {
+        get => _strokeLineJoin;
+        set => SetProperty(ref _strokeLineJoin, value);
+    }
+
+    public virtual Brush LabelBackground
+    {
+        get => _labelBackground;
+        set => SetProperty(ref _labelBackground, value ?? Brushes.Transparent);
+    }
+
+    public virtual Brush LabelForeground
+    {
+        get => _labelForeground;
+        set => SetProperty(ref _labelForeground, value ?? Brushes.Transparent);
+    }
+
+    public virtual double LabelOpacity
+    {
+        get => _labelOpacity;
+        set => SetProperty(ref _labelOpacity, Math.Clamp(value, 0, 1));
+    }
+
     private void NotifyMeasurementsChanged()
     {
         OnPropertyChanged(nameof(Left));
@@ -89,5 +167,12 @@ public class ImageAnnotation : BaseModel
         OnPropertyChanged(nameof(Width));
         OnPropertyChanged(nameof(Height));
         OnPropertyChanged(nameof(Length));
+    }
+
+    private static Brush CreateBrush(Color color)
+    {
+        var brush = new SolidColorBrush(color);
+        brush.Freeze();
+        return brush;
     }
 }

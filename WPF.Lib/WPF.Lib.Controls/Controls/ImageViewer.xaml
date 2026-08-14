@@ -79,18 +79,29 @@
                                     Height="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType=ItemsControl}}">
                                 <Line X1="{Binding Start.X}" Y1="{Binding Start.Y}"
                                       X2="{Binding End.X}" Y2="{Binding End.Y}"
-                                      Stroke="#FFFFC107" StrokeThickness="2" Cursor="SizeAll"
+                                      Stroke="{Binding Stroke}" Fill="{Binding Fill}"
+                                      StrokeThickness="{Binding StrokeThickness}" Opacity="{Binding Opacity}"
+                                      StrokeDashArray="{Binding StrokeDashArray}"
+                                      StrokeStartLineCap="{Binding StrokeStartLineCap}"
+                                      StrokeEndLineCap="{Binding StrokeEndLineCap}"
+                                      StrokeLineJoin="{Binding StrokeLineJoin}" Cursor="SizeAll"
                                       Visibility="{Binding Kind, Converter={StaticResource KindVisibilityConverter}, ConverterParameter=Line}" />
                                 <Rectangle Canvas.Left="{Binding Left}" Canvas.Top="{Binding Top}"
                                            Width="{Binding Width}" Height="{Binding Height}"
-                                           Stroke="#FFFFC107" StrokeThickness="2" Fill="#20FFC107" Cursor="SizeAll"
+                                           Stroke="{Binding Stroke}" Fill="{Binding Fill}"
+                                           StrokeThickness="{Binding StrokeThickness}" Opacity="{Binding Opacity}"
+                                           StrokeDashArray="{Binding StrokeDashArray}"
+                                           StrokeLineJoin="{Binding StrokeLineJoin}" Cursor="SizeAll"
                                            Visibility="{Binding Kind, Converter={StaticResource KindVisibilityConverter}, ConverterParameter=Rectangle}" />
                                 <Ellipse Canvas.Left="{Binding Left}" Canvas.Top="{Binding Top}"
                                          Width="{Binding Width}" Height="{Binding Height}"
-                                         Stroke="#FFFFC107" StrokeThickness="2" Fill="#20FFC107" Cursor="SizeAll"
+                                         Stroke="{Binding Stroke}" Fill="{Binding Fill}"
+                                         StrokeThickness="{Binding StrokeThickness}" Opacity="{Binding Opacity}"
+                                         StrokeDashArray="{Binding StrokeDashArray}" Cursor="SizeAll"
                                          Visibility="{Binding Kind, Converter={StaticResource KindVisibilityConverter}, ConverterParameter=Ellipse}" />
                                 <Border Canvas.Left="{Binding Left}" Canvas.Top="{Binding Top}" Margin="4,-24,0,0"
-                                        Padding="5,2" Background="#CC111827" CornerRadius="3"
+                                        Padding="5,2" Background="{Binding LabelBackground}"
+                                        Opacity="{Binding LabelOpacity}" CornerRadius="3"
                                         Cursor="SizeAll"
                                         RenderTransformOrigin="0,1"
                                         Visibility="{Binding IsLabelVisible, Converter={StaticResource BooleanVisibilityConverter}}">
@@ -99,7 +110,7 @@
                                             ScaleX="{Binding Model.Scale, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource InverseScaleConverter}}"
                                             ScaleY="{Binding Model.Scale, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource InverseScaleConverter}}" />
                                     </Border.RenderTransform>
-                                    <TextBlock Foreground="White" FontSize="11">
+                                    <TextBlock Foreground="{Binding LabelForeground}" FontSize="11">
                                         <TextBlock.Text>
                                             <MultiBinding Converter="{StaticResource MeasurementConverter}">
                                                 <Binding Path="Kind" />

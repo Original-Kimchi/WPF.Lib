@@ -10,7 +10,7 @@ using WPF.Lib.MVVM.Commands;
 
 namespace WPFControls.UI.ViewModels;
 
-public sealed class ImageViewerViewModel : BaseViewModel
+public sealed class ImageViewerViewModel : BaseViewModel, IDisposable
 {
     private static readonly HashSet<string> SupportedImageExtensions = new(StringComparer.OrdinalIgnoreCase)
     {
@@ -27,6 +27,7 @@ public sealed class ImageViewerViewModel : BaseViewModel
     private readonly ILogger<ImageViewerViewModel> _logger;
     private string? _imagePath;
     private string _statusMessage = "상단의 이미지 열기 버튼으로 파일을 선택하세요.";
+    private bool _disposed;
 
     public ImageViewerViewModel(
         IFileDialogService fileDialogService,
@@ -105,12 +106,14 @@ public sealed class ImageViewerViewModel : BaseViewModel
     {
         try
         {
-            Image.Source = LoadImage(path);
-            Image.Scale = 1;
-            Image.Annotations.Clear();
+            var source = LoadImage(path);
+
             Image.SelectedAnnotation = null;
+            Image.Annotations.Clear();
+            Image.Source = source;
+            Image.Scale = 1;
             ImagePath = path;
-            StatusMessage = $"{Image.Source.Width:0} × {Image.Source.Height:0} px";
+            StatusMessage = $"{source.PixelWidth} × {source.PixelHeight} px";
             _logger.LogInformation("이미지를 불러왔습니다. Path: {ImagePath}", path);
         }
         catch (Exception exception)
@@ -127,14 +130,33 @@ public sealed class ImageViewerViewModel : BaseViewModel
 
     private static BitmapImage LoadImage(string path)
     {
-        using var stream = File.OpenRead(path);
+        using var stream = new FileStream(
+            path,
+            FileMode.Open,
+            FileAccess.Read,
+            FileShare.Read,
+            bufferSize: 64 * 1024,
+            FileOptions.SequentialScan);
         var image = new BitmapImage();
         image.BeginInit();
         image.CacheOption = BitmapCacheOption.OnLoad;
+        image.CreateOptions = BitmapCreateOptions.PreservePixelFormat;
         image.StreamSource = stream;
         image.EndInit();
         image.Freeze();
         return image;
+    }
+
+    public void Dispose()
+    {
+        if (_disposed)
+        {
+            return;
+        }
+
+        _disposed = true;
+        Image.Clear();
+        ImagePath = null;
     }
 
     private static bool IsSupportedImageFile(string path)

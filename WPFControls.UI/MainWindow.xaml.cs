@@ -15,6 +15,7 @@ public partial class MainWindow : Window
         _settingsService = settingsService;
         RestoreWindowSettings();
         Closing += OnClosing;
+        Closed += OnClosed;
     }
 
     private void RestoreWindowSettings()
@@ -55,5 +56,12 @@ public partial class MainWindow : Window
         settings.WindowWidth = bounds.Width;
         settings.WindowHeight = bounds.Height;
         settings.IsWindowMaximized = WindowState == WindowState.Maximized;
+    }
+
+    private void OnClosed(object? sender, EventArgs e)
+    {
+        Closing -= OnClosing;
+        Closed -= OnClosed;
+        DataContext = null;
     }
 }

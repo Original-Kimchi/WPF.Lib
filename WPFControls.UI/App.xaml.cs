@@ -16,6 +16,7 @@ public partial class App : Application
     private ServiceProvider? _serviceProvider;
     private ILogger<App>? _logger;
     private ISettingsService? _settingsService;
+    private IExceptionHandler? _exceptionHandler;
 
     protected override void OnStartup(StartupEventArgs e)
     {
@@ -33,10 +34,12 @@ public partial class App : Application
 
         _logger = _serviceProvider.GetRequiredService<ILogger<App>>();
         _settingsService = _serviceProvider.GetRequiredService<ISettingsService>();
+        _logger?.LogInformation("Setting Service 호출");
         _settingsService.LoadAsync().GetAwaiter().GetResult();
+        _logger?.LogInformation("Setting Service 호출 완료");
         _serviceProvider.GetRequiredService<IThemeService>().ApplyTheme(_settingsService.Current.Theme);
         RegisterGlobalExceptionHandlers();
-        _logger.LogInformation("애플리케이션을 시작합니다.");
+        _logger?.LogInformation("애플리케이션을 시작합니다.");
 
         MainWindow = _serviceProvider.GetRequiredService<MainWindow>();
         MainWindow.Show();
@@ -44,10 +47,23 @@ public partial class App : Application
 
     protected override void OnExit(ExitEventArgs e)
     {
-        _logger?.LogInformation("애플리케이션을 종료합니다.");
-        _settingsService?.SaveAsync().GetAwaiter().GetResult();
-        _serviceProvider?.Dispose();
-        base.OnExit(e);
+        try
+        {
+            _logger?.LogInformation("애플리케이션을 종료합니다.");
+            _logger?.LogInformation("Setting Service 호출");
+            _settingsService?.SaveAsync().GetAwaiter().GetResult();
+            _logger?.LogInformation("Setting Service 호출 완료");
+        }
+        finally
+        {
+            UnregisterGlobalExceptionHandlers();
+            MainWindow = null;
+            _serviceProvider?.Dispose();
+            _serviceProvider = null;
+            _settingsService = null;
+            _logger = null;
+            base.OnExit(e);
+        }
     }
 
     private static void ConfigureServices(IServiceCollection services)
@@ -84,24 +100,37 @@ public partial class App : Application
 
     private void RegisterGlobalExceptionHandlers()
     {
-        var exceptionHandler = _serviceProvider!.GetRequiredService<IExceptionHandler>();
+        _exceptionHandler = _serviceProvider!.GetRequiredService<IExceptionHandler>();
+        DispatcherUnhandledException += OnDispatcherUnhandledException;
+        AppDomain.CurrentDomain.UnhandledException += OnAppDomainUnhandledException;
+        TaskScheduler.UnobservedTaskException += OnUnobservedTaskException;
+    }
 
-        DispatcherUnhandledException += (_, args) =>
-        {
-            exceptionHandler.Handle(args.Exception, "Dispatcher");
-        };
+    private void UnregisterGlobalExceptionHandlers()
+    {
+        DispatcherUnhandledException -= OnDispatcherUnhandledException;
+        AppDomain.CurrentDomain.UnhandledException -= OnAppDomainUnhandledException;
+        TaskScheduler.UnobservedTaskException -= OnUnobservedTaskException;
+        _exceptionHandler = null;
+    }
 
-        AppDomain.CurrentDomain.UnhandledException += (_, args) =>
-        {
-            var exception = args.ExceptionObject as Exception
-                ?? new InvalidOperationException(args.ExceptionObject?.ToString());
-            exceptionHandler.Handle(exception, "AppDomain", args.IsTerminating);
-        };
+    private void OnDispatcherUnhandledException(
+        object sender,
+        System.Windows.Threading.DispatcherUnhandledExceptionEventArgs args)
+    {
+        _exceptionHandler?.Handle(args.Exception, "Dispatcher");
+    }
 
-        TaskScheduler.UnobservedTaskException += (_, args) =>
-        {
-            exceptionHandler.Handle(args.Exception, "TaskScheduler");
-            args.SetObserved();
-        };
+    private void OnAppDomainUnhandledException(object sender, UnhandledExceptionEventArgs args)
+    {
+        var exception = args.ExceptionObject as Exception
+            ?? new InvalidOperationException(args.ExceptionObject?.ToString());
+        _exceptionHandler?.Handle(exception, "AppDomain", args.IsTerminating);
+    }
+
+    private void OnUnobservedTaskException(object? sender, UnobservedTaskExceptionEventArgs args)
+    {
+        _exceptionHandler?.Handle(args.Exception, "TaskScheduler");
+        args.SetObserved();
     }
 }

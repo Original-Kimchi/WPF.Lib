@@ -82,6 +82,7 @@ public partial class ImageViewer : UserControl
             return;
         }
 
+        Focus();
         _startPoint = Clamp(e.GetPosition(ImageSurface));
         if (Model.DrawingMode == ImageDrawingMode.Pan)
         {
@@ -193,30 +194,66 @@ public partial class ImageViewer : UserControl
             return;
         }
 
+        var constrainToAxis = Keyboard.Modifiers.HasFlag(ModifierKeys.Shift);
         switch (_editOperation)
         {
             case "ResizeStart":
+                if (constrainToAxis)
+                {
+                    current = ConstrainToAxis(current, _originalEnd);
+                }
+
                 _editedAnnotation.Start = current;
                 break;
             case "ResizeEnd":
+                if (constrainToAxis)
+                {
+                    current = ConstrainToAxis(current, _originalStart);
+                }
+
                 _editedAnnotation.End = current;
                 break;
             case "ResizeTopLeft":
+                if (constrainToAxis)
+                {
+                    current = ConstrainToAxis(current, _originalStart);
+                }
+
                 _editedAnnotation.Start = current;
                 break;
             case "ResizeTopRight":
+                if (constrainToAxis)
+                {
+                    current = ConstrainToAxis(current, new Point(_originalEnd.X, _originalStart.Y));
+                }
+
                 _editedAnnotation.Start = new Point(_originalStart.X, current.Y);
                 _editedAnnotation.End = new Point(current.X, _originalEnd.Y);
                 break;
             case "ResizeBottomLeft":
+                if (constrainToAxis)
+                {
+                    current = ConstrainToAxis(current, new Point(_originalStart.X, _originalEnd.Y));
+                }
+
                 _editedAnnotation.Start = new Point(current.X, _originalStart.Y);
                 _editedAnnotation.End = new Point(_originalEnd.X, current.Y);
                 break;
             case "ResizeBottomRight":
+                if (constrainToAxis)
+                {
+                    current = ConstrainToAxis(current, _originalEnd);
+                }
+
                 _editedAnnotation.End = current;
                 break;
             default:
                 var delta = current - _startPoint;
+                if (constrainToAxis)
+                {
+                    delta = ConstrainToAxis(delta);
+                }
+
                 var minX = Math.Min(_originalStart.X, _originalEnd.X);
                 var maxX = Math.Max(_originalStart.X, _originalEnd.X);
                 var minY = Math.Min(_originalStart.Y, _originalEnd.Y);
@@ -227,6 +264,31 @@ public partial class ImageViewer : UserControl
                 _editedAnnotation.End = _originalEnd + delta;
                 break;
         }
+    }
+
+    private void OnPreviewKeyDown(object sender, KeyEventArgs e)
+    {
+        if (e.Key != Key.Delete || Model?.DeleteSelectedCommand.CanExecute(null) != true)
+        {
+            return;
+        }
+
+        Model.DeleteSelectedCommand.Execute(null);
+        e.Handled = true;
+    }
+
+    private static Point ConstrainToAxis(Point current, Point origin)
+    {
+        var delta = current - origin;
+        var constrainedDelta = ConstrainToAxis(delta);
+        return origin + constrainedDelta;
+    }
+
+    private static Vector ConstrainToAxis(Vector delta)
+    {
+        return Math.Abs(delta.X) >= Math.Abs(delta.Y)
+            ? new Vector(delta.X, 0)
+            : new Vector(0, delta.Y);
     }
 
     private static void NormalizeShape(ImageAnnotation annotation)

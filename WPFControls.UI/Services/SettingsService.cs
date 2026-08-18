@@ -36,11 +36,11 @@ public sealed class SettingsService : ISettingsService
 
         try
         {
-            await using var stream = File.OpenRead(_settingsPath);
+            using var stream = File.OpenRead(_settingsPath);
             Current = await JsonSerializer.DeserializeAsync<AppSettings>(
                 stream,
                 SerializerOptions,
-                cancellationToken) ?? new AppSettings();
+                cancellationToken).ConfigureAwait(false) ?? new AppSettings();
         }
         catch (JsonException exception)
         {
@@ -61,12 +61,12 @@ public sealed class SettingsService : ISettingsService
             var directory = Path.GetDirectoryName(_settingsPath)!;
             Directory.CreateDirectory(directory);
 
-            await using var stream = File.Create(_settingsPath);
+            using var stream = File.Create(_settingsPath);
             await JsonSerializer.SerializeAsync(
                 stream,
                 Current,
                 SerializerOptions,
-                cancellationToken);
+                cancellationToken).ConfigureAwait(false);
         }
         catch (IOException exception)
         {

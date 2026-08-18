@@ -4,6 +4,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:converters="clr-namespace:WPF.Lib.Controls.Converters"
              xmlns:models="clr-namespace:WPF.Lib.Controls.Models"
+             Focusable="True"
+             PreviewKeyDown="OnPreviewKeyDown"
              MinWidth="320" MinHeight="240">
     <UserControl.Resources>
         <converters:AnnotationKindToVisibilityConverter x:Key="KindVisibilityConverter" />

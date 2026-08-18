@@ -103,6 +103,15 @@ public class ImageModel : BaseModel
         return new ImageAnnotation(kind, start);
     }
 
+    public void Clear()
+    {
+        SelectedAnnotation = null;
+        Annotations.Clear();
+        Source = null;
+        Scale = 1;
+        DrawingMode = ImageDrawingMode.Pan;
+    }
+
     private void DeleteSelected()
     {
         if (SelectedAnnotation is not null)

@@ -116,23 +116,56 @@ public static class DragDropBehavior
 
         if ((bool)e.OldValue)
         {
-            element.DragOver -= OnDragOver;
-            element.DragLeave -= OnDragLeave;
-            element.Drop -= OnDrop;
+            element.Loaded -= OnDropTargetLoaded;
+            element.Unloaded -= OnDropTargetUnloaded;
+            DetachDropTarget(element);
         }
 
         if ((bool)e.NewValue)
         {
-            element.AllowDrop = true;
-            element.DragOver += OnDragOver;
-            element.DragLeave += OnDragLeave;
-            element.Drop += OnDrop;
+            element.Loaded += OnDropTargetLoaded;
+            element.Unloaded += OnDropTargetUnloaded;
+            if (element.IsLoaded)
+            {
+                AttachDropTarget(element);
+            }
         }
-        else
+    }
+
+    private static void OnDropTargetLoaded(object sender, RoutedEventArgs e)
+    {
+        if (sender is FrameworkElement element && GetIsDropTarget(element))
         {
-            element.AllowDrop = false;
-            element.SetValue(IsDragOverPropertyKey, false);
+            AttachDropTarget(element);
         }
+    }
+
+    private static void OnDropTargetUnloaded(object sender, RoutedEventArgs e)
+    {
+        if (sender is FrameworkElement element)
+        {
+            DetachDropTarget(element);
+        }
+    }
+
+    private static void AttachDropTarget(FrameworkElement element)
+    {
+        element.DragOver -= OnDragOver;
+        element.DragLeave -= OnDragLeave;
+        element.Drop -= OnDrop;
+        element.DragOver += OnDragOver;
+        element.DragLeave += OnDragLeave;
+        element.Drop += OnDrop;
+        element.AllowDrop = true;
+    }
+
+    private static void DetachDropTarget(FrameworkElement element)
+    {
+        element.DragOver -= OnDragOver;
+        element.DragLeave -= OnDragLeave;
+        element.Drop -= OnDrop;
+        element.AllowDrop = false;
+        element.SetValue(IsDragOverPropertyKey, false);
     }
 
     private static void OnPreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)

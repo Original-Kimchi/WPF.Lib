@@ -1,6 +1,7 @@
 using System.IO;
 using System.Windows.Media.Imaging;
 using Microsoft.Extensions.Logging;
+using WPF.Lib.Controls.DragDrop;
 using WPF.Lib.Controls.Models;
 using WPF.Lib.Core.Abstractions;
 using WPF.Lib.Core.Models;
@@ -11,6 +12,17 @@ namespace WPFControls.UI.ViewModels;
 
 public sealed class ImageViewerViewModel : BaseViewModel
 {
+    private static readonly HashSet<string> SupportedImageExtensions = new(StringComparer.OrdinalIgnoreCase)
+    {
+        ".png",
+        ".jpg",
+        ".jpeg",
+        ".bmp",
+        ".gif",
+        ".tif",
+        ".tiff"
+    };
+
     private readonly IFileDialogService _fileDialogService;
     private readonly ILogger<ImageViewerViewModel> _logger;
     private string? _imagePath;
@@ -23,6 +35,7 @@ public sealed class ImageViewerViewModel : BaseViewModel
         _fileDialogService = fileDialogService;
         _logger = logger;
         OpenImageCommand = new RelayCommand(OpenImage);
+        DropImageCommand = new RelayCommand(DropImage, CanDropImage);
     }
 
     public ImageModel Image { get; } = new();
@@ -41,6 +54,8 @@ public sealed class ImageViewerViewModel : BaseViewModel
 
     public RelayCommand OpenImageCommand { get; }
 
+    public RelayCommand DropImageCommand { get; }
+
     private async void OpenImage()
     {
         var path = await _fileDialogService.SelectOpenFileAsync(new FileDialogOptions(
@@ -53,6 +68,41 @@ public sealed class ImageViewerViewModel : BaseViewModel
             return;
         }
 
+        LoadImageFile(path);
+    }
+
+    public bool CanDropFiles(IEnumerable<string>? paths)
+    {
+        return paths?.Any(IsSupportedImageFile) == true;
+    }
+
+    public void DropFiles(IEnumerable<string>? paths)
+    {
+        var path = paths?.FirstOrDefault(IsSupportedImageFile);
+        if (path is null)
+        {
+            StatusMessage = "지원되는 이미지 파일을 드롭해 주세요.";
+            return;
+        }
+
+        LoadImageFile(path);
+    }
+
+    private bool CanDropImage(object? parameter)
+    {
+        return parameter is DragDropInfo info && CanDropFiles(info.Files);
+    }
+
+    private void DropImage(object? parameter)
+    {
+        if (parameter is DragDropInfo info)
+        {
+            DropFiles(info.Files);
+        }
+    }
+
+    private void LoadImageFile(string path)
+    {
         try
         {
             Image.Source = LoadImage(path);
@@ -85,5 +135,10 @@ public sealed class ImageViewerViewModel : BaseViewModel
         image.EndInit();
         image.Freeze();
         return image;
+    }
+
+    private static bool IsSupportedImageFile(string path)
+    {
+        return File.Exists(path) && SupportedImageExtensions.Contains(Path.GetExtension(path));
     }
 }

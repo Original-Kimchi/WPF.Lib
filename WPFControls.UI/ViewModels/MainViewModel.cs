@@ -1,3 +1,5 @@
+using System.Collections.ObjectModel;
+using WPF.Lib.Controls.DragDrop;
 using WPF.Lib.Core.Abstractions;
 using WPF.Lib.Core.Models;
 using WPF.Lib.MVVM;
@@ -39,6 +41,7 @@ public sealed class MainViewModel : BaseViewModel
         ShowErrorToastCommand = new RelayCommand(() => _toastService.Show("요청을 처리하지 못했습니다.", ToastType.Error, duration: TimeSpan.Zero));
         SearchCommand = new RelayCommand(ExecuteSearch);
         ShowBusyCommand = new RelayCommand(ShowBusy, () => !IsBusy);
+        ReorderMemberCommand = new RelayCommand(ReorderMember, CanReorderMember);
     }
 
     public IReadOnlyList<ApplicationTheme> Themes { get; } = Enum.GetValues<ApplicationTheme>();
@@ -105,9 +108,10 @@ public sealed class MainViewModel : BaseViewModel
     public RelayCommand ShowErrorToastCommand { get; }
     public RelayCommand SearchCommand { get; }
     public RelayCommand ShowBusyCommand { get; }
+    public RelayCommand ReorderMemberCommand { get; }
     public IToastService ToastService => _toastService;
 
-    public IReadOnlyList<Member> Members { get; } =
+    public ObservableCollection<Member> Members { get; } =
     [
         new("AK", "Alex Kim", "alex@example.com", "Designer"),
         new("JL", "Jamie Lee", "jamie@example.com", "Developer"),
@@ -151,6 +155,32 @@ public sealed class MainViewModel : BaseViewModel
         finally
         {
             IsBusy = false;
+        }
+    }
+
+    private bool CanReorderMember(object? parameter)
+    {
+        return parameter is DragDropInfo { DraggedItem: Member member, InsertionIndex: >= 0 } &&
+               Members.Contains(member);
+    }
+
+    private void ReorderMember(object? parameter)
+    {
+        if (parameter is not DragDropInfo { DraggedItem: Member member } info)
+        {
+            return;
+        }
+
+        var oldIndex = Members.IndexOf(member);
+        var newIndex = Math.Clamp(info.InsertionIndex, 0, Members.Count);
+        if (oldIndex < newIndex)
+        {
+            newIndex--;
+        }
+
+        if (oldIndex >= 0 && oldIndex != newIndex)
+        {
+            Members.Move(oldIndex, newIndex);
         }
     }
 

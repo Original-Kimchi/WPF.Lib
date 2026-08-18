@@ -8,7 +8,7 @@
 |---|---|---|---|
 | `WPF.Lib.MVVM` | `net8.0` | 데이터 바인딩을 위한 모델 및 뷰 모델 기반 클래스 | [README](WPF.Lib.MVVM/README.md) |
 | `WPF.Lib.Theme` | `net8.0-windows` | 라이트/다크 테마, 공통 컨트롤 스타일, 런타임 테마 전환 | [README](WPF.Lib.Theme/README.md) |
-| `WPF.Lib.Controls` | `net8.0-windows` | 숫자·시간·검색 입력, 진행 상태, 토스트, 이미지 주석 컨트롤 | [README](WPF.Lib.Controls/README.md) |
+| `WPF.Lib.Controls` | `net8.0-windows` | 입력, 피드백, 이미지 주석 컨트롤과 재사용 가능한 드래그 앤 드롭 동작 | [README](WPF.Lib.Controls/README.md) |
 
 ## 프로젝트 참조
 

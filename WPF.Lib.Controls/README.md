@@ -1,6 +1,6 @@
 # WPF.Lib.Controls
 
-.NET 8 WPF 애플리케이션에서 재사용할 수 있는 입력, 피드백, 이미지 표시 컨트롤을 제공합니다. 모든 주요 상태는 의존성 속성 또는 바인딩 가능한 모델로 노출되며, `ImageModel`과 `ImageAnnotation`은 `WPF.Lib.MVVM`의 변경 알림 기반 클래스를 사용합니다.
+.NET 8 WPF 애플리케이션에서 재사용할 수 있는 입력, 피드백, 이미지 표시 컨트롤과 드래그 앤 드롭 동작을 제공합니다. 모든 주요 상태는 의존성 속성 또는 바인딩 가능한 모델로 노출되며, `ImageModel`과 `ImageAnnotation`은 `WPF.Lib.MVVM`의 변경 알림 기반 클래스를 사용합니다.
 
 ## 제공 기능
 
@@ -12,6 +12,7 @@
 | `BusyOverlay` | 콘텐츠 위에 진행 상태 표시 | `Child`, `ChildTemplate`, `IsBusy`, `BusyMessage`, `IsIndeterminate`, `Progress` |
 | `ToastHost` | 자동 닫힘을 지원하는 알림 목록 표시 | `Service` |
 | `ImageViewer` | 확대, 이동, 미니맵, 선·사각형·타원 주석 | `Model`, `FitToViewport()` |
+| `DragDropBehavior` | 파일 드롭과 `ItemsControl` 항목 이동 | `IsDragSource`, `IsDropTarget`, `DropCommand`, `DragGroup`, `IsDragOver` |
 
 ## 참조 및 테마 설정
 
@@ -153,6 +154,20 @@ public ImageModel Image { get; } = new()
 
 주석에 별도 데이터나 동작이 필요하면 `ImageModel.CreateAnnotation`을 재정의하여 사용자 정의 `ImageAnnotation`을 반환할 수 있습니다.
 
+## Drag and Drop
+
+`DragDropBehavior` 연결 속성으로 `ListBox`, `TreeView`, `DataGrid` 등의 항목 드래그와 외부 파일 드롭을 뷰 모델 명령에 연결할 수 있습니다. 드롭 명령은 `DragDropInfo`를 받아 원본 항목, 대상 항목, 삽입 위치, 파일 경로를 확인합니다.
+
+```xaml
+<ListBox ItemsSource="{Binding Items}"
+         dragDrop:DragDropBehavior.IsDragSource="True"
+         dragDrop:DragDropBehavior.IsDropTarget="True"
+         dragDrop:DragDropBehavior.DragGroup="Items"
+         dragDrop:DragDropBehavior.DropCommand="{Binding ReorderCommand}" />
+```
+
+공개 API, 목록 재정렬, 파일 드롭, 상태 표시 방법은 [Drag and Drop 문서](DRAG_DROP.md)를 참고합니다.
+
 ## 파일 구조
 
 ```text
@@ -167,6 +182,10 @@ WPF.Lib.Controls/
 │  ├─ TimePicker.xaml
 │  └─ ToastHost.xaml
 ├─ Converters/
+├─ DragDrop/
+│  ├─ DragDropBehavior.cs
+│  ├─ DragDropInfo.cs
+│  └─ DropPosition.cs
 ├─ Models/
 ├─ Services/
 │  └─ ToastService.cs

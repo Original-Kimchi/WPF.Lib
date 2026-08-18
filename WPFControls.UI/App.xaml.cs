@@ -15,6 +15,7 @@ public partial class App : Application
 {
     private ServiceProvider? _serviceProvider;
     private ILogger<App>? _logger;
+    private ISettingsService? _settingsService;
 
     protected override void OnStartup(StartupEventArgs e)
     {
@@ -31,6 +32,9 @@ public partial class App : Application
             });
 
         _logger = _serviceProvider.GetRequiredService<ILogger<App>>();
+        _settingsService = _serviceProvider.GetRequiredService<ISettingsService>();
+        _settingsService.LoadAsync().GetAwaiter().GetResult();
+        _serviceProvider.GetRequiredService<IThemeService>().ApplyTheme(_settingsService.Current.Theme);
         RegisterGlobalExceptionHandlers();
         _logger.LogInformation("애플리케이션을 시작합니다.");
 
@@ -41,6 +45,7 @@ public partial class App : Application
     protected override void OnExit(ExitEventArgs e)
     {
         _logger?.LogInformation("애플리케이션을 종료합니다.");
+        _settingsService?.SaveAsync().GetAwaiter().GetResult();
         _serviceProvider?.Dispose();
         base.OnExit(e);
     }
@@ -65,6 +70,9 @@ public partial class App : Application
         services.AddSingleton<IDialogService, DialogService>();
         services.AddSingleton<IFileDialogService, FileDialogService>();
         services.AddSingleton<IThemeService, ThemeService>();
+        services.AddSingleton<ISettingsService, SettingsService>();
+        services.AddSingleton<IAppLifetimeService, AppLifetimeService>();
+        services.AddSingleton<IExceptionHandler, ExceptionHandler>();
         services.AddSingleton<IToastService, ToastService>();
 
         services.AddSingleton<MainViewModel>();
@@ -76,22 +84,23 @@ public partial class App : Application
 
     private void RegisterGlobalExceptionHandlers()
     {
+        var exceptionHandler = _serviceProvider!.GetRequiredService<IExceptionHandler>();
+
         DispatcherUnhandledException += (_, args) =>
         {
-            _logger?.LogCritical(args.Exception, "UI 스레드에서 처리되지 않은 예외가 발생했습니다.");
+            exceptionHandler.Handle(args.Exception, "Dispatcher");
         };
 
         AppDomain.CurrentDomain.UnhandledException += (_, args) =>
         {
-            _logger?.LogCritical(
-                args.ExceptionObject as Exception,
-                "처리되지 않은 애플리케이션 예외가 발생했습니다. 종료 여부: {IsTerminating}",
-                args.IsTerminating);
+            var exception = args.ExceptionObject as Exception
+                ?? new InvalidOperationException(args.ExceptionObject?.ToString());
+            exceptionHandler.Handle(exception, "AppDomain", args.IsTerminating);
         };
 
         TaskScheduler.UnobservedTaskException += (_, args) =>
         {
-            _logger?.LogError(args.Exception, "관찰되지 않은 Task 예외가 발생했습니다.");
+            exceptionHandler.Handle(args.Exception, "TaskScheduler");
             args.SetObserved();
         };
     }

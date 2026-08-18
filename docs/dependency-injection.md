@@ -12,6 +12,9 @@
 services.AddSingleton<IMenuService, MenuService>();
 services.AddSingleton<IDialogService, DialogService>();
 services.AddSingleton<IThemeService, ThemeService>();
+services.AddSingleton<ISettingsService, SettingsService>();
+services.AddSingleton<IAppLifetimeService, AppLifetimeService>();
+services.AddSingleton<IExceptionHandler, ExceptionHandler>();
 
 services.AddSingleton<MainViewModel>();
 services.AddSingleton<ShellViewModel>();
@@ -26,6 +29,9 @@ services.AddSingleton<MainWindow>();
 | `IMenuService` | 표시할 메뉴 정의 제공 |
 | `IDialogService` | WPF 다이얼로그 생성 및 표시 |
 | `IThemeService` | 라이트·다크 테마 적용 |
+| `ISettingsService` | 테마와 창 위치·크기 설정을 JSON으로 저장·복원 |
+| `IAppLifetimeService` | ViewModel에서 WPF 타입 없이 애플리케이션 종료 요청 |
+| `IExceptionHandler` | 전역 예외의 일관된 로깅 |
 | `MainViewModel` | Main 화면의 데이터와 명령 관리 |
 | `ShellViewModel` | 메뉴 선택과 현재 화면 관리 |
 | `MainWindow` | 애플리케이션 셸 Window |

@@ -14,6 +14,7 @@ public sealed class MainViewModel : BaseViewModel
 {
     private readonly IDialogService _dialogService;
     private readonly IThemeService _themeService;
+    private readonly ISettingsService _settingsService;
     private readonly ILogger<MainViewModel> _logger;
     private readonly IToastService _toastService;
     private ApplicationTheme _selectedTheme = ApplicationTheme.Light;
@@ -27,13 +28,16 @@ public sealed class MainViewModel : BaseViewModel
     public MainViewModel(
         IDialogService dialogService,
         IThemeService themeService,
+        ISettingsService settingsService,
         IToastService toastService,
         ILogger<MainViewModel> logger)
     {
         _dialogService = dialogService;
         _themeService = themeService;
+        _settingsService = settingsService;
         _toastService = toastService;
         _logger = logger;
+        _selectedTheme = themeService.CurrentTheme;
         ShowDialogCommand = new RelayCommand(ShowDialog);
         ShowInfoToastCommand = new RelayCommand(() => _toastService.Show("새로운 업데이트를 확인할 수 있습니다."));
         ShowSuccessToastCommand = new RelayCommand(() => _toastService.Show("변경 사항이 저장되었습니다.", ToastType.Success));
@@ -54,6 +58,7 @@ public sealed class MainViewModel : BaseViewModel
             if (SetProperty(ref _selectedTheme, value))
             {
                 _themeService.ApplyTheme(value);
+                _settingsService.Current.Theme = value;
                 _logger.LogInformation("테마를 변경했습니다. Theme: {Theme}", value);
             }
         }

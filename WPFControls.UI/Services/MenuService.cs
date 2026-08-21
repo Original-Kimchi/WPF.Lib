@@ -14,6 +14,12 @@ public sealed class MenuService : IMenuService
             Icon: "ViewDashboardOutline",
             Order: 0),
         new(
+            Id: "schedule",
+            Title: "일정 관리",
+            Route: "schedule",
+            Icon: "CalendarMonthOutline",
+            Order: 5),
+        new(
             Id: "image-viewer",
             Title: "Image Viewer",
             Route: "image-viewer",

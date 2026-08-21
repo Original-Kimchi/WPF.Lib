@@ -57,7 +57,6 @@
     <Style x:Key="ModernCalendarItemStyle" TargetType="CalendarItem">
         <Setter Property="Background" Value="{DynamicResource SurfaceBrush}" />
         <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
-        <Setter Property="MinWidth" Value="270" />
         <Setter Property="MinHeight" Value="250" />
         <Setter Property="Template">
             <Setter.Value>
@@ -69,17 +68,19 @@
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
-                            <Grid Margin="0,0,0,6">
+                            <Grid Margin="0,0,0,10">
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="32" />
+                                    <ColumnDefinition Width="36" />
+                                    <ColumnDefinition Width="8" />
                                     <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="32" />
+                                    <ColumnDefinition Width="8" />
+                                    <ColumnDefinition Width="36" />
                                 </Grid.ColumnDefinitions>
-                                <Button x:Name="PART_PreviousButton" Padding="0" Content="‹"
+                                <Button x:Name="PART_PreviousButton" MinWidth="0" Padding="0" Content="‹"
                                         FontSize="18" Foreground="{DynamicResource ForegroundBrush}" />
-                                <Button x:Name="PART_HeaderButton" Grid.Column="1" Padding="6,3"
+                                <Button x:Name="PART_HeaderButton" Grid.Column="2" MinWidth="0" Padding="6,3"
                                         FontWeight="SemiBold" Foreground="{DynamicResource PrimaryForegroundBrush}" />
-                                <Button x:Name="PART_NextButton" Grid.Column="2" Padding="0" Content="›"
+                                <Button x:Name="PART_NextButton" Grid.Column="4" MinWidth="0" Padding="0" Content="›"
                                         FontSize="18" Foreground="{DynamicResource ForegroundBrush}" />
                             </Grid>
                             <Grid x:Name="PART_MonthView" Grid.Row="1">

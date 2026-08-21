@@ -15,6 +15,9 @@
         <DataTemplate DataType="{x:Type viewModels:MainViewModel}">
             <views:MainView />
         </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModels:ScheduleViewModel}">
+            <views:ScheduleView />
+        </DataTemplate>
         <DataTemplate DataType="{x:Type viewModels:ImageViewerViewModel}">
             <views:ImageViewerView />
         </DataTemplate>

@@ -90,8 +90,10 @@ public partial class App : Application
         services.AddSingleton<IAppLifetimeService, AppLifetimeService>();
         services.AddSingleton<IExceptionHandler, ExceptionHandler>();
         services.AddSingleton<IToastService, ToastService>();
+        services.AddSingleton<ScheduleStorageService>();
 
         services.AddSingleton<MainViewModel>();
+        services.AddSingleton<ScheduleViewModel>();
         services.AddSingleton<ImageViewerViewModel>();
         services.AddSingleton<ShellViewModel>();
 

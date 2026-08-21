@@ -1,6 +1,8 @@
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Threading;
 using WPF.Lib.Controls.Models;
 
 namespace WPF.Lib.Controls.Controls;
@@ -21,10 +23,13 @@ public partial class ImageViewer : UserControl
     private Point _originalEnd;
     private string? _editOperation;
     private bool _isPanning;
+    private bool _fitPending;
 
     public ImageViewer()
     {
         InitializeComponent();
+        Loaded += OnLoaded;
+        SizeChanged += OnSizeChanged;
     }
 
     public ImageModel? Model
@@ -35,7 +40,57 @@ public partial class ImageViewer : UserControl
 
     private static void OnModelChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args)
     {
-        ((ImageViewer)sender).UpdateMiniMapViewport();
+        var viewer = (ImageViewer)sender;
+
+        if (args.OldValue is ImageModel oldModel)
+        {
+            PropertyChangedEventManager.RemoveHandler(
+                oldModel, viewer.OnModelPropertyChanged, nameof(ImageModel.Source));
+        }
+
+        if (args.NewValue is ImageModel newModel)
+        {
+            PropertyChangedEventManager.AddHandler(
+                newModel, viewer.OnModelPropertyChanged, nameof(ImageModel.Source));
+        }
+
+        viewer.RequestFitToViewport();
+        viewer.UpdateMiniMapViewport();
+    }
+
+    private void OnModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(ImageModel.Source))
+        {
+            RequestFitToViewport();
+        }
+    }
+
+    private void RequestFitToViewport()
+    {
+        _fitPending = Model?.Source is not null;
+        if (!_fitPending)
+        {
+            return;
+        }
+
+        Dispatcher.BeginInvoke(DispatcherPriority.Loaded, TryFitToViewport);
+    }
+
+    private void OnLoaded(object sender, RoutedEventArgs e)
+    {
+        if (_fitPending)
+        {
+            TryFitToViewport();
+        }
+    }
+
+    private void OnSizeChanged(object sender, SizeChangedEventArgs e)
+    {
+        if (_fitPending)
+        {
+            TryFitToViewport();
+        }
     }
 
     private void OnPreviewMouseWheel(object sender, MouseWheelEventArgs e)
@@ -56,6 +111,12 @@ public partial class ImageViewer : UserControl
 
     public void FitToViewport()
     {
+        _fitPending = true;
+        TryFitToViewport();
+    }
+
+    private void TryFitToViewport()
+    {
         if (Model?.Source is null ||
             Model.Source.Width <= 0 || Model.Source.Height <= 0 ||
             ImageScrollViewer.ViewportWidth <= 0 || ImageScrollViewer.ViewportHeight <= 0)
@@ -70,6 +131,7 @@ public partial class ImageViewer : UserControl
         var verticalScale = availableHeight / Model.Source.Height;
 
         Model.Scale = Math.Min(horizontalScale, verticalScale);
+        _fitPending = false;
         ImageScrollViewer.UpdateLayout();
         ImageScrollViewer.ScrollToHome();
         UpdateMiniMapViewport();

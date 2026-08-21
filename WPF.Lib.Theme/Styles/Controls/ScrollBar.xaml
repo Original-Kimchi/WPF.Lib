@@ -102,4 +102,12 @@
             </Trigger>
         </Style.Triggers>
     </Style>
+
+    <Style TargetType="ScrollViewer">
+        <Setter Property="Background" Value="Transparent" />
+        <Style.Resources>
+            <!-- The default WPF template uses this brush where both scroll bars meet. -->
+            <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="Transparent" />
+        </Style.Resources>
+    </Style>
 </ResourceDictionary>

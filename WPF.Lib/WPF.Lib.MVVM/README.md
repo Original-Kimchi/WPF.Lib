@@ -1,36 +1,30 @@
 # WPF.Lib.MVVM
 
-WPF 데이터 바인딩에 필요한 최소 기반 클래스를 제공하는 .NET 8 클래스 라이브러리입니다. WPF 어셈블리에 직접 의존하지 않으므로 UI와 무관한 모델 및 뷰 모델에서도 사용할 수 있습니다.
-
-## 제공 API
-
-### `BaseModel`
-
-`INotifyPropertyChanged`를 구현하는 추상 클래스입니다.
-
-- `PropertyChanged`: 바인딩 대상 속성의 변경 알림 이벤트
-- `OnPropertyChanged(string? propertyName = null)`: 지정한 속성의 변경 알림 발생
-- `SetProperty<T>(ref T field, T value, string? propertyName = null)`: 값이 실제로 바뀐 경우에만 필드를 갱신하고 알림 발생
-
-`OnPropertyChanged`와 `SetProperty`는 `CallerMemberName`을 사용하므로 일반적인 속성 setter에서는 속성 이름을 생략할 수 있습니다. `SetProperty`는 값이 변경되면 `true`, 동일하면 `false`를 반환합니다.
-
-### `BaseViewModel`
-
-`BaseModel`을 상속하는 뷰 모델용 추상 클래스입니다. 현재 추가 동작은 없으며 모델과 뷰 모델의 역할을 타입 수준에서 구분합니다.
+데이터 바인딩에 필요한 변경 알림, 명령, 셸 및 다이얼로그 ViewModel 기반을 제공하는 `net8.0` 라이브러리입니다. WPF 어셈블리에 직접 의존하지 않아 UI 독립 ViewModel과 단위 테스트에서 사용할 수 있습니다.
 
 ## 참조
 
-저장소 루트에서 다음 명령을 실행합니다.
-
 ```powershell
-dotnet add <애플리케이션.csproj> reference WPF.Lib/WPF.Lib.MVVM/WPF.Lib.MVVM.csproj
+dotnet add <프로젝트.csproj> reference WPF.Lib/WPF.Lib.MVVM/WPF.Lib.MVVM.csproj
 ```
 
-## 사용 예제
+## 제공 API
+
+| 형식 | 역할 |
+|---|---|
+| `BaseModel` | `INotifyPropertyChanged`, `OnPropertyChanged`, `SetProperty` 제공 |
+| `BaseViewModel` | 모델과 ViewModel 역할을 구분하는 기본 형식 |
+| `BaseMainViewModel<TMenu>` | 메뉴 선택과 현재 화면 ViewModel 전환의 공통 흐름 |
+| `RelayCommand` | 동기 `ICommand`, 실행 가능 조건과 상태 갱신 제공 |
+| `BaseDialogViewModel` | 제목, 버튼, 확인 가능 조건, 닫기 요청 제공 |
+| `DialogButtonMode` | 버튼 없음, 확인, 확인·취소 구성 |
+| `DialogOutcome` | 확인 또는 취소 결과 |
+
+## 변경 알림
+
+`SetProperty`는 값이 실제로 바뀐 경우에만 필드를 갱신하고 알림을 발생시킵니다. 변경되면 `true`, 동일하면 `false`를 반환합니다.
 
 ```csharp
-using WPF.Lib.MVVM;
-
 public sealed class CustomerViewModel : BaseViewModel
 {
     private string _name = string.Empty;
@@ -38,32 +32,95 @@ public sealed class CustomerViewModel : BaseViewModel
     public string Name
     {
         get => _name;
-        set => SetProperty(ref _name, value);
+        set
+        {
+            if (SetProperty(ref _name, value))
+            {
+                OnPropertyChanged(nameof(DisplayName));
+            }
+        }
+    }
+
+    public string DisplayName => $"고객: {Name}";
+}
+```
+
+## 명령
+
+`RelayCommand`는 매개변수 없는 대리자와 `object?` 매개변수 대리자를 모두 지원합니다. 실행 가능 조건에 영향을 주는 상태가 바뀌면 `NotifyCanExecuteChanged`를 호출합니다.
+
+```csharp
+public RelayCommand SaveCommand { get; }
+
+public EditorViewModel()
+{
+    SaveCommand = new RelayCommand(Save, () => HasChanges);
+}
+
+private void OnHasChangesChanged()
+{
+    SaveCommand.NotifyCanExecuteChanged();
+}
+```
+
+현재 `RelayCommand`는 동기 명령입니다. 장시간 I/O는 서비스의 비동기 메서드와 별도의 중복 실행 방지 상태를 사용하거나, 공용 비동기 명령을 추가한 뒤 사용합니다.
+
+## 셸 ViewModel
+
+`BaseMainViewModel<TMenu>`는 `SelectedMenu`가 바뀌면 `ResolveViewModel`을 호출해 `CurrentViewModel`을 교체합니다. 파생 클래스 생성이 끝난 뒤 `SelectInitialMenu`를 호출해야 첫 메뉴가 선택됩니다.
+
+```csharp
+public sealed class ShellViewModel : BaseMainViewModel<MenuItemDefinition>
+{
+    public ShellViewModel(IMenuService menuService)
+        : base(menuService.GetMenus())
+    {
+        SelectInitialMenu();
+    }
+
+    protected override object? ResolveViewModel(MenuItemDefinition menu)
+    {
+        return menu.Route switch
+        {
+            "home" => new HomeViewModel(),
+            _ => null
+        };
     }
 }
 ```
 
-값 변경 뒤 추가 작업이 필요하면 반환값을 사용합니다.
+실제 앱에서는 `ResolveViewModel` 안에서 ViewModel을 직접 생성하기보다 DI로 주입받은 인스턴스나 탐색 서비스를 사용하는 것이 좋습니다.
+
+## 다이얼로그 ViewModel
+
+`BaseDialogViewModel`을 상속해 확인 가능 조건과 결과를 정의합니다. 입력 상태가 바뀌면 `RefreshConfirmCommand`를 호출합니다. View는 `CloseRequested` 이벤트를 받아 창을 닫고 `DialogOutcome`을 반환합니다.
 
 ```csharp
-if (SetProperty(ref _name, value))
+public sealed class RenameDialogViewModel : BaseDialogViewModel
 {
-    OnPropertyChanged(nameof(DisplayName));
+    private string _name = string.Empty;
+
+    public string Name
+    {
+        get => _name;
+        set
+        {
+            if (SetProperty(ref _name, value))
+            {
+                RefreshConfirmCommand();
+            }
+        }
+    }
+
+    protected override bool CanConfirm() => !string.IsNullOrWhiteSpace(Name);
 }
 ```
 
-## 파일 구조
-
-```text
-WPF.Lib.MVVM/
-├─ BaseModel.cs
-├─ BaseViewModel.cs
-└─ WPF.Lib.MVVM.csproj
-```
+`WPF.Lib.Theme.Controls.BaseDialogView`는 이 닫기 요청을 WPF Window에 연결하는 기본 View입니다.
 
 ## 확장 지침
 
-- UI와 무관한 상태 및 로직만 이 프로젝트에 둡니다.
-- 속성 setter에서 직접 `PropertyChanged`를 발생시키기보다 `SetProperty`를 사용합니다.
-- 계산 속성처럼 함께 바뀌는 속성은 `OnPropertyChanged`로 명시합니다.
-- 명령, 검증 등 공통 기능을 추가할 때는 UI 독립성을 유지하고 단위 테스트를 함께 추가합니다.
+- UI와 무관한 상태 및 흐름만 둡니다.
+- ViewModel에서 WPF 창, 메시지 상자, Dispatcher를 직접 사용하지 않습니다.
+- 계산 속성은 관련 원본 속성이 바뀔 때 `OnPropertyChanged`로 알립니다.
+- 공통 명령이나 검증 기능을 추가할 때 UI 독립성과 단위 테스트 가능성을 유지합니다.

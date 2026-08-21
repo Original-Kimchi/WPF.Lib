@@ -61,10 +61,14 @@ ThemeManager.ApplyTheme(ThemeKind.Light);
 | 주요 동작 전경 | `PrimaryForegroundColor` | `PrimaryForegroundBrush` | `#FFFFFF` | `#FFFFFF` |
 | 주요 동작 Hover | `PrimaryHoverColor` | `PrimaryHoverBrush` | `#1D4ED8` | `#93C5FD` |
 | 위험 동작 | `DangerColor` | `DangerBrush` | `#DC2626` | `#F87171` |
+| 정보 | `InfoColor` | `InfoBrush` | `#2563EB` | `#60A5FA` |
+| 성공 | `SuccessColor` | `SuccessBrush` | `#16A34A` | `#4ADE80` |
+| 경고 | `WarningColor` | `WarningBrush` | `#D97706` | `#FBBF24` |
 | 교차 표면 | `SurfaceAlternateColor` | `SurfaceAlternateBrush` | `#F9FAFB` | `#182234` |
 | 헤더 | `HeaderColor` | `HeaderBrush` | `#F3F4F6` | `#263244` |
 | Hover | `HoverColor` | `HoverBrush` | `#EFF6FF` | `#263A55` |
 | 선택 | `SelectionColor` | `SelectionBrush` | `#DBEAFE` | `#1E3A5F` |
+| 오버레이 | `OverlayColor` | `OverlayBrush` | `#990F172A` | `#B3000000` |
 
 주요 색상 위의 텍스트나 아이콘에는 고정된 흰색 대신 `PrimaryForegroundBrush`를 사용합니다.
 
@@ -72,12 +76,13 @@ ThemeManager.ApplyTheme(ThemeKind.Light);
 
 다음 컨트롤에는 키 없는 암시적 스타일이 자동 적용됩니다.
 
-- `Window`, `TextBlock`, `TextBox`, `Button`
-- `ComboBox`, `ComboBoxItem`
-- `ScrollBar`
-- `ListBox`, `ListBoxItem`
+- `Window`, `TextBlock`, `TextBox`, `PasswordBox`, `Button`, `ToggleButton`
+- `CheckBox`, `RadioButton`, `ComboBox`, `ComboBoxItem`
+- `Menu`, `ContextMenu`, `MenuItem`, `ScrollBar`, `ScrollViewer`
+- `ListBox`, `ListBoxItem`, `TreeView`, `TreeViewItem`
 - `DataGrid`, `DataGridColumnHeader`, `DataGridCell`, `DataGridRow`
-- `TabControl`, `TabItem`
+- `TabControl`, `TabItem`, `DatePicker`, `Calendar`
+- `ProgressBar`, `Slider`, `Expander`, `GroupBox`
 
 필요할 때 명시적으로 사용할 수 있는 주요 스타일은 다음과 같습니다.
 
@@ -89,6 +94,9 @@ ThemeManager.ApplyTheme(ThemeKind.Light);
 | `ModernListBoxItemStyle` | `ListBoxItem` | Hover 및 선택 상태가 적용된 항목 컨테이너 |
 | `DataGridCellRightStyle` | `DataGridCell` | 오른쪽 정렬 셀 |
 | `DataGridCellCenterStyle` | `DataGridCell` | 가운데 정렬 셀 |
+| `BaseDialogViewStyle` | `BaseDialogView` | 제목과 확인·취소 영역을 포함한 다이얼로그 |
+| `DialogSecondaryButtonStyle` | `Button` | 다이얼로그 보조 동작 버튼 |
+| `DialogCloseButtonStyle` | `Button` | 다이얼로그 닫기 버튼 |
 
 ## 창 제어 버튼
 
@@ -107,18 +115,14 @@ ThemeManager.ApplyTheme(ThemeKind.Light);
 ```text
 WPF.Lib.Theme/
 ├─ Controls/
+│  ├─ BaseDialogView.cs
 │  └─ WindowCaptionButton.cs
 ├─ Styles/
 │  ├─ Controls/
 │  │  ├─ Button.xaml
-│  │  ├─ ComboBox.xaml
-│  │  ├─ DataGrid.xaml
-│  │  ├─ ListBox.xaml
-│  │  ├─ ScrollBar.xaml
-│  │  ├─ TabControl.xaml
-│  │  ├─ TextBlock.xaml
-│  │  ├─ TextBox.xaml
-│  │  └─ Window.xaml
+│  │  ├─ Dialog.xaml
+│  │  ├─ SelectionControls.xaml
+│  │  └─ ...
 │  └─ ModernControls.xaml
 ├─ Theme/
 │  ├─ DarkTheme.xaml
@@ -134,3 +138,5 @@ WPF.Lib.Theme/
 3. 테마에 따라 바뀌는 값에는 하드코딩된 색상 대신 `DynamicResource`를 사용합니다.
 4. 기본, Hover, Focus, 선택, 비활성 상태를 함께 확인합니다.
 5. 주요 색상 배경 위의 전경에는 `PrimaryForegroundBrush`를 사용합니다.
+
+새 솔루션의 프로젝트 배치와 앱 초기화 전체 예시는 [WPF.Lib 도입 가이드](../../docs/library-adoption-guide.md)를 참고합니다.

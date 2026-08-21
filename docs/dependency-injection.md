@@ -11,12 +11,17 @@
 ```csharp
 services.AddSingleton<IMenuService, MenuService>();
 services.AddSingleton<IDialogService, DialogService>();
+services.AddSingleton<IFileDialogService, FileDialogService>();
 services.AddSingleton<IThemeService, ThemeService>();
 services.AddSingleton<ISettingsService, SettingsService>();
 services.AddSingleton<IAppLifetimeService, AppLifetimeService>();
 services.AddSingleton<IExceptionHandler, ExceptionHandler>();
+services.AddSingleton<IToastService, ToastService>();
+services.AddSingleton<ScheduleStorageService>();
 
 services.AddSingleton<MainViewModel>();
+services.AddSingleton<ScheduleViewModel>();
+services.AddSingleton<ImageViewerViewModel>();
 services.AddSingleton<ShellViewModel>();
 
 services.AddSingleton<MainWindow>();
@@ -28,11 +33,16 @@ services.AddSingleton<MainWindow>();
 | --- | --- |
 | `IMenuService` | 표시할 메뉴 정의 제공 |
 | `IDialogService` | WPF 다이얼로그 생성 및 표시 |
+| `IFileDialogService` | 파일 열기·저장 대화상자 표시 |
 | `IThemeService` | 라이트·다크 테마 적용 |
 | `ISettingsService` | 테마와 창 위치·크기 설정을 JSON으로 저장·복원 |
 | `IAppLifetimeService` | ViewModel에서 WPF 타입 없이 애플리케이션 종료 요청 |
 | `IExceptionHandler` | 전역 예외의 일관된 로깅 |
+| `IToastService` | 화면과 ViewModel이 공유하는 토스트 알림 상태 관리 |
+| `ScheduleStorageService` | 일정 데이터를 파일에 저장하고 복원 |
 | `MainViewModel` | Main 화면의 데이터와 명령 관리 |
+| `ScheduleViewModel` | 일정 화면의 데이터와 명령 관리 |
+| `ImageViewerViewModel` | 이미지 뷰어 화면의 상태와 명령 관리 |
 | `ShellViewModel` | 메뉴 선택과 현재 화면 관리 |
 | `MainWindow` | 애플리케이션 셸 Window |
 
@@ -98,3 +108,5 @@ public SettingsViewModel(ISettingsService settingsService)
 - ViewModel이 `Window`, `MessageBox` 등 WPF 타입을 직접 사용하지 않도록 서비스 인터페이스를 이용합니다.
 - `BuildServiceProvider`는 `App.OnStartup`에서 한 번만 호출합니다.
 - 앱 종료 시 `ServiceProvider.Dispose()`를 호출해 `IDisposable` 서비스가 정리되도록 합니다.
+
+다른 솔루션에서의 프로젝트 분리와 전체 초기 구성은 [WPF.Lib 도입 가이드](library-adoption-guide.md)를 참고합니다.

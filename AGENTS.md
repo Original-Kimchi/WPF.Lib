@@ -2,7 +2,7 @@
 
 ## Project Structure & Module Organization
 
-The repository contains a .NET 8 WPF application and reusable theme and MVVM libraries. `WPFControls.UI.sln` is the solution entry point. `WPFControls.UI/` contains the application, while `WPF.Lib/WPF.Lib.Theme/` and `WPF.Lib/WPF.Lib.MVVM/` contain the reusable libraries. Light and dark resource dictionaries live under `WPF.Lib/WPF.Lib.Theme/Theme/`. Keep both theme files aligned when adding resource keys. Application startup lives in `App.xaml` and `App.xaml.cs`; the initial window is defined by `MainWindow.xaml` and its code-behind. Keep each control's XAML and code-behind together and use feature-oriented folders such as `Controls/`, `ViewModels/`, and `Converters/` as the application grows. There is currently no test project.
+The repository contains a .NET 8 WPF application and reusable Core, MVVM, Theme, Controls, and Logging libraries. `WPFControls.UI.sln` is the solution entry point. `WPFControls.UI/` contains the sample application, while the projects under `WPF.Lib/` contain reusable libraries. Light and dark resource dictionaries live under `WPF.Lib/WPF.Lib.Theme/Theme/`. Keep both theme files aligned when adding resource keys. Application startup lives in `App.xaml` and `App.xaml.cs`; the initial window is defined by `MainWindow.xaml` and its code-behind. Keep each control's XAML and code-behind together and use feature-oriented folders such as `Controls/`, `ViewModels/`, and `Converters/` as the application grows. There is currently no test project.
 
 ## Build, Test, and Development Commands
 
@@ -30,4 +30,4 @@ Add tests in a sibling project such as `WPFControls.UI.Tests/`, named after the 
 
 ## Commit & Pull Request Guidelines
 
-History currently contains only `Initial commit`, so no established convention exists. Use concise, imperative subjects such as `Add numeric input validation`; keep each commit focused. Pull requests should explain intent, summarize verification commands, link relevant issues, and include screenshots or a short recording for visible UI changes. Call out breaking API, resource, or configuration changes explicitly.
+The history uses short Korean and English subjects but has no strict commit convention. Use a concise, imperative subject such as `Add numeric input validation` or its Korean equivalent, and keep each commit focused. Pull requests should explain intent, summarize verification commands, link relevant issues, and include screenshots or a short recording for visible UI changes. Call out breaking API, resource, or configuration changes explicitly.

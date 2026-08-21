@@ -13,6 +13,7 @@
 | `ToastHost` | 자동 닫힘을 지원하는 알림 목록 표시 | `Service` |
 | `ImageViewer` | 확대, 이동, 미니맵, 선·사각형·타원 주석 | `Model`, `FitToViewport()` |
 | `DragDropBehavior` | 파일 드롭과 `ItemsControl` 항목 이동 | `IsDragSource`, `IsDropTarget`, `DropCommand`, `DragGroup`, `IsDragOver` |
+| `NestedScrollBehavior` | 안쪽 스크롤 경계에서 휠 입력을 바깥 스크롤로 전달 | `IsEnabled` |
 
 ## 참조 및 테마 설정
 
@@ -168,12 +169,25 @@ public ImageModel Image { get; } = new()
 
 공개 API, 목록 재정렬, 파일 드롭, 상태 표시 방법은 [Drag and Drop 문서](DRAG_DROP.md)를 참고합니다.
 
+## 중첩 스크롤
+
+`NestedScrollBehavior`는 라이브러리가 로드될 때 자동 등록되며 기본값이 활성화되어 있습니다. 안쪽 `ScrollViewer`가 위·아래 경계에 도달하면 휠 입력을 스크롤 가능한 부모로 전달하고, Shift+휠은 가로 스크롤에 사용합니다. 특정 영역에서 비활성화하려면 연결 속성을 지정합니다.
+
+```xaml
+<ScrollViewer xmlns:behaviors="clr-namespace:WPF.Lib.Controls.Behaviors;assembly=WPF.Lib.Controls"
+              behaviors:NestedScrollBehavior.IsEnabled="False">
+    <!-- 이 영역은 휠 입력을 부모로 전달하지 않습니다. -->
+</ScrollViewer>
+```
+
 ## 파일 구조
 
 ```text
 WPF.Lib.Controls/
 ├─ Abstractions/
 │  └─ IToastService.cs
+├─ Behaviors/
+│  └─ NestedScrollBehavior.cs
 ├─ Controls/
 │  ├─ BusyOverlay.xaml
 │  ├─ ImageViewer.xaml
@@ -189,6 +203,7 @@ WPF.Lib.Controls/
 ├─ Models/
 ├─ Services/
 │  └─ ToastService.cs
+├─ ControlsModuleInitializer.cs
 └─ WPF.Lib.Controls.csproj
 ```
 
@@ -202,3 +217,5 @@ dotnet format WPFControls.UI.sln --verify-no-changes
 ```
 
 컨트롤을 변경할 때는 라이트·다크 테마에서 기본, hover, focus, 선택, 비활성, 팝업 상태를 함께 확인합니다. 템플릿의 텍스트와 아이콘에는 시스템 기본색 대신 적절한 동적 테마 브러시를 사용합니다.
+
+새 솔루션의 프로젝트 배치와 앱 초기화 전체 예시는 [WPF.Lib 도입 가이드](../../docs/library-adoption-guide.md)를 참고합니다.

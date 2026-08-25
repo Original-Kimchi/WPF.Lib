@@ -54,6 +54,7 @@
         <Setter Property="FontFamily" Value="Segoe UI" />
         <Setter Property="FontSize" Value="14" />
         <Setter Property="WindowStyle" Value="None" />
+        <Setter Property="controls:WindowWorkAreaBehavior.ConstrainMaximizedWindow" Value="True" />
         <Setter Property="shell:WindowChrome.WindowChrome">
             <Setter.Value>
                 <shell:WindowChrome CaptionHeight="44"

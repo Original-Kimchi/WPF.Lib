@@ -21,6 +21,9 @@
         <DataTemplate DataType="{x:Type viewModels:ImageViewerViewModel}">
             <views:ImageViewerView />
         </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModels:DummyJsonViewModel}">
+            <views:DummyJsonView />
+        </DataTemplate>
     </Window.Resources>
     <Grid Background="{DynamicResource BackgroundBrush}">
         <Grid.ColumnDefinitions>

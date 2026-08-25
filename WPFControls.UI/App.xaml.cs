@@ -92,15 +92,17 @@ public partial class App : Application
         services.AddSingleton<IExceptionHandler, ExceptionHandler>();
         services.AddSingleton<IToastService, ToastService>();
         services.AddSingleton<ScheduleStorageService>();
+        services.AddSingleton<DummyJsonProductService>();
         services.AddApiClient(options =>
         {
-            options.BaseAddress = new Uri("http://localhost:5000/");
+            options.BaseAddress = new Uri("https://dummyjson.com/");
             options.Timeout = TimeSpan.FromSeconds(30);
         });
 
         services.AddSingleton<MainViewModel>();
         services.AddSingleton<ScheduleViewModel>();
         services.AddSingleton<ImageViewerViewModel>();
+        services.AddSingleton<DummyJsonViewModel>();
         services.AddSingleton<ShellViewModel>();
 
         services.AddSingleton<MainWindow>();

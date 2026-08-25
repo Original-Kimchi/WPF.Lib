@@ -1,0 +1,142 @@
+<UserControl x:Class="WPFControls.UI.Views.DummyJsonView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="clr-namespace:WPF.Lib.Controls.Controls;assembly=WPF.Lib.Controls"
+             Background="{DynamicResource BackgroundBrush}">
+    <Grid Margin="28,24,28,28">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="16" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <StackPanel>
+            <TextBlock FontSize="28"
+                       FontWeight="Bold"
+                       Text="DummyJSON 상품 API" />
+            <TextBlock Margin="0,5,0,0"
+                       Foreground="{DynamicResource TextSecondaryBrush}"
+                       Text="키 발급 없이 상품 검색, DTO 변환, 페이징과 오류 처리를 연습합니다." />
+        </StackPanel>
+
+        <Border Grid.Row="2"
+                Padding="18"
+                Background="{DynamicResource SurfaceBrush}"
+                BorderBrush="{DynamicResource BorderBrush}"
+                BorderThickness="1"
+                CornerRadius="12">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <controls:SearchBox MinWidth="300"
+                                    MaxWidth="560"
+                                    HorizontalAlignment="Left"
+                                    Placeholder="상품 검색어 (예: phone, laptop)"
+                                    SearchCommand="{Binding SearchCommand}"
+                                    Text="{Binding SearchText, Mode=TwoWay}" />
+                <Button Grid.Column="1"
+                        MinWidth="100"
+                        Margin="12,0,0,0"
+                        Command="{Binding SearchCommand}"
+                        Content="검색" />
+            </Grid>
+        </Border>
+
+        <controls:BusyOverlay Grid.Row="4"
+                              BusyMessage="상품 정보를 불러오는 중입니다..."
+                              IsBusy="{Binding IsBusy}">
+            <controls:BusyOverlay.Child>
+                <Border Padding="18"
+                        Background="{DynamicResource SurfaceBrush}"
+                        BorderBrush="{DynamicResource BorderBrush}"
+                        BorderThickness="1"
+                        CornerRadius="12">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="12" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="14" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Foreground="{DynamicResource TextSecondaryBrush}"
+                                   Text="{Binding StatusText}" />
+
+                        <DataGrid Grid.Row="2"
+                                  AutoGenerateColumns="False"
+                                  IsReadOnly="True"
+                                  ItemsSource="{Binding Products}"
+                                  ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                  SelectionMode="Single">
+                            <DataGrid.Columns>
+                                <DataGridTemplateColumn Width="86" Header="이미지">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Border Width="62"
+                                                    Height="62"
+                                                    Margin="4"
+                                                    Background="{DynamicResource SurfaceAlternateBrush}"
+                                                    CornerRadius="6">
+                                                <Image Source="{Binding Thumbnail}"
+                                                       Stretch="Uniform" />
+                                            </Border>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTextColumn Width="*"
+                                                    MinWidth="210"
+                                                    Binding="{Binding Title}"
+                                                    Header="상품명" />
+                                <DataGridTextColumn Width="150"
+                                                    Binding="{Binding Category}"
+                                                    Header="분류" />
+                                <DataGridTextColumn Width="120"
+                                                    Binding="{Binding Brand, TargetNullValue=-}"
+                                                    Header="브랜드" />
+                                <DataGridTextColumn Width="105"
+                                                    Binding="{Binding Price, StringFormat={}{0:N2} USD}"
+                                                    Header="가격" />
+                                <DataGridTextColumn Width="80"
+                                                    Binding="{Binding Rating, StringFormat=N1}"
+                                                    Header="평점" />
+                                <DataGridTextColumn Width="75"
+                                                    Binding="{Binding Stock}"
+                                                    Header="재고" />
+                            </DataGrid.Columns>
+                        </DataGrid>
+
+                        <Grid Grid.Row="4">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock VerticalAlignment="Center"
+                                       Foreground="{DynamicResource TextSecondaryBrush}"
+                                       Text="Enter 키로도 검색할 수 있습니다." />
+                            <StackPanel Grid.Column="1"
+                                        Orientation="Horizontal">
+                                <Button MinWidth="90"
+                                        Command="{Binding PreviousPageCommand}"
+                                        Content="이전" />
+                                <Button MinWidth="90"
+                                        Margin="8,0,0,0"
+                                        Command="{Binding NextPageCommand}"
+                                        Content="다음" />
+                            </StackPanel>
+                        </Grid>
+                    </Grid>
+                </Border>
+            </controls:BusyOverlay.Child>
+        </controls:BusyOverlay>
+
+        <controls:ToastHost Grid.RowSpan="5"
+                            Margin="0,20,20,0"
+                            Panel.ZIndex="100"
+                            Service="{Binding ToastService}" />
+    </Grid>
+</UserControl>

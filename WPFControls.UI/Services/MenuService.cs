@@ -24,7 +24,13 @@ public sealed class MenuService : IMenuService
             Title: "Image Viewer",
             Route: "image-viewer",
             Icon: "ImageOutline",
-            Order: 10)
+            Order: 10),
+        new(
+            Id: "dummy-json",
+            Title: "DummyJSON API",
+            Route: "dummy-json",
+            Icon: "ShoppingOutline",
+            Order: 15)
     ];
 
     public IReadOnlyList<MenuItemDefinition> GetMenus()

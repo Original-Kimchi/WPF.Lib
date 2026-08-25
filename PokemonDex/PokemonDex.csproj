@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\PokemonDex.Core\PokemonDex.Core.csproj" />
+    <ProjectReference Include="..\PokemonDex.Infrastructure\PokemonDex.Infrastructure.csproj" />
+    <ProjectReference Include="..\WPF.LIB\WPF.Lib.MVVM\WPF.Lib.MVVM.csproj" />
+    <ProjectReference Include="..\WPF.LIB\WPF.Lib.Theme\WPF.Lib.Theme.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.1" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+</Project>

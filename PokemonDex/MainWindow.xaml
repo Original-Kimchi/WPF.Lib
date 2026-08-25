@@ -1,0 +1,74 @@
+<Window x:Class="PokemonDex.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="포켓몬 도감" Width="1180" Height="780" MinWidth="820" MinHeight="560"
+        Style="{StaticResource ModernWindowStyle}" WindowStartupLocation="CenterScreen">
+    <Grid Background="{DynamicResource BackgroundBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/><RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/><RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Border Padding="28,22" Background="{DynamicResource SurfaceBrush}">
+            <StackPanel>
+                <TextBlock FontSize="28" FontWeight="Bold" Text="포켓몬 도감"/>
+                <TextBlock Margin="0,4,0,0" Foreground="{DynamicResource TextSecondaryBrush}"
+                           Text="PokéAPI에서 포켓몬 정보를 찾아봅니다."/>
+            </StackPanel>
+        </Border>
+        <Grid Grid.Row="1" Margin="28,18,28,14">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/><ColumnDefinition Width="150"/><ColumnDefinition Width="140"/>
+                <ColumnDefinition Width="Auto"/><ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBox Height="42" Padding="12,8" VerticalContentAlignment="Center"
+                     Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}">
+                <TextBox.InputBindings><KeyBinding Key="Enter" Command="{Binding SearchCommand}"/></TextBox.InputBindings>
+            </TextBox>
+            <ComboBox Grid.Column="1" Height="42" Margin="10,0,0,0"
+                      ItemsSource="{Binding Types}" SelectedItem="{Binding SelectedType}"
+                      DisplayMemberPath="DisplayName"/>
+            <ComboBox Grid.Column="2" Height="42" Margin="10,0,0,0"
+                      ItemsSource="{Binding Generations}" SelectedItem="{Binding SelectedGeneration}"
+                      DisplayMemberPath="DisplayName"/>
+            <Button Grid.Column="3" MinWidth="92" Margin="10,0,0,0" Command="{Binding SearchCommand}" Content="검색"/>
+            <Button Grid.Column="4" MinWidth="92" Margin="8,0,0,0" Command="{Binding ResetCommand}" Content="초기화"/>
+        </Grid>
+        <ScrollViewer Grid.Row="2" Margin="20,0" VerticalScrollBarVisibility="Auto">
+            <ItemsControl ItemsSource="{Binding Pokemon}">
+                <ItemsControl.ItemsPanel><ItemsPanelTemplate><WrapPanel/></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Width="250" Height="300" Margin="8" Padding="16"
+                                Background="{DynamicResource SurfaceBrush}" BorderBrush="{DynamicResource BorderBrush}"
+                                BorderThickness="1" CornerRadius="14">
+                            <Grid>
+                                <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/>
+                                    <RowDefinition Height="Auto"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+                                <TextBlock HorizontalAlignment="Right" Foreground="{DynamicResource TextSecondaryBrush}"
+                                           Text="{Binding Id, StringFormat=\#{0:0000}}"/>
+                                <Image Grid.Row="1" Margin="8" Source="{Binding ArtworkUrl}" Stretch="Uniform"/>
+                                <TextBlock Grid.Row="2" HorizontalAlignment="Center" FontSize="20" FontWeight="Bold"
+                                           Text="{Binding KoreanName}"/>
+                                <ItemsControl Grid.Row="3" Margin="0,8,0,0" HorizontalAlignment="Center" ItemsSource="{Binding Types}">
+                                    <ItemsControl.ItemsPanel><ItemsPanelTemplate><StackPanel Orientation="Horizontal"/></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate><DataTemplate>
+                                        <Border Margin="3,0" Padding="10,4" Background="{DynamicResource SurfaceAlternateBrush}" CornerRadius="10">
+                                            <TextBlock FontSize="12" Text="{Binding}"/>
+                                        </Border>
+                                    </DataTemplate></ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+        <Grid Grid.Row="3" Margin="28,14,28,22">
+            <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+            <Button MinWidth="90" Command="{Binding PreviousPageCommand}" Content="이전"/>
+            <TextBlock Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"
+                       Foreground="{DynamicResource TextSecondaryBrush}" Text="{Binding StatusText}"/>
+            <Button Grid.Column="2" MinWidth="90" Command="{Binding NextPageCommand}" Content="다음"/>
+        </Grid>
+    </Grid>
+</Window>

@@ -6,6 +6,7 @@
 
 | 프로젝트 | 대상 | 직접 의존성 | 언제 참조하는가 |
 |---|---|---|---|
+| [`WPF.Lib.Api`](WPF.Lib.Api/README.md) | `net8.0` | Microsoft.Extensions.Http, Logging.Abstractions | JSON 기반 HTTP API 호출과 공통 오류 처리가 필요할 때 |
 | [`WPF.Lib.Core`](WPF.Lib.Core/README.md) | `net8.0` | 없음 | 테마·설정·메뉴·대화상자 같은 공통 계약과 모델이 필요할 때 |
 | [`WPF.Lib.MVVM`](WPF.Lib.MVVM/README.md) | `net8.0` | 없음 | 변경 알림, `RelayCommand`, 셸 또는 다이얼로그 ViewModel 기반이 필요할 때 |
 | [`WPF.Lib.Theme`](WPF.Lib.Theme/README.md) | `net8.0-windows` | `WPF.Lib.MVVM`, MaterialDesignThemes | 라이트·다크 테마와 WPF 기본 컨트롤 스타일을 적용할 때 |
@@ -17,15 +18,16 @@
 ## 의존성 방향
 
 ```text
-WPF.Lib.Core                 WPF.Lib.Logging.Log4Net
-     ^                                  ^
-     |                                  |
-애플리케이션 UI ────────> WPF.Lib.Theme ──> WPF.Lib.MVVM
-     |
-     └──────────────────> WPF.Lib.Controls ─> WPF.Lib.MVVM
+애플리케이션 UI
+├──> WPF.Lib.Core
+├──> WPF.Lib.Api
+├──> WPF.Lib.Logging.Log4Net
+├──> WPF.Lib.Theme ──────> WPF.Lib.MVVM
+└──> WPF.Lib.Controls ───> WPF.Lib.MVVM
 ```
 
 - `Core`와 `MVVM`은 WPF 어셈블리를 참조하지 않습니다.
+- `Api`는 WPF에 종속되지 않으며 공통 HTTP 전송과 오류 처리만 담당합니다.
 - `Theme`과 `Controls`는 WPF 전용이며 `MVVM`을 사용합니다.
 - `Core`는 서비스의 계약만 제공합니다. 실제 파일, 창, 대화상자 구현과 DI 등록은 실행 프로젝트 또는 제품별 Infrastructure 프로젝트가 담당합니다.
 - 라이브러리에서 실행 프로젝트를 역참조하지 않습니다.
@@ -36,6 +38,7 @@ WPF.Lib.Core                 WPF.Lib.Logging.Log4Net
 
 ```powershell
 dotnet add <애플리케이션.csproj> reference WPF.Lib/WPF.Lib.Core/WPF.Lib.Core.csproj
+dotnet add <애플리케이션.csproj> reference WPF.Lib/WPF.Lib.Api/WPF.Lib.Api.csproj
 dotnet add <애플리케이션.csproj> reference WPF.Lib/WPF.Lib.MVVM/WPF.Lib.MVVM.csproj
 dotnet add <애플리케이션.csproj> reference WPF.Lib/WPF.Lib.Theme/WPF.Lib.Theme.csproj
 dotnet add <애플리케이션.csproj> reference WPF.Lib/WPF.Lib.Controls/WPF.Lib.Controls.csproj
@@ -46,6 +49,7 @@ dotnet add <애플리케이션.csproj> reference WPF.Lib/WPF.Lib.Logging.Log4Net
 
 | 요구 사항 | 참조 |
 |---|---|
+| JSON HTTP API 호출 | `WPF.Lib.Api` |
 | UI 독립 모델과 ViewModel만 작성 | `WPF.Lib.MVVM` |
 | 공통 서비스 계약도 사용 | `WPF.Lib.Core`, `WPF.Lib.MVVM` |
 | 공통 WPF 스타일 적용 | 위 항목 + `WPF.Lib.Theme` |

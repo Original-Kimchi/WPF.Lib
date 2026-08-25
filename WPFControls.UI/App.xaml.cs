@@ -2,6 +2,7 @@ using System.IO;
 using System.Windows;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using WPF.Lib.Api;
 using WPF.Lib.Core.Abstractions;
 using WPF.Lib.Logging.Log4Net;
 using WPF.Lib.Controls.Abstractions;
@@ -91,6 +92,11 @@ public partial class App : Application
         services.AddSingleton<IExceptionHandler, ExceptionHandler>();
         services.AddSingleton<IToastService, ToastService>();
         services.AddSingleton<ScheduleStorageService>();
+        services.AddApiClient(options =>
+        {
+            options.BaseAddress = new Uri("http://localhost:5000/");
+            options.Timeout = TimeSpan.FromSeconds(30);
+        });
 
         services.AddSingleton<MainViewModel>();
         services.AddSingleton<ScheduleViewModel>();

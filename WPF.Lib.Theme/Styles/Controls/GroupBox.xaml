@@ -74,6 +74,7 @@
                             </Grid.RowDefinitions>
                             <Border x:Name="HeaderBorder"
                                     Padding="14,9"
+                                    CornerRadius="6,6,0,0"
                                     Background="{Binding Path=(controls:GroupBoxAssist.HeaderBackground), RelativeSource={RelativeSource TemplatedParent}}">
                                 <ContentPresenter ContentSource="Header"
                                                   RecognizesAccessKey="True" />

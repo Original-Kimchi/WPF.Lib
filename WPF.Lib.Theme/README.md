@@ -84,6 +84,10 @@ ThemeManager.ApplyTheme(ThemeKind.Light);
 - `TabControl`, `TabItem`, `DatePicker`, `Calendar`
 - `ProgressBar`, `Slider`, `Expander`, `GroupBox`
 
+`DataGrid` 컬럼 헤더 정렬은 기본적으로 `오름차순 → 내림차순 → 정렬 없음` 순서로 순환합니다.
+기존 WPF 정렬 순환을 사용하려면 해당 그리드에
+`themeBehaviors:DataGridSortingBehavior.IsEnabled="False"`를 지정합니다.
+
 필요할 때 명시적으로 사용할 수 있는 주요 스타일은 다음과 같습니다.
 
 | 키 | 대상 | 용도 |

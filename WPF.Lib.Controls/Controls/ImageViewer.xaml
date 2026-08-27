@@ -194,11 +194,35 @@
                                                Width="10" Height="10" Tag="ResizeBottomRight"
                                                Cursor="SizeNWSE" Fill="{DynamicResource SurfaceBrush}" Stroke="{DynamicResource PrimaryBrush}" StrokeThickness="2"
                                                Visibility="{Binding Kind, Converter={StaticResource KindVisibilityConverter}, ConverterParameter='Rectangle,Ellipse'}" />
+                                    <Rectangle Canvas.Left="{Binding CenterX}" Canvas.Top="{Binding Top}"
+                                               Width="10" Height="10" Tag="ResizeTop"
+                                               Cursor="SizeNS" Fill="{DynamicResource SurfaceBrush}" Stroke="{DynamicResource PrimaryBrush}" StrokeThickness="2"
+                                               Visibility="{Binding Kind, Converter={StaticResource KindVisibilityConverter}, ConverterParameter='Rectangle,Ellipse'}" />
+                                    <Rectangle Canvas.Left="{Binding CenterX}" Canvas.Top="{Binding End.Y}"
+                                               Width="10" Height="10" Tag="ResizeBottom"
+                                               Cursor="SizeNS" Fill="{DynamicResource SurfaceBrush}" Stroke="{DynamicResource PrimaryBrush}" StrokeThickness="2"
+                                               Visibility="{Binding Kind, Converter={StaticResource KindVisibilityConverter}, ConverterParameter='Rectangle,Ellipse'}" />
+                                    <Rectangle Canvas.Left="{Binding Left}" Canvas.Top="{Binding CenterY}"
+                                               Width="10" Height="10" Tag="ResizeLeft"
+                                               Cursor="SizeWE" Fill="{DynamicResource SurfaceBrush}" Stroke="{DynamicResource PrimaryBrush}" StrokeThickness="2"
+                                               Visibility="{Binding Kind, Converter={StaticResource KindVisibilityConverter}, ConverterParameter='Rectangle,Ellipse'}" />
+                                    <Rectangle Canvas.Left="{Binding End.X}" Canvas.Top="{Binding CenterY}"
+                                               Width="10" Height="10" Tag="ResizeRight"
+                                               Cursor="SizeWE" Fill="{DynamicResource SurfaceBrush}" Stroke="{DynamicResource PrimaryBrush}" StrokeThickness="2"
+                                               Visibility="{Binding Kind, Converter={StaticResource KindVisibilityConverter}, ConverterParameter='Rectangle,Ellipse'}" />
                                 </Canvas>
                             </Canvas>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
+                <Canvas IsHitTestVisible="False">
+                    <Line x:Name="VerticalSnapGuide"
+                          Stroke="{DynamicResource PrimaryBrush}" StrokeDashArray="4,3"
+                          Visibility="Collapsed" />
+                    <Line x:Name="HorizontalSnapGuide"
+                          Stroke="{DynamicResource PrimaryBrush}" StrokeDashArray="4,3"
+                          Visibility="Collapsed" />
+                </Canvas>
             </Grid>
         </ScrollViewer>
 

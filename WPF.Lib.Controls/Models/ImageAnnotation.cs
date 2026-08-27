@@ -62,6 +62,8 @@ public class ImageAnnotation : BaseModel
     public double Top => Math.Min(Start.Y, End.Y);
     public double Width => Math.Abs(End.X - Start.X);
     public double Height => Math.Abs(End.Y - Start.Y);
+    public double CenterX => Left + (Width / 2);
+    public double CenterY => Top + (Height / 2);
     public double Length => Kind == ImageDrawingMode.Line
         ? Math.Sqrt(Math.Pow(End.X - Start.X, 2) + Math.Pow(End.Y - Start.Y, 2))
         : 0;
@@ -182,6 +184,8 @@ public class ImageAnnotation : BaseModel
         OnPropertyChanged(nameof(Top));
         OnPropertyChanged(nameof(Width));
         OnPropertyChanged(nameof(Height));
+        OnPropertyChanged(nameof(CenterX));
+        OnPropertyChanged(nameof(CenterY));
         OnPropertyChanged(nameof(Length));
     }
 

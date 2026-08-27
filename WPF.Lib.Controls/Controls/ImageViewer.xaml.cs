@@ -10,6 +10,8 @@ namespace WPF.Lib.Controls.Controls;
 
 public partial class ImageViewer : UserControl
 {
+    private const double SnapThresholdInScreenPixels = 8;
+
     public static IReadOnlyList<Color> ObjectColors { get; } =
     [
         Color.FromRgb(255, 193, 7),
@@ -240,6 +242,7 @@ public partial class ImageViewer : UserControl
             NormalizeShape(_editedAnnotation);
         }
 
+        HideSnapGuides();
         _draft = null;
         _editedAnnotation = null;
         _editOperation = null;
@@ -271,57 +274,64 @@ public partial class ImageViewer : UserControl
         }
 
         var constrainToAxis = Keyboard.Modifiers.HasFlag(ModifierKeys.Shift);
+        if (_editOperation != "Move")
+        {
+            var allowX = _editOperation is not "ResizeTop" and not "ResizeBottom";
+            var allowY = _editOperation is not "ResizeLeft" and not "ResizeRight";
+
+            if (constrainToAxis && allowX && allowY)
+            {
+                var constraintOrigin = GetResizeConstraintOrigin();
+                current = ConstrainToAxis(current, constraintOrigin);
+                var constrainedDelta = current - constraintOrigin;
+                allowX = Math.Abs(constrainedDelta.X) >= Math.Abs(constrainedDelta.Y);
+                allowY = !allowX;
+            }
+
+            if (Keyboard.Modifiers.HasFlag(ModifierKeys.Alt))
+            {
+                current = SnapResizePoint(current, allowX, allowY, out var snapX, out var snapY);
+                UpdateSnapGuides(snapX, snapY);
+            }
+            else
+            {
+                HideSnapGuides();
+            }
+        }
+
         switch (_editOperation)
         {
             case "ResizeStart":
-                if (constrainToAxis)
-                {
-                    current = ConstrainToAxis(current, _originalEnd);
-                }
-
                 _editedAnnotation.Start = current;
                 break;
             case "ResizeEnd":
-                if (constrainToAxis)
-                {
-                    current = ConstrainToAxis(current, _originalStart);
-                }
-
                 _editedAnnotation.End = current;
                 break;
             case "ResizeTopLeft":
-                if (constrainToAxis)
-                {
-                    current = ConstrainToAxis(current, _originalStart);
-                }
-
                 _editedAnnotation.Start = current;
                 break;
             case "ResizeTopRight":
-                if (constrainToAxis)
-                {
-                    current = ConstrainToAxis(current, new Point(_originalEnd.X, _originalStart.Y));
-                }
-
                 _editedAnnotation.Start = new Point(_originalStart.X, current.Y);
                 _editedAnnotation.End = new Point(current.X, _originalEnd.Y);
                 break;
             case "ResizeBottomLeft":
-                if (constrainToAxis)
-                {
-                    current = ConstrainToAxis(current, new Point(_originalStart.X, _originalEnd.Y));
-                }
-
                 _editedAnnotation.Start = new Point(current.X, _originalStart.Y);
                 _editedAnnotation.End = new Point(_originalEnd.X, current.Y);
                 break;
             case "ResizeBottomRight":
-                if (constrainToAxis)
-                {
-                    current = ConstrainToAxis(current, _originalEnd);
-                }
-
                 _editedAnnotation.End = current;
+                break;
+            case "ResizeTop":
+                _editedAnnotation.Start = new Point(_originalStart.X, current.Y);
+                break;
+            case "ResizeBottom":
+                _editedAnnotation.End = new Point(_originalEnd.X, current.Y);
+                break;
+            case "ResizeLeft":
+                _editedAnnotation.Start = new Point(current.X, _originalStart.Y);
+                break;
+            case "ResizeRight":
+                _editedAnnotation.End = new Point(current.X, _originalEnd.Y);
                 break;
             default:
                 var delta = current - _startPoint;
@@ -336,21 +346,259 @@ public partial class ImageViewer : UserControl
                 var maxY = Math.Max(_originalStart.Y, _originalEnd.Y);
                 delta.X = Math.Clamp(delta.X, -minX, ImageSurface.ActualWidth - maxX);
                 delta.Y = Math.Clamp(delta.Y, -minY, ImageSurface.ActualHeight - maxY);
+
+                double? snapX = null;
+                double? snapY = null;
+                if (Keyboard.Modifiers.HasFlag(ModifierKeys.Alt))
+                {
+                    delta = SnapMoveDelta(delta, minX, maxX, minY, maxY, out snapX, out snapY);
+                }
+
                 _editedAnnotation.Start = _originalStart + delta;
                 _editedAnnotation.End = _originalEnd + delta;
+                UpdateSnapGuides(snapX, snapY);
                 break;
         }
     }
 
+    private Point GetResizeConstraintOrigin()
+    {
+        return _editOperation switch
+        {
+            "ResizeStart" => _originalEnd,
+            "ResizeEnd" => _originalStart,
+            "ResizeTopRight" => new Point(_originalEnd.X, _originalStart.Y),
+            "ResizeBottomLeft" => new Point(_originalStart.X, _originalEnd.Y),
+            "ResizeBottomRight" => _originalEnd,
+            _ => _originalStart
+        };
+    }
+
     private void OnPreviewKeyDown(object sender, KeyEventArgs e)
     {
-        if (e.Key != Key.Delete || Model?.DeleteSelectedCommand.CanExecute(null) != true)
+        if (e.Key == Key.Delete && Model?.DeleteSelectedCommand.CanExecute(null) == true)
+        {
+            Model.DeleteSelectedCommand.Execute(null);
+            e.Handled = true;
+            return;
+        }
+
+        if (!ReferenceEquals(Keyboard.FocusedElement, this) ||
+            Model?.SelectedAnnotation is not ImageAnnotation annotation)
         {
             return;
         }
 
-        Model.DeleteSelectedCommand.Execute(null);
+        var step = Keyboard.Modifiers.HasFlag(ModifierKeys.Shift) ? 10d : 1d;
+        var delta = e.Key switch
+        {
+            Key.Left => new Vector(-step, 0),
+            Key.Right => new Vector(step, 0),
+            Key.Up => new Vector(0, -step),
+            Key.Down => new Vector(0, step),
+            _ => default
+        };
+
+        if (delta == default)
+        {
+            return;
+        }
+
+        MoveAnnotation(annotation, delta);
         e.Handled = true;
+    }
+
+    private Vector SnapMoveDelta(
+        Vector delta,
+        double originalMinX,
+        double originalMaxX,
+        double originalMinY,
+        double originalMaxY,
+        out double? snapX,
+        out double? snapY)
+    {
+        snapX = null;
+        snapY = null;
+        if (Model is null || _editedAnnotation is null)
+        {
+            return delta;
+        }
+
+        var threshold = SnapThresholdInScreenPixels / Math.Max(Model.Scale, 0.01);
+        var movingX = new[]
+        {
+            originalMinX + delta.X,
+            ((originalMinX + originalMaxX) / 2) + delta.X,
+            originalMaxX + delta.X
+        };
+        var movingY = new[]
+        {
+            originalMinY + delta.Y,
+            ((originalMinY + originalMaxY) / 2) + delta.Y,
+            originalMaxY + delta.Y
+        };
+
+        var bestXDistance = threshold;
+        var bestYDistance = threshold;
+        var xAdjustment = 0d;
+        var yAdjustment = 0d;
+
+        var viewerX = new[] { 0d, ImageSurface.ActualWidth / 2, ImageSurface.ActualWidth };
+        var viewerY = new[] { 0d, ImageSurface.ActualHeight / 2, ImageSurface.ActualHeight };
+        FindClosestSnap(movingX, viewerX, ref bestXDistance, ref xAdjustment, ref snapX);
+        FindClosestSnap(movingY, viewerY, ref bestYDistance, ref yAdjustment, ref snapY);
+
+        foreach (var target in Model.Annotations.Where(annotation => !ReferenceEquals(annotation, _editedAnnotation)))
+        {
+            var targetX = new[] { target.Left, target.CenterX, target.Left + target.Width };
+            var targetY = new[] { target.Top, target.CenterY, target.Top + target.Height };
+
+            FindClosestSnap(movingX, targetX, ref bestXDistance, ref xAdjustment, ref snapX);
+            FindClosestSnap(movingY, targetY, ref bestYDistance, ref yAdjustment, ref snapY);
+        }
+
+        var snappedX = Math.Clamp(
+            delta.X + xAdjustment,
+            -originalMinX,
+            ImageSurface.ActualWidth - originalMaxX);
+        var snappedY = Math.Clamp(
+            delta.Y + yAdjustment,
+            -originalMinY,
+            ImageSurface.ActualHeight - originalMaxY);
+
+        if (Math.Abs(snappedX - (delta.X + xAdjustment)) > double.Epsilon)
+        {
+            snapX = null;
+        }
+
+        if (Math.Abs(snappedY - (delta.Y + yAdjustment)) > double.Epsilon)
+        {
+            snapY = null;
+        }
+
+        return new Vector(snappedX, snappedY);
+    }
+
+    private Point SnapResizePoint(
+        Point current,
+        bool allowX,
+        bool allowY,
+        out double? snapX,
+        out double? snapY)
+    {
+        snapX = null;
+        snapY = null;
+        if (Model is null || _editedAnnotation is null)
+        {
+            return current;
+        }
+
+        var threshold = SnapThresholdInScreenPixels / Math.Max(Model.Scale, 0.01);
+        var bestXDistance = threshold;
+        var bestYDistance = threshold;
+        var xAdjustment = 0d;
+        var yAdjustment = 0d;
+        var movingX = new[] { current.X };
+        var movingY = new[] { current.Y };
+
+        var viewerX = new[] { 0d, ImageSurface.ActualWidth / 2, ImageSurface.ActualWidth };
+        var viewerY = new[] { 0d, ImageSurface.ActualHeight / 2, ImageSurface.ActualHeight };
+        if (allowX)
+        {
+            FindClosestSnap(movingX, viewerX, ref bestXDistance, ref xAdjustment, ref snapX);
+        }
+
+        if (allowY)
+        {
+            FindClosestSnap(movingY, viewerY, ref bestYDistance, ref yAdjustment, ref snapY);
+        }
+
+        foreach (var target in Model.Annotations.Where(annotation => !ReferenceEquals(annotation, _editedAnnotation)))
+        {
+            if (allowX)
+            {
+                var targetX = new[] { target.Left, target.CenterX, target.Left + target.Width };
+                FindClosestSnap(movingX, targetX, ref bestXDistance, ref xAdjustment, ref snapX);
+            }
+
+            if (allowY)
+            {
+                var targetY = new[] { target.Top, target.CenterY, target.Top + target.Height };
+                FindClosestSnap(movingY, targetY, ref bestYDistance, ref yAdjustment, ref snapY);
+            }
+        }
+
+        return new Point(current.X + xAdjustment, current.Y + yAdjustment);
+    }
+
+    private static void FindClosestSnap(
+        IEnumerable<double> movingAnchors,
+        IEnumerable<double> targetAnchors,
+        ref double bestDistance,
+        ref double adjustment,
+        ref double? guidePosition)
+    {
+        foreach (var movingAnchor in movingAnchors)
+        {
+            foreach (var targetAnchor in targetAnchors)
+            {
+                var difference = targetAnchor - movingAnchor;
+                var distance = Math.Abs(difference);
+                if (distance > bestDistance)
+                {
+                    continue;
+                }
+
+                bestDistance = distance;
+                adjustment = difference;
+                guidePosition = targetAnchor;
+            }
+        }
+    }
+
+    private void UpdateSnapGuides(double? x, double? y)
+    {
+        var thickness = 1 / Math.Max(Model?.Scale ?? 1, 0.01);
+        VerticalSnapGuide.StrokeThickness = thickness;
+        HorizontalSnapGuide.StrokeThickness = thickness;
+
+        VerticalSnapGuide.Visibility = x.HasValue ? Visibility.Visible : Visibility.Collapsed;
+        if (x.HasValue)
+        {
+            VerticalSnapGuide.X1 = x.Value;
+            VerticalSnapGuide.X2 = x.Value;
+            VerticalSnapGuide.Y1 = 0;
+            VerticalSnapGuide.Y2 = ImageSurface.ActualHeight;
+        }
+
+        HorizontalSnapGuide.Visibility = y.HasValue ? Visibility.Visible : Visibility.Collapsed;
+        if (y.HasValue)
+        {
+            HorizontalSnapGuide.X1 = 0;
+            HorizontalSnapGuide.X2 = ImageSurface.ActualWidth;
+            HorizontalSnapGuide.Y1 = y.Value;
+            HorizontalSnapGuide.Y2 = y.Value;
+        }
+    }
+
+    private void HideSnapGuides()
+    {
+        VerticalSnapGuide.Visibility = Visibility.Collapsed;
+        HorizontalSnapGuide.Visibility = Visibility.Collapsed;
+    }
+
+    private void MoveAnnotation(ImageAnnotation annotation, Vector requestedDelta)
+    {
+        var minX = annotation.Left;
+        var maxX = annotation.Left + annotation.Width;
+        var minY = annotation.Top;
+        var maxY = annotation.Top + annotation.Height;
+        var delta = new Vector(
+            Math.Clamp(requestedDelta.X, -minX, ImageSurface.ActualWidth - maxX),
+            Math.Clamp(requestedDelta.Y, -minY, ImageSurface.ActualHeight - maxY));
+
+        annotation.Start += delta;
+        annotation.End += delta;
     }
 
     private static Point ConstrainToAxis(Point current, Point origin)

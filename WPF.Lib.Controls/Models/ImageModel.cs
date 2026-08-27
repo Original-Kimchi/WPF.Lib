@@ -14,7 +14,7 @@ public class ImageModel : BaseModel
     private ImageAnnotation? _selectedAnnotation;
     private double _unitsPerPixel = 1;
     private string _measurementUnit = "px";
-    private bool _showLabels = true;
+    private bool _showLabels;
 
     public ImageModel()
     {

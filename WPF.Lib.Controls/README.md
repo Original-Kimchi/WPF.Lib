@@ -172,12 +172,14 @@ public ImageModel Image { get; } = new()
 ```
 
 - `Ctrl`+마우스 휠로 확대·축소하며 배율은 0.01에서 10 사이로 제한됩니다.
-- `Pan` 모드에서는 이미지를 이동하고 기존 주석을 선택, 이동, 크기 조절할 수 있습니다.
+- `Pan` 모드에서는 이미지를 이동하고 기존 주석을 선택, 이동, 크기 조절할 수 있습니다. 사각형과 타원은 네 모서리 및 상·하·좌·우 중앙 핸들로 크기를 조절합니다.
+- 선택한 주석은 방향키로 1px, `Shift`+방향키로 10px씩 이동할 수 있습니다.
+- 주석을 이동하거나 크기를 조절할 때 `Alt`를 누르면 ImageViewer 영역과 다른 주석의 좌·중앙·우 및 상·중앙·하 위치에 스냅되며 정렬 가이드가 표시됩니다.
 - `Line`, `Rectangle`, `Ellipse` 모드에서는 드래그하여 주석을 추가합니다. 추가 후에는 자동으로 `Pan` 모드로 돌아갑니다.
 - `SetDrawingModeCommand`, `ResetScaleCommand`, `DeleteSelectedCommand`, `ClearAnnotationsCommand`로 도구 모음을 구성할 수 있습니다.
 - `UnitsPerPixel`과 `MeasurementUnit`으로 주석 측정값의 단위를 설정할 수 있습니다.
 - `ImageAnnotation.ObjectColor`로 각 주석의 선과 채우기 색상을 개별 설정할 수 있습니다.
-- `ImageModel.ShowLabels`로 ImageViewer 전체 Label 표시 여부를 설정할 수 있습니다.
+- `ImageModel.ShowLabels`로 ImageViewer 전체 Label 표시 여부를 설정할 수 있으며 기본값은 `false`입니다.
 - `ImageAnnotation.LabelVisibility`는 `WhenSelected`, `Always`, `Hidden` 중 하나를 사용합니다.
   새 주석의 기본값은 `Always`입니다.
 

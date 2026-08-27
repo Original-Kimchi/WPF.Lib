@@ -11,6 +11,7 @@
 | `SearchBox` | Enter 검색과 입력 지연 검색 | `Text`, `Placeholder`, `SearchCommand`, `SearchCommandParameter`, `SearchOnTextChanged`, `SearchDelay` |
 | `BusyOverlay` | 콘텐츠 위에 진행 상태 표시 | `Child`, `ChildTemplate`, `IsBusy`, `BusyMessage`, `IsIndeterminate`, `Progress` |
 | `ToastHost` | 자동 닫힘을 지원하는 알림 목록 표시 | `Service` |
+| `ThemedMessageBox` | 현재 테마를 따르는 모달 메시지 박스 | `Show(...)`, `MessageBoxButton`, `MessageBoxImage`, `MessageBoxResult` |
 | `ImageViewer` | 확대, 이동, 미니맵, 선·사각형·타원 주석 | `Model`, `FitToViewport()` |
 | `DragDropBehavior` | 파일 드롭과 `ItemsControl` 항목 이동 | `IsDragSource`, `IsDropTarget`, `DropCommand`, `DragGroup`, `IsDragOver` |
 | `NestedScrollBehavior` | 안쪽 스크롤 경계에서 휠 입력을 바깥 스크롤로 전달 | `IsEnabled` |
@@ -126,6 +127,30 @@ public sealed class EditorViewModel(IToastService toastService)
 
 `MaximumVisible`의 기본값은 4개입니다. `duration`을 `TimeSpan.Zero` 이하로 지정하면 자동으로 닫히지 않으며, `Dismiss` 또는 `Clear`로 제거할 수 있습니다.
 
+## 테마 메시지 박스
+
+`ThemedMessageBox`는 WPF 기본 메시지 박스와 동일한 버튼, 아이콘, 결과 열거형을 사용합니다. 활성 창을 자동으로 소유자로 지정하거나 첫 번째 인수로 명시할 수 있습니다.
+
+```csharp
+using System.Windows;
+using WPF.Lib.Controls.Controls;
+
+var result = ThemedMessageBox.Show(
+    owner: Application.Current.MainWindow,
+    messageBoxText: "변경 내용을 저장하시겠습니까?",
+    caption: "저장 확인",
+    button: MessageBoxButton.YesNoCancel,
+    icon: MessageBoxImage.Question,
+    defaultResult: MessageBoxResult.Yes);
+
+if (result == MessageBoxResult.Yes)
+{
+    Save();
+}
+```
+
+`OK`, `OKCancel`, `YesNo`, `YesNoCancel` 버튼 조합과 정보, 경고, 오류, 질문 아이콘을 지원합니다. `MessageBoxType`에는 `Default`, `Information`, `Success`, `Warning`, `Error`가 있으며 상태에 맞는 강조선과 아이콘 색상을 표시합니다. `Ctrl+C`를 누르면 제목, 메시지, 버튼 텍스트가 클립보드에 복사됩니다.
+
 ## ImageViewer
 
 이미지와 뷰어 상태를 `ImageModel`에 설정한 뒤 `Model`에 바인딩합니다.
@@ -196,6 +221,7 @@ WPF.Lib.Controls/
 │  ├─ ImageViewer.xaml
 │  ├─ NumericUpDown.xaml
 │  ├─ SearchBox.xaml
+│  ├─ ThemedMessageBox.xaml
 │  ├─ TimePicker.xaml
 │  └─ ToastHost.xaml
 ├─ Converters/

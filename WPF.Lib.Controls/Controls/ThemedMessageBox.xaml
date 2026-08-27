@@ -1,0 +1,229 @@
+<Window x:Class="WPF.Lib.Controls.Controls.ThemedMessageBoxWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Name="Root"
+        Width="440"
+        MinWidth="360"
+        MaxWidth="720"
+        MaxHeight="720"
+        AllowsTransparency="True"
+        Background="Transparent"
+        FontFamily="Segoe UI"
+        FontSize="14"
+        Foreground="{DynamicResource ForegroundBrush}"
+        ResizeMode="NoResize"
+        ShowInTaskbar="False"
+        SizeToContent="Height"
+        WindowStyle="None">
+    <Window.Resources>
+        <Style x:Key="MessageBoxButtonStyle" TargetType="Button">
+            <Setter Property="MinWidth" Value="76" />
+            <Setter Property="MinHeight" Value="34" />
+            <Setter Property="Margin" Value="6,0,0,0" />
+            <Setter Property="Padding" Value="12,7" />
+            <Setter Property="Background" Value="{DynamicResource SurfaceAlternateBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="ButtonBorder"
+                                Padding="{TemplateBinding Padding}"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="7">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"
+                                              RecognizesAccessKey="True"
+                                              TextElement.Foreground="{TemplateBinding Foreground}">
+                                <ContentPresenter.Resources>
+                                    <Style TargetType="TextBlock"
+                                           BasedOn="{StaticResource {x:Type TextBlock}}">
+                                        <Setter Property="Foreground"
+                                                Value="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type Button}}}" />
+                                    </Style>
+                                </ContentPresenter.Resources>
+                            </ContentPresenter>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="ButtonBorder"
+                                        Property="Background"
+                                        Value="{DynamicResource PrimaryHoverBrush}" />
+                                <Setter Property="Foreground"
+                                        Value="{DynamicResource PrimaryForegroundBrush}" />
+                            </Trigger>
+                            <Trigger Property="IsKeyboardFocused" Value="True">
+                                <Setter TargetName="ButtonBorder"
+                                        Property="Background"
+                                        Value="{DynamicResource PrimaryBrush}" />
+                                <Setter TargetName="ButtonBorder"
+                                        Property="BorderBrush"
+                                        Value="{DynamicResource PrimaryBrush}" />
+                                <Setter TargetName="ButtonBorder" Property="BorderThickness" Value="2" />
+                                <Setter Property="Foreground"
+                                        Value="{DynamicResource PrimaryForegroundBrush}" />
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="ButtonBorder" Property="Opacity" Value="0.8" />
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" Value="0.5" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="MessageBoxCloseButtonStyle" TargetType="Button">
+            <Setter Property="Width" Value="46" />
+            <Setter Property="Height" Value="44" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Focusable" Value="False" />
+            <Setter Property="FontSize" Value="20" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="CloseButtonBackground"
+                                Background="{TemplateBinding Background}"
+                                CornerRadius="5">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"
+                                              TextElement.Foreground="{TemplateBinding Foreground}">
+                                <ContentPresenter.Resources>
+                                    <Style TargetType="TextBlock"
+                                           BasedOn="{StaticResource {x:Type TextBlock}}">
+                                        <Setter Property="Foreground"
+                                                Value="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type Button}}}" />
+                                    </Style>
+                                </ContentPresenter.Resources>
+                            </ContentPresenter>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="{DynamicResource DangerBrush}" />
+                                <Setter Property="Foreground" Value="White" />
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="CloseButtonBackground" Property="Opacity" Value="0.7" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Border Background="{DynamicResource SurfaceBrush}"
+            BorderBrush="{DynamicResource BorderBrush}"
+            BorderThickness="1"
+            CornerRadius="10"
+            SnapsToDevicePixels="True">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="44" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <Border x:Name="HeaderBorder"
+                    Background="{DynamicResource HeaderBrush}"
+                    CornerRadius="9,9,0,0"
+                    MouseLeftButtonDown="Header_MouseLeftButtonDown">
+                <Grid>
+                    <TextBlock x:Name="HeaderTitle"
+                               Margin="16,0,52,0"
+                               VerticalAlignment="Center"
+                               FontWeight="SemiBold"
+                               Foreground="{DynamicResource ForegroundBrush}"
+                               Text="{Binding Title, ElementName=Root}"
+                               TextTrimming="CharacterEllipsis" />
+                    <Button x:Name="CloseButton"
+                            HorizontalAlignment="Right"
+                            AutomationProperties.Name="닫기"
+                            Click="CloseButton_Click"
+                            Content="&#x00D7;"
+                            Style="{StaticResource MessageBoxCloseButtonStyle}"
+                            ToolTip="닫기" />
+                </Grid>
+            </Border>
+
+            <Grid Grid.Row="1" Margin="24">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Border x:Name="IconBackground"
+                        Width="42"
+                        Height="42"
+                        Margin="0,1,18,0"
+                        VerticalAlignment="Top"
+                        CornerRadius="21">
+                    <TextBlock x:Name="IconText"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               FontFamily="Segoe UI Symbol"
+                               FontSize="24"
+                               FontWeight="Bold"
+                               Foreground="White"
+                               TextAlignment="Center" />
+                </Border>
+
+                <ScrollViewer x:Name="MessageScrollViewer"
+                              Grid.Column="1"
+                              MaxHeight="520"
+                              HorizontalScrollBarVisibility="Disabled"
+                              VerticalScrollBarVisibility="Auto">
+                    <TextBlock x:Name="MessageTextBlock"
+                               VerticalAlignment="Center"
+                               Foreground="{DynamicResource ForegroundBrush}"
+                               TextWrapping="Wrap" />
+                </ScrollViewer>
+            </Grid>
+
+            <Border Grid.Row="2"
+                    Padding="16,12"
+                    Background="{DynamicResource SurfaceAlternateBrush}"
+                    BorderBrush="{DynamicResource BorderBrush}"
+                    BorderThickness="0,1,0,0"
+                    CornerRadius="0,0,9,9">
+                <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+                    <Button x:Name="OkButton"
+                            AutomationProperties.Name="확인"
+                            Click="ResultButton_Click"
+                            Content="확인"
+                            Style="{StaticResource MessageBoxButtonStyle}"
+                            Tag="OK" />
+                    <Button x:Name="YesButton"
+                            AutomationProperties.Name="예"
+                            Click="ResultButton_Click"
+                            Content="예"
+                            Style="{StaticResource MessageBoxButtonStyle}"
+                            Tag="Yes" />
+                    <Button x:Name="NoButton"
+                            AutomationProperties.Name="아니요"
+                            Click="ResultButton_Click"
+                            Content="아니요"
+                            Style="{StaticResource MessageBoxButtonStyle}"
+                            Tag="No" />
+                    <Button x:Name="CancelButton"
+                            AutomationProperties.Name="취소"
+                            Click="ResultButton_Click"
+                            Content="취소"
+                            IsCancel="True"
+                            Style="{StaticResource MessageBoxButtonStyle}"
+                            Tag="Cancel" />
+                </StackPanel>
+            </Border>
+        </Grid>
+    </Border>
+</Window>

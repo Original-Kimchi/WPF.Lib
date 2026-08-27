@@ -35,6 +35,18 @@
     <SolidColorBrush x:Key="InfoBrush" Color="{StaticResource InfoColor}" />
     <SolidColorBrush x:Key="SuccessBrush" Color="{StaticResource SuccessColor}" />
     <SolidColorBrush x:Key="WarningBrush" Color="{StaticResource WarningColor}" />
+    <SolidColorBrush x:Key="MessageBoxInfoHeaderBackgroundBrush"
+                     Color="{StaticResource InfoColor}"
+                     Opacity="0.18" />
+    <SolidColorBrush x:Key="MessageBoxSuccessHeaderBackgroundBrush"
+                     Color="{StaticResource SuccessColor}"
+                     Opacity="0.18" />
+    <SolidColorBrush x:Key="MessageBoxWarningHeaderBackgroundBrush"
+                     Color="{StaticResource WarningColor}"
+                     Opacity="0.18" />
+    <SolidColorBrush x:Key="MessageBoxErrorHeaderBackgroundBrush"
+                     Color="{StaticResource DangerColor}"
+                     Opacity="0.18" />
     <SolidColorBrush x:Key="SurfaceAlternateBrush" Color="{StaticResource SurfaceAlternateColor}" />
     <SolidColorBrush x:Key="HeaderBrush" Color="{StaticResource HeaderColor}" />
     <SolidColorBrush x:Key="HoverBrush" Color="{StaticResource HoverColor}" />

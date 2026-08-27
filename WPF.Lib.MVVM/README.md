@@ -16,6 +16,7 @@ dotnet add <프로젝트.csproj> reference WPF.Lib/WPF.Lib.MVVM/WPF.Lib.MVVM.csp
 | `BaseViewModel` | 모델과 ViewModel 역할을 구분하는 기본 형식 |
 | `BaseMainViewModel<TMenu>` | 메뉴 선택과 현재 화면 ViewModel 전환의 공통 흐름 |
 | `RelayCommand` | 동기 `ICommand`, 실행 가능 조건과 상태 갱신 제공 |
+| `AsyncRelayCommand` | 비동기 `ICommand`, 재진입 방지, 실행 상태 및 취소 제공 |
 | `BaseDialogViewModel` | 제목, 버튼, 확인 가능 조건, 닫기 요청 제공 |
 | `DialogButtonMode` | 버튼 없음, 확인, 확인·취소 구성 |
 | `DialogOutcome` | 확인 또는 취소 결과 |
@@ -63,7 +64,22 @@ private void OnHasChangesChanged()
 }
 ```
 
-현재 `RelayCommand`는 동기 명령입니다. 장시간 I/O는 서비스의 비동기 메서드와 별도의 중복 실행 방지 상태를 사용하거나, 공용 비동기 명령을 추가한 뒤 사용합니다.
+`RelayCommand`는 동기 작업에 사용합니다. I/O처럼 비동기로 실행되는 작업에는 `AsyncRelayCommand`를 사용합니다. 실행 중에는 자동으로 `CanExecute`가 `false`가 되며, `IsRunning`을 로딩 UI에 바인딩할 수 있습니다. 취소 토큰을 받는 대리자는 `Cancel()`로 취소할 수 있고, 직접 실행 결과를 기다려야 할 때는 `ExecuteAsync()`를 사용합니다.
+
+```csharp
+public AsyncRelayCommand LoadCommand { get; }
+
+public CustomerViewModel()
+{
+    LoadCommand = new AsyncRelayCommand(
+        (_, cancellationToken) => LoadAsync(cancellationToken));
+}
+
+private async Task LoadAsync(CancellationToken cancellationToken)
+{
+    await customerService.LoadAsync(cancellationToken);
+}
+```
 
 ## 셸 ViewModel
 

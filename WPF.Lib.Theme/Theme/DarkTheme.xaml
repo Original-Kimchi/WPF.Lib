@@ -20,6 +20,8 @@
     <Color x:Key="HoverColor">#FF263A55</Color>
     <Color x:Key="SelectionColor">#FF1E3A5F</Color>
     <Color x:Key="OverlayColor">#B3000000</Color>
+    <Color x:Key="ImageViewerMiniMapBackgroundColor">#E61F2937</Color>
+    <Color x:Key="ImageViewerViewportFillColor">#33FBBF24</Color>
 
     <SolidColorBrush x:Key="BackgroundBrush" Color="{StaticResource BackgroundColor}" />
     <SolidColorBrush x:Key="SurfaceBrush" Color="{StaticResource SurfaceColor}" />
@@ -38,4 +40,6 @@
     <SolidColorBrush x:Key="HoverBrush" Color="{StaticResource HoverColor}" />
     <SolidColorBrush x:Key="SelectionBrush" Color="{StaticResource SelectionColor}" />
     <SolidColorBrush x:Key="OverlayBrush" Color="{StaticResource OverlayColor}" />
+    <SolidColorBrush x:Key="ImageViewerMiniMapBackgroundBrush" Color="{StaticResource ImageViewerMiniMapBackgroundColor}" />
+    <SolidColorBrush x:Key="ImageViewerViewportFillBrush" Color="{StaticResource ImageViewerViewportFillColor}" />
 </ResourceDictionary>

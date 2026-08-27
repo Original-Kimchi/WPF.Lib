@@ -14,6 +14,7 @@ public class ImageModel : BaseModel
     private ImageAnnotation? _selectedAnnotation;
     private double _unitsPerPixel = 1;
     private string _measurementUnit = "px";
+    private bool _showLabels = true;
 
     public ImageModel()
     {
@@ -92,6 +93,12 @@ public class ImageModel : BaseModel
         set => SetProperty(ref _measurementUnit, string.IsNullOrWhiteSpace(value) ? "px" : value);
     }
 
+    public bool ShowLabels
+    {
+        get => _showLabels;
+        set => SetProperty(ref _showLabels, value);
+    }
+
     public ObservableCollection<ImageAnnotation> Annotations { get; } = [];
     public ICommand SetDrawingModeCommand { get; }
     public ICommand ResetScaleCommand { get; }
@@ -120,4 +127,5 @@ public class ImageModel : BaseModel
             SelectedAnnotation = null;
         }
     }
+
 }

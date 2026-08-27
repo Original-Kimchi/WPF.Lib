@@ -12,6 +12,8 @@
         <converters:MeasurementConverter x:Key="MeasurementConverter" />
         <converters:DrawingModeToBooleanConverter x:Key="DrawingModeToBooleanConverter" />
         <converters:InverseScaleConverter x:Key="InverseScaleConverter" />
+        <converters:ColorToBrushConverter x:Key="ColorToBrushConverter" />
+        <converters:AllTrueToVisibilityConverter x:Key="AllTrueToVisibilityConverter" />
         <BooleanToVisibilityConverter x:Key="BooleanVisibilityConverter" />
     </UserControl.Resources>
 
@@ -43,6 +45,30 @@
                             Click="OnFitClick" />
                     <Button Padding="12,5" Content="선택 삭제"
                             Command="{Binding Model.DeleteSelectedCommand, ElementName=Root}" />
+                    <Border Width="1" Margin="12,2" Background="{DynamicResource BorderBrush}" />
+                    <TextBlock Margin="0,0,7,0" VerticalAlignment="Center" Text="Object 색상" />
+                    <ComboBox Width="64" Margin="0,0,12,0"
+                              ItemsSource="{Binding ObjectColors, ElementName=Root}"
+                              SelectedItem="{Binding Model.SelectedAnnotation.ObjectColor, ElementName=Root, Mode=TwoWay}">
+                        <ComboBox.Style>
+                            <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Model.SelectedAnnotation, ElementName=Root}" Value="{x:Null}">
+                                        <Setter Property="IsEnabled" Value="False" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ComboBox.Style>
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <Border Width="28" Height="16" CornerRadius="3"
+                                        Background="{Binding Converter={StaticResource ColorToBrushConverter}}"
+                                        BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" />
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                    <CheckBox VerticalAlignment="Center" Content="Label 표시"
+                              IsChecked="{Binding Model.ShowLabels, ElementName=Root, Mode=TwoWay}" />
                 </StackPanel>
                 <TextBlock Margin="16,0,0,0" VerticalAlignment="Center" DockPanel.Dock="Right"
                            Foreground="{DynamicResource TextSecondaryBrush}"
@@ -105,8 +131,13 @@
                                         Padding="5,2" Background="{Binding LabelBackground}"
                                         Opacity="{Binding LabelOpacity}" CornerRadius="3"
                                         Cursor="SizeAll"
-                                        RenderTransformOrigin="0,1"
-                                        Visibility="{Binding IsLabelVisible, Converter={StaticResource BooleanVisibilityConverter}}">
+                                        RenderTransformOrigin="0,1">
+                                    <Border.Visibility>
+                                        <MultiBinding Converter="{StaticResource AllTrueToVisibilityConverter}">
+                                            <Binding Path="IsLabelVisible" />
+                                            <Binding Path="Model.ShowLabels" RelativeSource="{RelativeSource AncestorType=UserControl}" />
+                                        </MultiBinding>
+                                    </Border.Visibility>
                                     <Border.RenderTransform>
                                         <ScaleTransform
                                             ScaleX="{Binding Model.Scale, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource InverseScaleConverter}}"
@@ -141,27 +172,27 @@
                                     </Canvas.Resources>
                                     <Rectangle Canvas.Left="{Binding Start.X}" Canvas.Top="{Binding Start.Y}"
                                                Width="10" Height="10" Tag="ResizeStart"
-                                               Cursor="SizeAll" Fill="White" Stroke="#FF2563EB" StrokeThickness="2"
+                                               Cursor="SizeAll" Fill="{DynamicResource SurfaceBrush}" Stroke="{DynamicResource PrimaryBrush}" StrokeThickness="2"
                                                Visibility="{Binding Kind, Converter={StaticResource KindVisibilityConverter}, ConverterParameter=Line}" />
                                     <Rectangle Canvas.Left="{Binding End.X}" Canvas.Top="{Binding End.Y}"
                                                Width="10" Height="10" Tag="ResizeEnd"
-                                               Cursor="SizeAll" Fill="White" Stroke="#FF2563EB" StrokeThickness="2"
+                                               Cursor="SizeAll" Fill="{DynamicResource SurfaceBrush}" Stroke="{DynamicResource PrimaryBrush}" StrokeThickness="2"
                                                Visibility="{Binding Kind, Converter={StaticResource KindVisibilityConverter}, ConverterParameter=Line}" />
                                     <Rectangle Canvas.Left="{Binding Left}" Canvas.Top="{Binding Top}"
                                                Width="10" Height="10" Tag="ResizeTopLeft"
-                                               Cursor="SizeNWSE" Fill="White" Stroke="#FF2563EB" StrokeThickness="2"
+                                               Cursor="SizeNWSE" Fill="{DynamicResource SurfaceBrush}" Stroke="{DynamicResource PrimaryBrush}" StrokeThickness="2"
                                                Visibility="{Binding Kind, Converter={StaticResource KindVisibilityConverter}, ConverterParameter='Rectangle,Ellipse'}" />
                                     <Rectangle Canvas.Left="{Binding Left}" Canvas.Top="{Binding End.Y}"
                                                Width="10" Height="10" Tag="ResizeBottomLeft"
-                                               Cursor="SizeNESW" Fill="White" Stroke="#FF2563EB" StrokeThickness="2"
+                                               Cursor="SizeNESW" Fill="{DynamicResource SurfaceBrush}" Stroke="{DynamicResource PrimaryBrush}" StrokeThickness="2"
                                                Visibility="{Binding Kind, Converter={StaticResource KindVisibilityConverter}, ConverterParameter='Rectangle,Ellipse'}" />
                                     <Rectangle Canvas.Left="{Binding End.X}" Canvas.Top="{Binding Top}"
                                                Width="10" Height="10" Tag="ResizeTopRight"
-                                               Cursor="SizeNESW" Fill="White" Stroke="#FF2563EB" StrokeThickness="2"
+                                               Cursor="SizeNESW" Fill="{DynamicResource SurfaceBrush}" Stroke="{DynamicResource PrimaryBrush}" StrokeThickness="2"
                                                Visibility="{Binding Kind, Converter={StaticResource KindVisibilityConverter}, ConverterParameter='Rectangle,Ellipse'}" />
                                     <Rectangle Canvas.Left="{Binding End.X}" Canvas.Top="{Binding End.Y}"
                                                Width="10" Height="10" Tag="ResizeBottomRight"
-                                               Cursor="SizeNWSE" Fill="White" Stroke="#FF2563EB" StrokeThickness="2"
+                                               Cursor="SizeNWSE" Fill="{DynamicResource SurfaceBrush}" Stroke="{DynamicResource PrimaryBrush}" StrokeThickness="2"
                                                Visibility="{Binding Kind, Converter={StaticResource KindVisibilityConverter}, ConverterParameter='Rectangle,Ellipse'}" />
                                 </Canvas>
                             </Canvas>
@@ -173,12 +204,14 @@
 
         <Border x:Name="MiniMap" Grid.Row="1" Width="190" Height="130" Margin="14"
                 HorizontalAlignment="Right" VerticalAlignment="Bottom"
-                Background="#CC111827" BorderBrush="#99FFFFFF" BorderThickness="1"
+                Background="{DynamicResource ImageViewerMiniMapBackgroundBrush}"
+                BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1"
                 MouseLeftButtonDown="OnMiniMapMouseLeftButtonDown">
             <Grid Margin="5">
                 <Image Source="{Binding Model.Source, ElementName=Root}" Stretch="Uniform" />
                 <Rectangle x:Name="MiniMapViewport" HorizontalAlignment="Left" VerticalAlignment="Top"
-                           Stroke="#FFFFC107" StrokeThickness="2" Fill="#22FFC107" />
+                           Stroke="{DynamicResource WarningBrush}" StrokeThickness="2"
+                           Fill="{DynamicResource ImageViewerViewportFillBrush}" />
             </Grid>
         </Border>
     </Grid>

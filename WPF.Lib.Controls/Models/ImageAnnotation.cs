@@ -9,9 +9,10 @@ public class ImageAnnotation : BaseModel
     private Point _start;
     private Point _end;
     private bool _isSelected;
-    private AnnotationLabelVisibility _labelVisibility = AnnotationLabelVisibility.WhenSelected;
-    private Brush _stroke = CreateBrush(Color.FromRgb(255, 193, 7));
-    private Brush _fill = CreateBrush(Color.FromArgb(32, 255, 193, 7));
+    private AnnotationLabelVisibility _labelVisibility = AnnotationLabelVisibility.Always;
+    private Color _objectColor = Color.FromRgb(255, 193, 7);
+    private Brush _stroke;
+    private Brush _fill;
     private double _strokeThickness = 2;
     private double _opacity = 1;
     private DoubleCollection? _strokeDashArray;
@@ -27,6 +28,8 @@ public class ImageAnnotation : BaseModel
         Kind = kind;
         _start = start;
         _end = start;
+        _stroke = CreateBrush(_objectColor);
+        _fill = CreateBrush(Color.FromArgb(32, _objectColor.R, _objectColor.G, _objectColor.B));
     }
 
     public ImageDrawingMode Kind { get; }
@@ -93,6 +96,19 @@ public class ImageAnnotation : BaseModel
         AnnotationLabelVisibility.WhenSelected => IsSelected,
         _ => false
     };
+
+    public virtual Color ObjectColor
+    {
+        get => _objectColor;
+        set
+        {
+            if (SetProperty(ref _objectColor, value))
+            {
+                Stroke = CreateBrush(value);
+                Fill = CreateBrush(Color.FromArgb(32, value.R, value.G, value.B));
+            }
+        }
+    }
 
     public virtual Brush Stroke
     {

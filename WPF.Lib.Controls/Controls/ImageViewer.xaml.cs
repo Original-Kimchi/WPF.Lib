@@ -2,6 +2,7 @@ using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Threading;
 using WPF.Lib.Controls.Models;
 
@@ -9,6 +10,19 @@ namespace WPF.Lib.Controls.Controls;
 
 public partial class ImageViewer : UserControl
 {
+    public static IReadOnlyList<Color> ObjectColors { get; } =
+    [
+        Color.FromRgb(255, 193, 7),
+        Color.FromRgb(239, 68, 68),
+        Color.FromRgb(249, 115, 22),
+        Color.FromRgb(34, 197, 94),
+        Color.FromRgb(6, 182, 212),
+        Color.FromRgb(59, 130, 246),
+        Color.FromRgb(139, 92, 246),
+        Color.FromRgb(236, 72, 153),
+        Color.FromRgb(255, 255, 255)
+    ];
+
     public static readonly DependencyProperty ModelProperty = DependencyProperty.Register(
         nameof(Model), typeof(ImageModel), typeof(ImageViewer),
         new FrameworkPropertyMetadata(null, OnModelChanged));

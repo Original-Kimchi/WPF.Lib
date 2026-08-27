@@ -16,7 +16,7 @@ public static class NestedScrollBehavior
         "IsEnabled",
         typeof(bool),
         typeof(NestedScrollBehavior),
-        new FrameworkPropertyMetadata(true, FrameworkPropertyMetadataOptions.Inherits));
+        new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.Inherits));
 
     private static bool _isRegistered;
 

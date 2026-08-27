@@ -151,7 +151,10 @@ public ImageModel Image { get; } = new()
 - `Line`, `Rectangle`, `Ellipse` 모드에서는 드래그하여 주석을 추가합니다. 추가 후에는 자동으로 `Pan` 모드로 돌아갑니다.
 - `SetDrawingModeCommand`, `ResetScaleCommand`, `DeleteSelectedCommand`, `ClearAnnotationsCommand`로 도구 모음을 구성할 수 있습니다.
 - `UnitsPerPixel`과 `MeasurementUnit`으로 주석 측정값의 단위를 설정할 수 있습니다.
+- `ImageAnnotation.ObjectColor`로 각 주석의 선과 채우기 색상을 개별 설정할 수 있습니다.
+- `ImageModel.ShowLabels`로 ImageViewer 전체 Label 표시 여부를 설정할 수 있습니다.
 - `ImageAnnotation.LabelVisibility`는 `WhenSelected`, `Always`, `Hidden` 중 하나를 사용합니다.
+  새 주석의 기본값은 `Always`입니다.
 
 주석에 별도 데이터나 동작이 필요하면 `ImageModel.CreateAnnotation`을 재정의하여 사용자 정의 `ImageAnnotation`을 반환할 수 있습니다.
 
@@ -171,12 +174,12 @@ public ImageModel Image { get; } = new()
 
 ## 중첩 스크롤
 
-`NestedScrollBehavior`는 라이브러리가 로드될 때 자동 등록되며 기본값이 활성화되어 있습니다. 안쪽 `ScrollViewer`가 위·아래 경계에 도달하면 휠 입력을 스크롤 가능한 부모로 전달하고, Shift+휠은 가로 스크롤에 사용합니다. 특정 영역에서 비활성화하려면 연결 속성을 지정합니다.
+`NestedScrollBehavior`는 라이브러리가 로드될 때 처리기가 등록되지만 기본값은 비활성화되어 있습니다. 중첩 스크롤이 필요한 상위 영역에서 명시적으로 활성화하면, 안쪽 `ScrollViewer`가 위·아래 경계에 도달했을 때 휠 입력을 스크롤 가능한 부모로 전달합니다. Shift+휠은 가로 스크롤에 사용합니다. 연결 속성 값은 하위 요소로 상속됩니다.
 
 ```xaml
 <ScrollViewer xmlns:behaviors="clr-namespace:WPF.Lib.Controls.Behaviors;assembly=WPF.Lib.Controls"
-              behaviors:NestedScrollBehavior.IsEnabled="False">
-    <!-- 이 영역은 휠 입력을 부모로 전달하지 않습니다. -->
+              behaviors:NestedScrollBehavior.IsEnabled="True">
+    <!-- 이 영역의 중첩 ScrollViewer는 경계에서 휠 입력을 부모로 전달합니다. -->
 </ScrollViewer>
 ```
 

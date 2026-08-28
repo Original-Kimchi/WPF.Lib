@@ -26,6 +26,25 @@ dotnet add <애플리케이션.csproj> reference WPF.Lib/WPF.Lib.Logging.Log4Net
 <file value="%property{LogDirectory}/application.log" />
 ```
 
+오류를 별도 파일에도 기록하려면 `ERROR` 임계값을 가진 appender를 추가합니다.
+
+```xml
+<appender name="ErrorFile" type="log4net.Appender.RollingFileAppender">
+  <file type="log4net.Util.PatternString"
+        value="%property{LogDirectory}/error/error_" />
+  <threshold value="ERROR" />
+  <!-- rolling 및 layout 설정 -->
+</appender>
+
+<root>
+  <level value="INFO" />
+  <appender-ref ref="RollingFile" />
+  <appender-ref ref="ErrorFile" />
+</root>
+```
+
+이 구성에서는 Error와 Critical 로그가 일반 로그와 오류 전용 로그에 함께 기록됩니다. 샘플 앱의 전체 롤링 설정은 `WPFControls.UI/log4net.config`에서 확인할 수 있습니다.
+
 ## 등록
 
 ```csharp

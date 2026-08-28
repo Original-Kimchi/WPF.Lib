@@ -40,11 +40,13 @@ public partial class ImageViewer : UserControl
     private string? _editOperation;
     private bool _isPanning;
     private bool _fitPending;
+    private DispatcherOperation? _fitOperation;
 
     public ImageViewer()
     {
         InitializeComponent();
         Loaded += OnLoaded;
+        Unloaded += OnUnloaded;
         SizeChanged += OnSizeChanged;
     }
 
@@ -84,13 +86,18 @@ public partial class ImageViewer : UserControl
 
     private void RequestFitToViewport()
     {
+        CancelPendingFit();
         _fitPending = Model?.Source is not null;
-        if (!_fitPending)
+        if (!_fitPending || !IsLoaded)
         {
             return;
         }
 
-        Dispatcher.BeginInvoke(DispatcherPriority.Loaded, TryFitToViewport);
+        _fitOperation = Dispatcher.BeginInvoke(DispatcherPriority.Loaded, () =>
+        {
+            _fitOperation = null;
+            TryFitToViewport();
+        });
     }
 
     private void OnLoaded(object sender, RoutedEventArgs e)
@@ -107,6 +114,31 @@ public partial class ImageViewer : UserControl
         {
             TryFitToViewport();
         }
+    }
+
+    private void OnUnloaded(object sender, RoutedEventArgs e)
+    {
+        CancelPendingFit();
+        _draft = null;
+        _editedAnnotation = null;
+        _editOperation = null;
+        _isPanning = false;
+        HideSnapGuides();
+
+        if (ImageSurface.IsMouseCaptured)
+        {
+            ImageSurface.ReleaseMouseCapture();
+        }
+    }
+
+    private void CancelPendingFit()
+    {
+        if (_fitOperation?.Status == DispatcherOperationStatus.Pending)
+        {
+            _fitOperation.Abort();
+        }
+
+        _fitOperation = null;
     }
 
     private void OnPreviewMouseWheel(object sender, MouseWheelEventArgs e)

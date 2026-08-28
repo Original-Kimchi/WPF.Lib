@@ -1,6 +1,9 @@
+using System.Buffers;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Text;
 using System.Text.Json;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace WPF.Lib.Api;
@@ -10,11 +13,22 @@ public sealed class ApiClient : IApiClient
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
     private readonly HttpClient _httpClient;
     private readonly ILogger<ApiClient> _logger;
+    private readonly int _maximumResponseContentBytes;
 
     public ApiClient(HttpClient httpClient, ILogger<ApiClient> logger)
+        : this(httpClient, logger, new ApiOptions())
+    {
+    }
+
+    [ActivatorUtilitiesConstructor]
+    public ApiClient(
+        HttpClient httpClient,
+        ILogger<ApiClient> logger,
+        ApiOptions options)
     {
         _httpClient = httpClient;
         _logger = logger;
+        _maximumResponseContentBytes = checked((int)options.MaximumResponseContentBytes);
     }
 
     public Task<TResponse?> GetAsync<TResponse>(
@@ -59,13 +73,17 @@ public sealed class ApiClient : IApiClient
         using var response = await SendAsync(request, cancellationToken);
         await EnsureSuccessAsync(response, request, cancellationToken);
 
-        var responseContent = await response.Content.ReadAsStringAsync(cancellationToken);
-        if (string.IsNullOrWhiteSpace(responseContent))
+        using var responseContent = await ReadContentAsync(response.Content, cancellationToken);
+        if (IsEmptyOrWhitespace(responseContent))
         {
             return default;
         }
 
-        return JsonSerializer.Deserialize<TResponse>(responseContent, JsonOptions);
+        responseContent.Position = 0;
+        return await JsonSerializer.DeserializeAsync<TResponse>(
+            responseContent,
+            JsonOptions,
+            cancellationToken);
     }
 
     private async Task<HttpResponseMessage> SendAsync(
@@ -124,7 +142,11 @@ public sealed class ApiClient : IApiClient
             return;
         }
 
-        var responseContent = await response.Content.ReadAsStringAsync(cancellationToken);
+        using var responseStream = await ReadContentAsync(response.Content, cancellationToken);
+        var responseContent = Encoding.UTF8.GetString(
+            responseStream.GetBuffer(),
+            0,
+            checked((int)responseStream.Length));
         _logger.LogWarning(
             "API가 오류 상태 코드를 반환했습니다. {StatusCode} {Method} {RequestUri}",
             (int)response.StatusCode,
@@ -135,5 +157,64 @@ public sealed class ApiClient : IApiClient
             response.StatusCode,
             responseContent,
             $"API request failed with status code {(int)response.StatusCode} ({response.StatusCode}).");
+    }
+
+    private async Task<MemoryStream> ReadContentAsync(
+        HttpContent content,
+        CancellationToken cancellationToken)
+    {
+        if (content.Headers.ContentLength > _maximumResponseContentBytes)
+        {
+            throw new ApiResponseTooLargeException(_maximumResponseContentBytes);
+        }
+
+        var initialCapacity = content.Headers.ContentLength is > 0
+            ? checked((int)Math.Min(content.Headers.ContentLength.Value, 64 * 1024))
+            : 0;
+        var destination = new MemoryStream(initialCapacity);
+        var buffer = ArrayPool<byte>.Shared.Rent(64 * 1024);
+
+        try
+        {
+            using var source = await content.ReadAsStreamAsync(cancellationToken);
+            while (true)
+            {
+                var bytesRead = await source.ReadAsync(buffer, cancellationToken);
+                if (bytesRead == 0)
+                {
+                    return destination;
+                }
+
+                if (destination.Length + bytesRead > _maximumResponseContentBytes)
+                {
+                    throw new ApiResponseTooLargeException(_maximumResponseContentBytes);
+                }
+
+                await destination.WriteAsync(buffer.AsMemory(0, bytesRead), cancellationToken);
+            }
+        }
+        catch
+        {
+            destination.Dispose();
+            throw;
+        }
+        finally
+        {
+            ArrayPool<byte>.Shared.Return(buffer);
+        }
+    }
+
+    private static bool IsEmptyOrWhitespace(MemoryStream content)
+    {
+        var buffer = content.GetBuffer();
+        for (var index = 0; index < content.Length; index++)
+        {
+            if (buffer[index] is not ((byte)' ' or (byte)'\t' or (byte)'\r' or (byte)'\n'))
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

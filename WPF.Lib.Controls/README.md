@@ -127,6 +127,8 @@ public sealed class EditorViewModel(IToastService toastService)
 
 `MaximumVisible`의 기본값은 4개입니다. `duration`을 `TimeSpan.Zero` 이하로 지정하면 자동으로 닫히지 않으며, `Dismiss` 또는 `Clear`로 제거할 수 있습니다.
 
+`ToastService`는 생성된 UI Dispatcher를 소유권 기준으로 사용합니다. 백그라운드 호출은 해당 Dispatcher로 전달하며, `Dismiss`, 최대 개수 초과, `Clear`, `Dispose`에서 연관된 타이머를 중지하고 `Tick` 구독을 해제합니다. DI Singleton으로 등록하면 루트 `ServiceProvider.Dispose()`가 마지막 정리를 호출합니다.
+
 ## 테마 메시지 박스
 
 `ThemedMessageBox`는 WPF 기본 메시지 박스와 동일한 버튼, 아이콘, 결과 열거형을 사용합니다. 활성 창을 자동으로 소유자로 지정하거나 첫 번째 인수로 명시할 수 있습니다.
@@ -184,6 +186,16 @@ public ImageModel Image { get; } = new()
   새 주석의 기본값은 `Always`입니다.
 
 주석에 별도 데이터나 동작이 필요하면 `ImageModel.CreateAnnotation`을 재정의하여 사용자 정의 `ImageAnnotation`을 반환할 수 있습니다.
+
+## 수명과 메모리
+
+- `SearchBox`는 `Unloaded`에서 입력 지연용 `DispatcherTimer`를 중지합니다. 다시 로드된 뒤 입력이 들어오면 같은 타이머를 재사용합니다.
+- `ImageViewer`는 지연된 맞춤 작업을 하나만 유지하고 `Unloaded`에서 예약된 `DispatcherOperation`과 마우스 캡처를 취소합니다.
+- 대용량 이미지는 원본 전체 해상도로 디코딩하지 말고 표시 크기에 맞는 `DecodePixelWidth`/`DecodePixelHeight`와 최대 픽셀 수 제한을 사용합니다.
+- 이미지 스트림을 사용할 때는 디코딩이 끝난 뒤 스트림을 닫을 수 있도록 `BitmapCacheOption.OnLoad`를 사용하고, 화면 이탈 시 ViewModel의 이미지 참조를 제거합니다.
+- `Loaded`에서 등록한 인스턴스 이벤트는 `Unloaded`에서 해제합니다. 정적 이벤트는 약한 이벤트 패턴 또는 명시적 `Dispose`가 필요합니다.
+
+상세한 소유권 기준과 현재 보강 항목은 [라이브러리 수명·메모리·안전 가이드](../../docs/library-lifecycle-and-safety.md)를 참고합니다.
 
 ## Drag and Drop
 

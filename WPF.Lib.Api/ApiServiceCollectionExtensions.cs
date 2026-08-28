@@ -23,6 +23,14 @@ public static class ApiServiceCollectionExtensions
             throw new ArgumentOutOfRangeException(nameof(configure), "API timeout must be greater than zero.");
         }
 
+        if (options.MaximumResponseContentBytes <= 0 ||
+            options.MaximumResponseContentBytes > int.MaxValue)
+        {
+            throw new ArgumentOutOfRangeException(
+                nameof(configure),
+                $"Maximum response content bytes must be between 1 and {int.MaxValue}.");
+        }
+
         services.AddSingleton(options);
         services.AddHttpClient<IApiClient, ApiClient>(client =>
         {

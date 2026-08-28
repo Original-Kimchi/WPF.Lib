@@ -32,32 +32,17 @@ dotnet add <프로젝트.csproj> reference WPF.Lib/WPF.Lib.Core/WPF.Lib.Core.csp
 
 ## 구현 원칙
 
-이 프로젝트에는 계약만 두고 실제 WPF 구현은 실행 프로젝트 또는 제품별 Infrastructure 프로젝트에 둡니다.
+이 프로젝트에는 WPF 타입에 독립적인 계약만 둡니다. 여러 제품이 함께 쓰는 기본 WPF 구현은 `WPF.Lib.Services`에, 제품 도메인에 결합된 구현은 실행 프로젝트 또는 제품별 Infrastructure에 둡니다.
+
+Composition Root에서는 `WPF.Lib.Services`의 등록 확장을 사용해 공통 계약과 구현을 연결합니다.
 
 ```csharp
-using WPF.Lib.Core.Abstractions;
-using WPF.Lib.Core.Models;
-using WPF.Lib.Theme;
+using WPF.Lib.Services;
 
-public sealed class ThemeService : IThemeService
+services.AddWpfServices(options =>
 {
-    public ApplicationTheme CurrentTheme { get; private set; }
-
-    public void ApplyTheme(ApplicationTheme theme)
-    {
-        ThemeManager.ApplyTheme(
-            theme == ApplicationTheme.Light ? ThemeKind.Light : ThemeKind.Dark);
-        CurrentTheme = theme;
-    }
-}
-```
-
-Composition Root에서 계약과 구현을 연결합니다.
-
-```csharp
-services.AddSingleton<IThemeService, ThemeService>();
-services.AddSingleton<ISettingsService, SettingsService>();
-services.AddSingleton<IDialogService, DialogService>();
+    options.ApplicationName = "MyApp";
+});
 ```
 
 ## 확장 기준
@@ -67,4 +52,4 @@ services.AddSingleton<IDialogService, DialogService>();
 - 한 제품에만 필요한 업무 모델은 해당 제품의 `MyApp.Core` 또는 `MyApp.Application`에 둡니다.
 - 계약을 변경하면 모든 구현체와 DI 등록, 관련 문서를 함께 확인합니다.
 
-다른 솔루션에서의 계층 구성은 [WPF.Lib 도입 가이드](../../docs/library-adoption-guide.md)를 참고합니다.
+기본 구현은 [WPF.Lib.Services README](../WPF.Lib.Services/README.md), 다른 솔루션에서의 계층 구성은 [WPF.Lib 도입 가이드](../../docs/library-adoption-guide.md)를 참고합니다.

@@ -32,11 +32,8 @@ public partial class SearchBox : UserControl
     {
         InitializeComponent();
         _searchTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(SearchDelay) };
-        _searchTimer.Tick += (_, _) =>
-        {
-            _searchTimer.Stop();
-            ExecuteSearch();
-        };
+        _searchTimer.Tick += OnSearchTimerTick;
+        Unloaded += OnUnloaded;
         GotKeyboardFocus += (_, _) => OuterBorder.SetResourceReference(Border.BorderBrushProperty, "PrimaryBrush");
         LostKeyboardFocus += (_, _) => OuterBorder.SetResourceReference(Border.BorderBrushProperty, "BorderBrush");
     }
@@ -100,7 +97,7 @@ public partial class SearchBox : UserControl
 
     private void OnInputTextChanged(object sender, TextChangedEventArgs e)
     {
-        if (!SearchOnTextChanged || _searchTimer is null)
+        if (!SearchOnTextChanged || !IsLoaded)
         {
             return;
         }
@@ -113,11 +110,22 @@ public partial class SearchBox : UserControl
     {
         Text = string.Empty;
         InputTextBox.Focus();
-        if (SearchOnTextChanged)
+        if (SearchOnTextChanged && IsLoaded)
         {
             _searchTimer.Stop();
             _searchTimer.Start();
         }
+    }
+
+    private void OnSearchTimerTick(object? sender, EventArgs e)
+    {
+        _searchTimer.Stop();
+        ExecuteSearch();
+    }
+
+    private void OnUnloaded(object sender, RoutedEventArgs e)
+    {
+        _searchTimer.Stop();
     }
 
     private static object CoerceSearchDelay(DependencyObject d, object baseValue) => Math.Max(0, (int)baseValue);

@@ -55,6 +55,8 @@ services.AddLogging(builder =>
 
 설정 파일이 없으면 provider 생성 시 `FileNotFoundException`이 발생합니다. `ConfigFilePath`는 출력 디렉터리 기준의 절대 경로로 구성하는 것이 안전합니다.
 
+기본 `LogDirectory`에는 샘플 앱 이름인 `WPFControls.UI`가 포함됩니다. 다른 제품에서 사용할 때는 반드시 제품 고유의 쓰기 가능한 `%LocalAppData%` 하위 경로로 재설정합니다. 로그 메시지에는 액세스 토큰, 비밀번호, 개인 정보, 원문 쿼리 문자열을 기록하지 않습니다.
+
 ## 사용
 
 ```csharp
@@ -68,3 +70,5 @@ public sealed class MainViewModel(ILogger<MainViewModel> logger)
 ```
 
 DI 컨테이너를 종료할 때 `ServiceProvider.Dispose()`를 호출하면 provider가 repository를 종료하고 logger 캐시를 정리합니다.
+
+애플리케이션 실행 중 동적으로 매우 많은 category 이름을 만들면 logger 캐시도 함께 증가합니다. 일반적인 `ILogger<T>`처럼 형식별로 안정적인 category를 사용하고, 요청 ID나 사용자 값은 category가 아니라 구조화된 로그 속성에 넣습니다.

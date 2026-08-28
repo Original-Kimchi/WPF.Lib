@@ -29,7 +29,23 @@ public abstract class BaseMainViewModel<TMenu> : BaseViewModel where TMenu : cla
     public object? CurrentViewModel
     {
         get => _currentViewModel;
-        protected set => SetProperty(ref _currentViewModel, value);
+        protected set
+        {
+            if (ReferenceEquals(_currentViewModel, value))
+            {
+                return;
+            }
+
+            if (_currentViewModel is INavigationAware current)
+            {
+                current.OnDeactivated();
+            }
+
+            if (SetProperty(ref _currentViewModel, value) && value is INavigationAware next)
+            {
+                next.OnActivated();
+            }
+        }
     }
 
     protected void SelectInitialMenu()

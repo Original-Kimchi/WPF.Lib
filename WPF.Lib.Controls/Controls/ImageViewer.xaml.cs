@@ -29,6 +29,15 @@ public partial class ImageViewer : UserControl
         nameof(Model), typeof(ImageModel), typeof(ImageViewer),
         new FrameworkPropertyMetadata(null, OnModelChanged));
 
+    public static readonly DependencyProperty ShowMiniMapProperty = DependencyProperty.Register(
+        nameof(ShowMiniMap), typeof(bool), typeof(ImageViewer), new PropertyMetadata(true));
+
+    public bool ShowMiniMap
+    {
+        get => (bool)GetValue(ShowMiniMapProperty);
+        set => SetValue(ShowMiniMapProperty, value);
+    }
+
     private Point _startPoint;
     private Point _panStart;
     private double _horizontalOffset;
@@ -72,8 +81,21 @@ public partial class ImageViewer : UserControl
                 newModel, viewer.OnModelPropertyChanged, nameof(ImageModel.Source));
         }
 
+        if (viewer.IsLoaded)
+        {
+            if (args.OldValue is ImageModel previousModel)
+            {
+                previousModel.NavigationRequested -= viewer.OnNavigationRequested;
+            }
+
+            if (args.NewValue is ImageModel currentModel)
+            {
+                currentModel.NavigationRequested += viewer.OnNavigationRequested;
+            }
+        }
+
         viewer.RequestFitToViewport();
-        viewer.UpdateMiniMapViewport();
+        viewer.UpdateModelViewport();
     }
 
     private void OnModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -102,6 +124,12 @@ public partial class ImageViewer : UserControl
 
     private void OnLoaded(object sender, RoutedEventArgs e)
     {
+        if (Model is not null)
+        {
+            Model.NavigationRequested += OnNavigationRequested;
+        }
+
+        UpdateModelViewport();
         if (_fitPending)
         {
             TryFitToViewport();
@@ -118,6 +146,11 @@ public partial class ImageViewer : UserControl
 
     private void OnUnloaded(object sender, RoutedEventArgs e)
     {
+        if (Model is not null)
+        {
+            Model.NavigationRequested -= OnNavigationRequested;
+        }
+
         CancelPendingFit();
         _draft = null;
         _editedAnnotation = null;
@@ -182,7 +215,7 @@ public partial class ImageViewer : UserControl
         _fitPending = false;
         ImageScrollViewer.UpdateLayout();
         ImageScrollViewer.ScrollToHome();
-        UpdateMiniMapViewport();
+        UpdateModelViewport();
     }
 
     private void OnSurfaceMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -669,32 +702,35 @@ public partial class ImageViewer : UserControl
 
     private void OnScrollChanged(object sender, ScrollChangedEventArgs e)
     {
-        UpdateMiniMapViewport();
+        UpdateModelViewport();
     }
 
-    private void UpdateMiniMapViewport()
+    private void UpdateModelViewport()
     {
-        var width = Math.Max(0, MiniMap.ActualWidth - 10);
-        var height = Math.Max(0, MiniMap.ActualHeight - 10);
-        var extentWidth = Math.Max(1, ImageScrollViewer.ExtentWidth);
-        var extentHeight = Math.Max(1, ImageScrollViewer.ExtentHeight);
+        if (Model?.Source is not { } source)
+        {
+            return;
+        }
 
-        MiniMapViewport.Width = Math.Min(width, width * ImageScrollViewer.ViewportWidth / extentWidth);
-        MiniMapViewport.Height = Math.Min(height, height * ImageScrollViewer.ViewportHeight / extentHeight);
-        MiniMapViewport.Margin = new Thickness(
-            width * ImageScrollViewer.HorizontalOffset / extentWidth,
-            height * ImageScrollViewer.VerticalOffset / extentHeight, 0, 0);
+        var scale = Model.Scale;
+        var width = Math.Min(source.Width, ImageScrollViewer.ViewportWidth / scale);
+        var height = Math.Min(source.Height, ImageScrollViewer.ViewportHeight / scale);
+        Model.Viewport = new Rect(
+            Math.Clamp(ImageScrollViewer.HorizontalOffset / scale, 0, Math.Max(0, source.Width - width)),
+            Math.Clamp(ImageScrollViewer.VerticalOffset / scale, 0, Math.Max(0, source.Height - height)),
+            Math.Max(0, width), Math.Max(0, height));
     }
 
-    private void OnMiniMapMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+    private void OnNavigationRequested(object? sender, Point imagePoint)
     {
-        var point = e.GetPosition(MiniMap);
-        var xRatio = Math.Clamp(point.X / Math.Max(1, MiniMap.ActualWidth), 0, 1);
-        var yRatio = Math.Clamp(point.Y / Math.Max(1, MiniMap.ActualHeight), 0, 1);
+        if (Model?.Source is null)
+        {
+            return;
+        }
+
         ImageScrollViewer.ScrollToHorizontalOffset(
-            xRatio * Math.Max(0, ImageScrollViewer.ExtentWidth - ImageScrollViewer.ViewportWidth));
+            imagePoint.X * Model.Scale - ImageScrollViewer.ViewportWidth / 2);
         ImageScrollViewer.ScrollToVerticalOffset(
-            yRatio * Math.Max(0, ImageScrollViewer.ExtentHeight - ImageScrollViewer.ViewportHeight));
-        e.Handled = true;
+            imagePoint.Y * Model.Scale - ImageScrollViewer.ViewportHeight / 2);
     }
 }

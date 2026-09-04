@@ -3,6 +3,7 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:converters="clr-namespace:WPF.Lib.Controls.Converters"
+             xmlns:controls="clr-namespace:WPF.Lib.Controls.Controls"
              xmlns:models="clr-namespace:WPF.Lib.Controls.Models"
              Focusable="True"
              PreviewKeyDown="OnPreviewKeyDown"
@@ -226,17 +227,9 @@
             </Grid>
         </ScrollViewer>
 
-        <Border x:Name="MiniMap" Grid.Row="1" Width="190" Height="130" Margin="14"
-                HorizontalAlignment="Right" VerticalAlignment="Bottom"
-                Background="{DynamicResource ImageViewerMiniMapBackgroundBrush}"
-                BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1"
-                MouseLeftButtonDown="OnMiniMapMouseLeftButtonDown">
-            <Grid Margin="5">
-                <Image Source="{Binding Model.Source, ElementName=Root}" Stretch="Uniform" />
-                <Rectangle x:Name="MiniMapViewport" HorizontalAlignment="Left" VerticalAlignment="Top"
-                           Stroke="{DynamicResource WarningBrush}" StrokeThickness="2"
-                           Fill="{DynamicResource ImageViewerViewportFillBrush}" />
-            </Grid>
-        </Border>
+        <controls:ImageMiniMap Grid.Row="1" Width="190" Height="130" Margin="14"
+                               HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                               Model="{Binding Model, ElementName=Root}"
+                               Visibility="{Binding ShowMiniMap, ElementName=Root, Converter={StaticResource BooleanVisibilityConverter}}" />
     </Grid>
 </UserControl>

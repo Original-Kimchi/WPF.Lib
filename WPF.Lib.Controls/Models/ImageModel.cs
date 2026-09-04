@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using WPF.Lib.MVVM;
@@ -15,6 +16,7 @@ public class ImageModel : BaseModel
     private double _unitsPerPixel = 1;
     private string _measurementUnit = "px";
     private bool _showLabels;
+    private Rect _viewport = Rect.Empty;
 
     public ImageModel()
     {
@@ -39,7 +41,31 @@ public class ImageModel : BaseModel
     public ImageSource? Source
     {
         get => _source;
-        set => SetProperty(ref _source, value);
+        set
+        {
+            if (SetProperty(ref _source, value))
+            {
+                Viewport = Rect.Empty;
+            }
+        }
+    }
+
+    /// <summary>The visible image area in unscaled image coordinates, updated by ImageViewer.</summary>
+    public Rect Viewport
+    {
+        get => _viewport;
+        internal set => SetProperty(ref _viewport, value);
+    }
+
+    internal event EventHandler<Point>? NavigationRequested;
+
+    /// <summary>Requests that the connected viewer center on a point in image coordinates.</summary>
+    public void NavigateTo(Point imagePoint)
+    {
+        if (Source is not null && double.IsFinite(imagePoint.X) && double.IsFinite(imagePoint.Y))
+        {
+            NavigationRequested?.Invoke(this, imagePoint);
+        }
     }
 
     public double Scale

@@ -12,7 +12,8 @@
 | `BusyOverlay` | 콘텐츠 위에 진행 상태 표시 | `Child`, `ChildTemplate`, `IsBusy`, `BusyMessage`, `IsIndeterminate`, `Progress` |
 | `ToastHost` | 자동 닫힘을 지원하는 알림 목록 표시 | `Service` |
 | `ThemedMessageBox` | 현재 테마를 따르는 모달 메시지 박스 | `Show(...)`, `MessageBoxButton`, `MessageBoxImage`, `MessageBoxResult` |
-| `ImageViewer` | 확대, 이동, 미니맵, 선·사각형·타원 주석 | `Model`, `FitToViewport()` |
+| `ImageViewer` | 확대, 이동, 미니맵, 선·사각형·타원 주석 | `Model`, `ShowMiniMap`, `FitToViewport()` |
+| `ImageMiniMap` | 독립 배치 가능한 이미지 미니맵 | `Model` |
 | `DragDropBehavior` | 파일 드롭과 `ItemsControl` 항목 이동 | `IsDragSource`, `IsDropTarget`, `DropCommand`, `DragGroup`, `IsDragOver` |
 | `NestedScrollBehavior` | 안쪽 스크롤 경계에서 휠 입력을 바깥 스크롤로 전달 | `IsEnabled` |
 
@@ -24,11 +25,23 @@
 dotnet add <애플리케이션.csproj> reference WPF.Lib/WPF.Lib.Controls/WPF.Lib.Controls.csproj
 ```
 
-XAML에서 컨트롤 네임스페이스를 선언합니다.
+`WPF.Lib.Controls.Controls`는 `AssemblyInfo.cs`의 `XmlnsDefinition`으로 기본 WPF XAML 네임스페이스에 연결되어 있습니다. 라이브러리를 참조하는 앱에서는 접두사 없이 컨트롤을 사용할 수 있습니다.
+
+```xaml
+<Grid xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+    <ImageViewer Model="{Binding Image}" ShowMiniMap="False" />
+    <ImageMiniMap Model="{Binding Image}" Width="190" Height="130"
+                  HorizontalAlignment="Right" VerticalAlignment="Bottom" />
+</Grid>
+```
+
+이 매핑은 `Controls` 네임스페이스에만 적용됩니다. `Models`, `Converters`, `DragDrop`, `Behaviors` 등은 기존처럼 별도 네임스페이스를 선언합니다. 기존 `controls:` 표기도 계속 사용할 수 있으며, 아래 예제는 명시적인 표기를 유지합니다.
 
 ```xaml
 xmlns:controls="clr-namespace:WPF.Lib.Controls.Controls;assembly=WPF.Lib.Controls"
 ```
+
+`AssemblyInfo.cs`는 어셈블리 특성을 모아 두는 일반 C# 파일입니다. SDK의 자동 생성 설정을 끌 필요 없이 이 파일에 사용자 정의 특성을 추가할 수 있습니다. 동일한 XAML 네임스페이스에 같은 이름의 타입을 노출하면 충돌할 수 있으므로 컨트롤 이름은 고유하게 유지합니다.
 
 컨트롤 템플릿은 `WPF.Lib.Theme`의 동적 브러시 리소스를 사용합니다. 애플리케이션에서 `WPF.Lib.Theme`을 참조하고 `App.xaml`에 라이트 또는 다크 테마를 병합합니다.
 
@@ -197,6 +210,30 @@ public ImageModel Image { get; } = new()
 
 상세한 소유권 기준과 현재 보강 항목은 [라이브러리 수명·메모리·안전 가이드](../../docs/library-lifecycle-and-safety.md)를 참고합니다.
 
+## 독립 미니맵
+
+`ImageMiniMap`은 Viewer 참조 없이 동일한 `ImageModel` 인스턴스를 바인딩하여 사용합니다.
+원하는 패널에 배치하고 `Width`/`Height`로 크기를 지정하거나 부모 레이아웃에 맞게 늘릴 수 있습니다.
+
+```xaml
+<Grid>
+    <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="*" />
+        <ColumnDefinition Width="220" />
+    </Grid.ColumnDefinitions>
+    <controls:ImageViewer Model="{Binding Image}" ShowMiniMap="False" />
+    <controls:ImageMiniMap Grid.Column="1" Model="{Binding Image}"
+                           Height="150" Margin="12" VerticalAlignment="Top" />
+</Grid>
+```
+
+- `ShowMiniMap` 기본값은 `true`이며 기존 내장 미니맵도 `ImageMiniMap`을 사용합니다.
+- Viewer의 확대·스크롤·크기 변경은 모델의 읽기 전용 `Viewport`에 이미지 좌표로 반영됩니다.
+- 미니맵을 클릭하거나 드래그하면 해당 이미지 위치를 중심으로 Viewer가 이동합니다. 이미지 비율에 따른 여백은 클릭 대상에서 제외됩니다.
+- 코드에서는 `ImageModel.NavigateTo(new Point(x, y))`로 이동할 수 있습니다.
+- Model 하나에 Viewer 하나와 여러 미니맵을 연결할 수 있습니다. 서로 다른 표시 영역을 가진 Viewer 여러 개는 별도의 Model을 사용합니다.
+- Viewer 없이도 이미지를 표시할 수 있으며, 연결된 Viewer가 표시 영역을 제공하기 전에는 영역 사각형이 숨겨집니다.
+
 ## Drag and Drop
 
 `DragDropBehavior` 연결 속성으로 `ListBox`, `TreeView`, `DataGrid` 등의 항목 드래그와 외부 파일 드롭을 뷰 모델 명령에 연결할 수 있습니다. 드롭 명령은 `DragDropInfo`를 받아 원본 항목, 대상 항목, 삽입 위치, 파일 경로를 확인합니다.
@@ -232,6 +269,7 @@ WPF.Lib.Controls/
 │  └─ NestedScrollBehavior.cs
 ├─ Controls/
 │  ├─ BusyOverlay.xaml
+│  ├─ ImageMiniMap.xaml
 │  ├─ ImageViewer.xaml
 │  ├─ NumericUpDown.xaml
 │  ├─ SearchBox.xaml

@@ -3,7 +3,7 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:WPF.Lib.Controls.Controls"
-             MinWidth="140" MinHeight="38"
+             MinWidth="140" MinHeight="32"
              Foreground="{DynamicResource ForegroundBrush}">
     <UserControl.Resources>
         <DrawingBrush x:Key="CheckerBrush" TileMode="Tile" Viewport="0,0,10,10" ViewportUnits="Absolute">
@@ -24,8 +24,8 @@
             <GradientStop Offset="1" Color="#FFFF0000" />
         </LinearGradientBrush>
         <Style x:Key="PickerToggleStyle" TargetType="ToggleButton">
-            <Setter Property="MinHeight" Value="38" />
-            <Setter Property="Padding" Value="8,5" />
+            <Setter Property="MinHeight" Value="32" />
+            <Setter Property="Padding" Value="7,3" />
             <Setter Property="Background" Value="{DynamicResource SurfaceBrush}" />
             <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
             <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}" />
@@ -83,13 +83,13 @@
                Placement="Bottom" PlacementTarget="{Binding ElementName=DropDownButton}"
                IsOpen="{Binding IsDropDownOpen, ElementName=Root, Mode=TwoWay}"
                Opened="OnPopupOpened">
-            <Border Width="390" Margin="0,5,0,8" Padding="16"
+            <Border Width="350" Margin="0,4,0,6" Padding="12"
                     Background="{DynamicResource SurfaceBrush}" BorderBrush="{DynamicResource BorderBrush}"
                     BorderThickness="1" CornerRadius="8">
                 <Border.Effect><DropShadowEffect BlurRadius="14" ShadowDepth="3" Opacity="0.22" /></Border.Effect>
                 <StackPanel KeyboardNavigation.TabNavigation="Cycle">
-                    <TextBlock Margin="0,0,0,8" FontWeight="SemiBold" Text="색상" />
-                    <Grid Height="180">
+                    <TextBlock Margin="0,0,0,6" FontWeight="SemiBold" Text="색상" />
+                    <Grid Height="165">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="12" />
@@ -131,17 +131,17 @@
                         </Canvas>
                     </Grid>
 
-                    <Grid Margin="0,14,0,0">
+                    <Grid Margin="0,10,0,0">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="62" />
+                            <ColumnDefinition Width="55" />
                             <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="16" />
-                            <ColumnDefinition Width="62" />
+                            <ColumnDefinition Width="12" />
+                            <ColumnDefinition Width="55" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
-                            <RowDefinition Height="8" />
+                            <RowDefinition Height="6" />
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
                         <TextBlock VerticalAlignment="Center" Text="빨강(R)" />
@@ -154,9 +154,9 @@
                         <local:NumericUpDown x:Name="AlphaInput" Grid.Row="2" Grid.Column="4" Minimum="0" Maximum="255" ValueChanged="OnRgbValueChanged" />
                     </Grid>
 
-                    <Grid Margin="0,12,0,0">
+                    <Grid Margin="0,10,0,0">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="62" />
+                            <ColumnDefinition Width="55" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
                         <TextBlock VerticalAlignment="Center" Text="16진수(H)" />
@@ -164,7 +164,7 @@
                                  AutomationProperties.Name="HEX 색상" ToolTip="#RRGGBB 또는 #AARRGGBB"
                                  PreviewKeyDown="OnHexKeyDown" LostKeyboardFocus="OnHexLostFocus" />
                     </Grid>
-                    <TextBlock x:Name="HexError" Margin="62,6,0,0" Visibility="Collapsed"
+                    <TextBlock x:Name="HexError" Margin="55,5,0,0" Visibility="Collapsed"
                                Foreground="{DynamicResource DangerBrush}" TextWrapping="Wrap"
                                Text="#RRGGBB 또는 #AARRGGBB 형식으로 입력하세요." />
                 </StackPanel>

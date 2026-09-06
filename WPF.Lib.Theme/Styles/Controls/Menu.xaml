@@ -3,7 +3,7 @@
     <Style TargetType="Menu">
         <Setter Property="Background" Value="{DynamicResource SurfaceBrush}" />
         <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
-        <Setter Property="Padding" Value="4" />
+        <Setter Property="Padding" Value="2" />
     </Style>
 
     <Style TargetType="ContextMenu">
@@ -11,7 +11,7 @@
         <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
         <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}" />
         <Setter Property="BorderThickness" Value="1" />
-        <Setter Property="Padding" Value="4" />
+        <Setter Property="Padding" Value="2" />
         <Setter Property="HorizontalContentAlignment" Value="Stretch" />
         <Setter Property="SnapsToDevicePixels" Value="True" />
         <Setter Property="Template">
@@ -37,7 +37,7 @@
     <Style TargetType="MenuItem">
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
-        <Setter Property="Padding" Value="10,7" />
+        <Setter Property="Padding" Value="8,5" />
         <Setter Property="HorizontalAlignment" Value="Stretch" />
         <Setter Property="HorizontalContentAlignment" Value="Stretch" />
         <Setter Property="Template">
@@ -84,7 +84,7 @@
                                Placement="Right"
                                PopupAnimation="Fade">
                             <Border Margin="3,0"
-                                    Padding="4"
+                                    Padding="3"
                                     Background="{DynamicResource SurfaceBrush}"
                                     BorderBrush="{DynamicResource BorderBrush}"
                                     BorderThickness="1"

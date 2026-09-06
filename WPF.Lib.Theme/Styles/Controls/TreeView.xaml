@@ -2,9 +2,9 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:behaviors="clr-namespace:WPF.Lib.Theme.Behaviors"
                     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes">
-    <Style TargetType="TreeView"><Setter Property="Background" Value="Transparent" /><Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" /><Setter Property="BorderThickness" Value="0" /><Setter Property="Padding" Value="4" /><Setter Property="behaviors:TreeViewItemExpandBehavior.IsEnabled" Value="True" /></Style>
+    <Style TargetType="TreeView"><Setter Property="Background" Value="Transparent" /><Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" /><Setter Property="BorderThickness" Value="0" /><Setter Property="Padding" Value="2" /><Setter Property="behaviors:TreeViewItemExpandBehavior.IsEnabled" Value="True" /></Style>
     <Style TargetType="TreeViewItem">
-        <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" /><Setter Property="Padding" Value="7,5" /><Setter Property="IsExpanded" Value="True" />
+        <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" /><Setter Property="Padding" Value="5,3" /><Setter Property="IsExpanded" Value="True" />
         <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="TreeViewItem"><Grid><Grid.RowDefinitions><RowDefinition Height="Auto" /><RowDefinition /></Grid.RowDefinitions><Grid.ColumnDefinitions><ColumnDefinition Width="18" /><ColumnDefinition /></Grid.ColumnDefinitions>
             <ToggleButton x:Name="Expander" Width="18" Height="18"
                           VerticalAlignment="Center"

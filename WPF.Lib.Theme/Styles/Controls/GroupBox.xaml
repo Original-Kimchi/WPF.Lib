@@ -3,7 +3,7 @@
                     xmlns:controls="clr-namespace:WPF.Lib.Theme.Controls">
     <Style TargetType="GroupBox">
         <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
-        <Setter Property="Padding" Value="14,12" />
+        <Setter Property="Padding" Value="10,8" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="GroupBox">
@@ -18,7 +18,7 @@
                                 <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
                             <Border x:Name="HeaderBorder"
-                                    Padding="14,9"
+                                    Padding="10,6"
                                     Background="{DynamicResource HeaderBrush}"
                                     BorderBrush="{DynamicResource BorderBrush}"
                                     BorderThickness="0,0,0,1">
@@ -73,7 +73,7 @@
                                 <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
                             <Border x:Name="HeaderBorder"
-                                    Padding="14,9"
+                                    Padding="10,6"
                                     CornerRadius="6,6,0,0"
                                     Background="{Binding Path=(controls:GroupBoxAssist.HeaderBackground), RelativeSource={RelativeSource TemplatedParent}}">
                                 <ContentPresenter ContentSource="Header"

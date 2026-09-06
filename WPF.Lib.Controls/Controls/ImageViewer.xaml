@@ -24,29 +24,29 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <Border Padding="8" Background="{DynamicResource SurfaceBrush}"
+        <Border Padding="6" Background="{DynamicResource SurfaceBrush}"
                 BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,0,0,1">
             <DockPanel LastChildFill="False">
                 <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
-                    <ToggleButton Margin="0,0,6,0" Padding="12,5" Content="이동"
+                    <ToggleButton Margin="0,0,4,0" Padding="9,4" Content="이동"
                                   IsChecked="{Binding Model.DrawingMode, ElementName=Root, Mode=OneWay, Converter={StaticResource DrawingModeToBooleanConverter}, ConverterParameter=Pan}"
                                   Command="{Binding Model.SetDrawingModeCommand, ElementName=Root}" CommandParameter="Pan" />
-                    <ToggleButton Margin="0,0,6,0" Padding="12,5" Content="선"
+                    <ToggleButton Margin="0,0,4,0" Padding="9,4" Content="선"
                                   IsChecked="{Binding Model.DrawingMode, ElementName=Root, Mode=OneWay, Converter={StaticResource DrawingModeToBooleanConverter}, ConverterParameter=Line}"
                                   Command="{Binding Model.SetDrawingModeCommand, ElementName=Root}" CommandParameter="Line" />
-                    <ToggleButton Margin="0,0,6,0" Padding="12,5" Content="사각형"
+                    <ToggleButton Margin="0,0,4,0" Padding="9,4" Content="사각형"
                                   IsChecked="{Binding Model.DrawingMode, ElementName=Root, Mode=OneWay, Converter={StaticResource DrawingModeToBooleanConverter}, ConverterParameter=Rectangle}"
                                   Command="{Binding Model.SetDrawingModeCommand, ElementName=Root}" CommandParameter="Rectangle" />
-                    <ToggleButton Margin="0,0,12,0" Padding="12,5" Content="원"
+                    <ToggleButton Margin="0,0,8,0" Padding="9,4" Content="원"
                                   IsChecked="{Binding Model.DrawingMode, ElementName=Root, Mode=OneWay, Converter={StaticResource DrawingModeToBooleanConverter}, ConverterParameter=Ellipse}"
                                   Command="{Binding Model.SetDrawingModeCommand, ElementName=Root}" CommandParameter="Ellipse" />
-                    <Button Margin="0,0,6,0" Padding="12,5" Content="100%"
+                    <Button Margin="0,0,4,0" Padding="9,4" Content="100%"
                             Command="{Binding Model.ResetScaleCommand, ElementName=Root}" />
-                    <Button Margin="0,0,6,0" Padding="12,5" Content="맞춤"
+                    <Button Margin="0,0,4,0" Padding="9,4" Content="맞춤"
                             Click="OnFitClick" />
-                    <Button Padding="12,5" Content="선택 삭제"
+                    <Button Padding="9,4" Content="선택 삭제"
                             Command="{Binding Model.DeleteSelectedCommand, ElementName=Root}" />
-                    <Border Width="1" Margin="12,2" Background="{DynamicResource BorderBrush}" />
+                    <Border Width="1" Margin="8,2" Background="{DynamicResource BorderBrush}" />
                     <TextBlock Margin="0,0,7,0" VerticalAlignment="Center" Text="Object 색상" />
                     <ComboBox Width="64" Margin="0,0,12,0"
                               ItemsSource="{Binding ObjectColors, ElementName=Root}"

@@ -17,10 +17,10 @@
         WindowStyle="None">
     <Window.Resources>
         <Style x:Key="MessageBoxButtonStyle" TargetType="Button">
-            <Setter Property="MinWidth" Value="76" />
-            <Setter Property="MinHeight" Value="34" />
-            <Setter Property="Margin" Value="6,0,0,0" />
-            <Setter Property="Padding" Value="12,7" />
+            <Setter Property="MinWidth" Value="72" />
+            <Setter Property="MinHeight" Value="32" />
+            <Setter Property="Margin" Value="5,0,0,0" />
+            <Setter Property="Padding" Value="10,5" />
             <Setter Property="Background" Value="{DynamicResource SurfaceAlternateBrush}" />
             <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
             <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}" />
@@ -191,7 +191,7 @@
             </Grid>
 
             <Border Grid.Row="2"
-                    Padding="16,12"
+                    Padding="12,8"
                     Background="{DynamicResource SurfaceAlternateBrush}"
                     BorderBrush="{DynamicResource BorderBrush}"
                     BorderThickness="0,1,0,0"

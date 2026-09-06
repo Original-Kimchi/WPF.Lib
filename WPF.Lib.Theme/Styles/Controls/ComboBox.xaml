@@ -5,8 +5,8 @@
         <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
         <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}" />
         <Setter Property="BorderThickness" Value="1" />
-        <Setter Property="Padding" Value="10,7" />
-        <Setter Property="MinHeight" Value="38" />
+        <Setter Property="Padding" Value="8,4" />
+        <Setter Property="MinHeight" Value="32" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
         <Setter Property="Template">
             <Setter.Value>
@@ -21,7 +21,7 @@
                         <Grid Margin="{TemplateBinding BorderThickness}">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="36" />
+                                <ColumnDefinition Width="32" />
                             </Grid.ColumnDefinitions>
 
                             <ToggleButton Grid.ColumnSpan="2"
@@ -84,8 +84,8 @@
                             <Border x:Name="DropDownBorder"
                                     MinWidth="{Binding ActualWidth, ElementName=Root}"
                                     MaxHeight="{TemplateBinding MaxDropDownHeight}"
-                                    Margin="0,4,0,0"
-                                    Padding="4"
+                                    Margin="0,3,0,0"
+                                    Padding="3"
                                     Background="{DynamicResource SurfaceBrush}"
                                     BorderBrush="{DynamicResource BorderBrush}"
                                     BorderThickness="1"
@@ -133,7 +133,7 @@
 
     <Style TargetType="ComboBoxItem">
         <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
-        <Setter Property="Padding" Value="10,8" />
+        <Setter Property="Padding" Value="8,5" />
         <Setter Property="HorizontalContentAlignment" Value="Stretch" />
         <Setter Property="Template">
             <Setter.Value>

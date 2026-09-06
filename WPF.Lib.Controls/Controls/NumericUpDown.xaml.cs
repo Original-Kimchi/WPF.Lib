@@ -7,6 +7,8 @@ namespace WPF.Lib.Controls.Controls;
 
 public partial class NumericUpDown : UserControl
 {
+    public event RoutedPropertyChangedEventHandler<decimal>? ValueChanged;
+
     public static readonly DependencyProperty ValueProperty = DependencyProperty.Register(
         nameof(Value), typeof(decimal), typeof(NumericUpDown),
         new FrameworkPropertyMetadata(0m, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnValueChanged, CoerceValue));
@@ -184,6 +186,7 @@ public partial class NumericUpDown : UserControl
         var control = (NumericUpDown)d;
         control.UpdateText();
         control.UpdateButtonState();
+        control.ValueChanged?.Invoke(control, new RoutedPropertyChangedEventArgs<decimal>((decimal)e.OldValue, (decimal)e.NewValue));
     }
 
     private static void OnRangeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)

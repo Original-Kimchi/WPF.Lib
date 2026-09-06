@@ -6,7 +6,7 @@
 
 | 컨트롤 | 용도 | 주요 API |
 |---|---|---|
-| `ColorPicker` | 팔레트, HEX와 불투명도로 색상 선택 | `SelectedColor` (`System.Windows.Media.Color`, 기본 양방향 바인딩) |
+| `ColorPicker` | 팝업 색상 영역과 RGB·HEX 입력으로 색상 선택 | `SelectedColor`, `IsDropDownOpen` |
 | `NumericUpDown` | 범위와 증감 단위를 지원하는 숫자 입력 | `Value`, `Minimum`, `Maximum`, `Increment`, `DecimalPlaces`, `IsReadOnly` |
 | `TimePicker` | 12시간제 또는 24시간제 시간 선택 | `SelectedTime`, `MinuteStep`, `Is24HourMode` |
 | `SearchBox` | Enter 검색과 입력 지연 검색 | `Text`, `Placeholder`, `SearchCommand`, `SearchCommandParameter`, `SearchOnTextChanged`, `SearchDelay` |
@@ -96,10 +96,12 @@ xmlns:controls="clr-namespace:WPF.Lib.Controls.Controls;assembly=WPF.Lib.Control
 뷰 모델의 `SelectedColor`는 `System.Windows.Media.Color` 형식으로 선언합니다.
 이미지 주석에는 `SelectedColor="{Binding SelectedAnnotation.ObjectColor}"`처럼 색상 속성을 직접 연결할 수 있습니다.
 
-- 16색 팔레트는 현재 알파 값을 유지합니다. 방향키로 팔레트를 이동할 수 있습니다.
+- 접힌 상태에는 현재 색상과 HEX 값이 표시되며 클릭하면 편집 팝업이 열립니다.
+- 색상 영역에서 채도와 명도를, 오른쪽 세로 막대에서 색조를 선택합니다.
+- 빨강·녹색·파랑·알파 값을 0~255 범위에서 직접 입력할 수 있습니다.
 - HEX는 `#RRGGBB` 또는 `#AARRGGBB` 형식이며 `#`은 생략할 수 있습니다. 6자리 입력은 불투명한 색상으로 적용됩니다.
 - Enter 또는 포커스 이동으로 적용하고 Esc로 입력을 되돌립니다. 잘못된 입력은 안내를 표시하며 기존 색상을 유지합니다.
-- 불투명도 슬라이더는 알파 0~255를 조절합니다. 체크무늬 미리보기로 투명도를 확인할 수 있습니다.
+- 투명한 색상은 접힌 미리보기의 체크무늬로 확인할 수 있습니다.
 - `IsEnabled="False"`로 입력을 비활성화할 수 있습니다. 갤러리에서 활성·비활성 예제와 테마 전환을 확인할 수 있습니다.
 
 ## BusyOverlay

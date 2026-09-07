@@ -13,7 +13,6 @@
         <converters:MeasurementConverter x:Key="MeasurementConverter" />
         <converters:DrawingModeToBooleanConverter x:Key="DrawingModeToBooleanConverter" />
         <converters:InverseScaleConverter x:Key="InverseScaleConverter" />
-        <converters:ColorToBrushConverter x:Key="ColorToBrushConverter" />
         <converters:AllTrueToVisibilityConverter x:Key="AllTrueToVisibilityConverter" />
         <BooleanToVisibilityConverter x:Key="BooleanVisibilityConverter" />
     </UserControl.Resources>
@@ -48,26 +47,18 @@
                             Command="{Binding Model.DeleteSelectedCommand, ElementName=Root}" />
                     <Border Width="1" Margin="8,2" Background="{DynamicResource BorderBrush}" />
                     <TextBlock Margin="0,0,7,0" VerticalAlignment="Center" Text="Object 색상" />
-                    <ComboBox Width="64" Margin="0,0,12,0"
-                              ItemsSource="{Binding ObjectColors, ElementName=Root}"
-                              SelectedItem="{Binding Model.SelectedAnnotation.ObjectColor, ElementName=Root, Mode=TwoWay}">
-                        <ComboBox.Style>
-                            <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
+                    <controls:ColorPicker Width="140" Margin="0,0,12,0"
+                                          SelectedColor="{Binding Model.SelectedAnnotation.ObjectColor, ElementName=Root, Mode=TwoWay}">
+                        <controls:ColorPicker.Style>
+                            <Style TargetType="controls:ColorPicker">
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding Model.SelectedAnnotation, ElementName=Root}" Value="{x:Null}">
                                         <Setter Property="IsEnabled" Value="False" />
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
-                        </ComboBox.Style>
-                        <ComboBox.ItemTemplate>
-                            <DataTemplate>
-                                <Border Width="28" Height="16" CornerRadius="3"
-                                        Background="{Binding Converter={StaticResource ColorToBrushConverter}}"
-                                        BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" />
-                            </DataTemplate>
-                        </ComboBox.ItemTemplate>
-                    </ComboBox>
+                        </controls:ColorPicker.Style>
+                    </controls:ColorPicker>
                     <CheckBox VerticalAlignment="Center" Content="Label 표시"
                               IsChecked="{Binding Model.ShowLabels, ElementName=Root, Mode=TwoWay}" />
                 </StackPanel>

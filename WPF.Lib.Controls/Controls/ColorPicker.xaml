@@ -159,7 +159,7 @@
                             <ColumnDefinition Width="55" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <TextBlock VerticalAlignment="Center" Text="16진수(H)" />
+                        <TextBlock VerticalAlignment="Center" Text="16진수" />
                         <TextBox x:Name="HexInput" Grid.Column="1" MaxLength="9"
                                  AutomationProperties.Name="HEX 색상" ToolTip="#RRGGBB 또는 #AARRGGBB"
                                  PreviewKeyDown="OnHexKeyDown" LostKeyboardFocus="OnHexLostFocus" />

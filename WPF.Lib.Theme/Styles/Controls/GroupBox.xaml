@@ -53,9 +53,10 @@
         <Setter Property="HeaderTemplate">
             <Setter.Value>
                 <DataTemplate>
-                    <TextBlock Text="{Binding}"
-                               Foreground="{Binding Path=(controls:GroupBoxAssist.HeaderForeground), RelativeSource={RelativeSource AncestorType={x:Type GroupBox}}}"
-                               FontWeight="SemiBold" />
+                    <TextBlock
+                        Text="{Binding}"
+                        Foreground="{Binding Path=(controls:GroupBoxAssist.HeaderForeground), RelativeSource={RelativeSource AncestorType={x:Type GroupBox}}}"
+                        FontWeight="SemiBold" />
                 </DataTemplate>
             </Setter.Value>
         </Setter>

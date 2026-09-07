@@ -2,42 +2,85 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:behaviors="clr-namespace:WPF.Lib.Theme.Behaviors"
                     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes">
-    <Style TargetType="TreeView"><Setter Property="Background" Value="Transparent" /><Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" /><Setter Property="BorderThickness" Value="0" /><Setter Property="Padding" Value="2" /><Setter Property="behaviors:TreeViewItemExpandBehavior.IsEnabled" Value="True" /></Style>
+    <Style TargetType="TreeView">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Padding" Value="2" />
+        <Setter Property="behaviors:TreeViewItemExpandBehavior.IsEnabled" Value="True" />
+    </Style>
     <Style TargetType="TreeViewItem">
-        <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" /><Setter Property="Padding" Value="5,3" /><Setter Property="IsExpanded" Value="True" />
-        <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="TreeViewItem"><Grid><Grid.RowDefinitions><RowDefinition Height="Auto" /><RowDefinition /></Grid.RowDefinitions><Grid.ColumnDefinitions><ColumnDefinition Width="18" /><ColumnDefinition /></Grid.ColumnDefinitions>
-            <ToggleButton x:Name="Expander" Width="18" Height="18"
-                          VerticalAlignment="Center"
-                          IsChecked="{Binding IsExpanded, RelativeSource={RelativeSource TemplatedParent}}"
-                          Style="{x:Null}">
-                <ToggleButton.Template>
-                    <ControlTemplate TargetType="ToggleButton">
-                        <Border Background="Transparent" CornerRadius="3">
-                            <materialDesign:PackIcon x:Name="Chevron"
-                                                     Width="16" Height="16"
-                                                     Kind="ChevronRight"
-                                                     Foreground="{DynamicResource TextSecondaryBrush}"
-                                                     RenderTransformOrigin="0.5,0.5">
-                                <materialDesign:PackIcon.RenderTransform>
-                                    <RotateTransform Angle="0" />
-                                </materialDesign:PackIcon.RenderTransform>
-                            </materialDesign:PackIcon>
+        <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
+        <Setter Property="Padding" Value="5,3" />
+        <Setter Property="IsExpanded" Value="True" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="TreeViewItem">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="18" />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <ToggleButton x:Name="Expander"
+                                      Width="18"
+                                      Height="18"
+                                      VerticalAlignment="Center"
+                                      IsChecked="{Binding IsExpanded, RelativeSource={RelativeSource TemplatedParent}}"
+                                      Style="{x:Null}">
+                            <ToggleButton.Template>
+                                <ControlTemplate TargetType="ToggleButton">
+                                    <Border Background="Transparent" CornerRadius="3">
+                                        <materialDesign:PackIcon x:Name="Chevron"
+                                                                 Width="16"
+                                                                 Height="16"
+                                                                 Foreground="{DynamicResource TextSecondaryBrush}"
+                                                                 Kind="ChevronRight"
+                                                                 RenderTransformOrigin="0.5,0.5">
+                                            <materialDesign:PackIcon.RenderTransform>
+                                                <RotateTransform Angle="0" />
+                                            </materialDesign:PackIcon.RenderTransform>
+                                        </materialDesign:PackIcon>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsChecked" Value="True">
+                                            <Setter TargetName="Chevron" Property="RenderTransform">
+                                                <Setter.Value>
+                                                    <RotateTransform Angle="90" />
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Trigger>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter TargetName="Chevron" Property="Foreground" Value="{DynamicResource PrimaryBrush}" />
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </ToggleButton.Template>
+                        </ToggleButton>
+                        <Border x:Name="Header" Grid.Column="1" Padding="{TemplateBinding Padding}" CornerRadius="5">
+                            <ContentPresenter ContentSource="Header" />
                         </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsChecked" Value="True">
-                                <Setter TargetName="Chevron" Property="RenderTransform">
-                                    <Setter.Value><RotateTransform Angle="90" /></Setter.Value>
-                                </Setter>
-                            </Trigger>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="Chevron" Property="Foreground" Value="{DynamicResource PrimaryBrush}" />
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </ToggleButton.Template>
-            </ToggleButton>
-            <Border x:Name="Header" Grid.Column="1" Padding="{TemplateBinding Padding}" CornerRadius="5"><ContentPresenter ContentSource="Header" /></Border>
-            <ItemsPresenter x:Name="ItemsHost" Grid.Row="1" Grid.Column="1" />
-        </Grid><ControlTemplate.Triggers><Trigger Property="HasItems" Value="False"><Setter TargetName="Expander" Property="Visibility" Value="Hidden" /></Trigger><Trigger Property="IsExpanded" Value="False"><Setter TargetName="ItemsHost" Property="Visibility" Value="Collapsed" /></Trigger><Trigger Property="IsSelected" Value="True"><Setter TargetName="Header" Property="Background" Value="{DynamicResource SelectionBrush}" /></Trigger><Trigger Property="IsMouseOver" Value="True"><Setter TargetName="Header" Property="Background" Value="{DynamicResource HoverBrush}" /></Trigger></ControlTemplate.Triggers></ControlTemplate></Setter.Value></Setter>
+                        <ItemsPresenter x:Name="ItemsHost" Grid.Row="1" Grid.Column="1" />
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="HasItems" Value="False">
+                            <Setter TargetName="Expander" Property="Visibility" Value="Hidden" />
+                        </Trigger>
+                        <Trigger Property="IsExpanded" Value="False">
+                            <Setter TargetName="ItemsHost" Property="Visibility" Value="Collapsed" />
+                        </Trigger>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter TargetName="Header" Property="Background" Value="{DynamicResource SelectionBrush}" />
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Header" Property="Background" Value="{DynamicResource HoverBrush}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
     </Style>
 </ResourceDictionary>

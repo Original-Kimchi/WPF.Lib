@@ -65,9 +65,13 @@ private void OnHasChangesChanged()
 }
 ```
 
-`RelayCommand`는 동기 작업에 사용합니다. I/O처럼 비동기로 실행되는 작업에는 `AsyncRelayCommand`를 사용합니다. 실행 중에는 자동으로 `CanExecute`가 `false`가 되며, `IsRunning`을 로딩 UI에 바인딩할 수 있습니다. 취소 토큰을 받는 대리자는 `Cancel()`로 취소할 수 있고, 직접 실행 결과를 기다려야 할 때는 `ExecuteAsync()`를 사용합니다.
+`RelayCommand`는 동기 작업에 사용합니다. I/O처럼 비동기로 실행되는 작업에는 `AsyncRelayCommand`를 사용합니다. 실행 중에는 자동으로 `CanExecute`가 `false`가 되며, `IsRunning`을 로딩 UI에 바인딩할 수 있습니다. 취소 토큰을 받는 대리자는 `Cancel()`로 취소할 수 있고, `CanBeCanceled`로 현재 취소 가능 여부를 확인할 수 있습니다. 직접 실행 결과를 기다려야 할 때는 `ExecuteAsync()`를 사용합니다.
+
+다음 예제의 `IExceptionHandler`는 `WPF.Lib.Core`에서 제공하므로 이 패턴을 사용할 때는 Core 프로젝트도 함께 참조합니다.
 
 ```csharp
+using WPF.Lib.Core.Abstractions;
+
 public AsyncRelayCommand LoadCommand { get; }
 
 private readonly ICustomerService _customerService;

@@ -21,6 +21,9 @@ dotnet add <프로젝트.csproj> reference WPF.Lib/WPF.Lib.Core/WPF.Lib.Core.csp
 | `ISettingsService` | 현재 설정의 로드와 저장 |
 | `IThemeService` | 현재 테마 조회와 변경 |
 
+`INavigationService`는 애플리케이션마다 화면 구성과 수명 정책이 다르므로 계약만 제공합니다.
+`WPF.Lib.Services.AddWpfServices`는 이 인터페이스를 등록하지 않으며, 실행 프로젝트에서 구현체를 선택해 별도로 등록해야 합니다.
+
 ## 제공 모델
 
 | 형식 | 역할 |
@@ -34,7 +37,7 @@ dotnet add <프로젝트.csproj> reference WPF.Lib/WPF.Lib.Core/WPF.Lib.Core.csp
 
 이 프로젝트에는 WPF 타입에 독립적인 계약만 둡니다. 여러 제품이 함께 쓰는 기본 WPF 구현은 `WPF.Lib.Services`에, 제품 도메인에 결합된 구현은 실행 프로젝트 또는 제품별 Infrastructure에 둡니다.
 
-Composition Root에서는 `WPF.Lib.Services`의 등록 확장을 사용해 공통 계약과 구현을 연결합니다.
+Composition Root에서는 `WPF.Lib.Services`의 등록 확장을 사용해 기본 구현이 제공되는 공통 계약을 연결합니다.
 
 ```csharp
 using WPF.Lib.Services;

@@ -69,6 +69,8 @@ ThemeManager.ApplyTheme(ThemeKind.Light);
 | Hover | `HoverColor` | `HoverBrush` | `#EFF6FF` | `#263A55` |
 | 선택 | `SelectionColor` | `SelectionBrush` | `#DBEAFE` | `#1E3A5F` |
 | 오버레이 | `OverlayColor` | `OverlayBrush` | `#990F172A` | `#B3000000` |
+| 이미지 미니맵 배경 | `ImageViewerMiniMapBackgroundColor` | `ImageViewerMiniMapBackgroundBrush` | `#E6FFFFFF` | `#E61F2937` |
+| 이미지 뷰포트 표시 | `ImageViewerViewportFillColor` | `ImageViewerViewportFillBrush` | `#33D97706` | `#33FBBF24` |
 
 주요 색상 위의 텍스트나 아이콘에는 고정된 흰색 대신 `PrimaryForegroundBrush`를 사용합니다.
 
@@ -84,9 +86,22 @@ ThemeManager.ApplyTheme(ThemeKind.Light);
 - `TabControl`, `TabItem`, `DatePicker`, `Calendar`
 - `ProgressBar`, `Slider`, `Expander`, `GroupBox`
 
-`DataGrid` 컬럼 헤더 정렬은 기본적으로 `오름차순 → 내림차순 → 정렬 없음` 순서로 순환합니다.
-기존 WPF 정렬 순환을 사용하려면 해당 그리드에
-`themeBehaviors:DataGridSortingBehavior.IsEnabled="False"`를 지정합니다.
+암시적 `DataGrid` 스타일은 색상과 템플릿만 적용하며 편집, 행 추가, 선택 방식은 WPF 기본 동작을 유지합니다.
+읽기 전용·단일 행 선택이 필요한 표에는 `ModernReadOnlyDataGridStyle`을 적용합니다. 이 스타일의 컬럼 정렬은
+`오름차순 → 내림차순 → 정렬 없음` 순서로 순환합니다.
+
+```xaml
+<DataGrid Style="{StaticResource ModernReadOnlyDataGridStyle}"
+          ItemsSource="{Binding Items}" />
+```
+
+일반 `DataGrid`에서 3단계 정렬만 사용하려면 연결 속성을 명시적으로 활성화합니다.
+
+```xaml
+<DataGrid xmlns:themeBehaviors="clr-namespace:WPF.Lib.Theme.Behaviors;assembly=WPF.Lib.Theme"
+          themeBehaviors:DataGridSortingBehavior.IsEnabled="True"
+          ItemsSource="{Binding Items}" />
+```
 
 필요할 때 명시적으로 사용할 수 있는 주요 스타일은 다음과 같습니다.
 
@@ -96,6 +111,7 @@ ThemeManager.ApplyTheme(ThemeKind.Light);
 | `WindowCaptionButtonStyle` | `Button` | 최소화 및 최대화/복원 버튼 |
 | `WindowCloseButtonStyle` | `Button` | 닫기 버튼 |
 | `ModernListBoxItemStyle` | `ListBoxItem` | Hover 및 선택 상태가 적용된 항목 컨테이너 |
+| `ModernReadOnlyDataGridStyle` | `DataGrid` | 읽기 전용, 단일 행 선택 및 3단계 정렬이 적용된 표 |
 | `DataGridCellRightStyle` | `DataGridCell` | 오른쪽 정렬 셀 |
 | `DataGridCellCenterStyle` | `DataGridCell` | 가운데 정렬 셀 |
 | `BaseDialogViewStyle` | `BaseDialogView` | 제목과 확인·취소 영역을 포함한 다이얼로그 |

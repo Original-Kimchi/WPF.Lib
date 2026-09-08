@@ -11,6 +11,7 @@
 | `TimePicker` | 12시간제 또는 24시간제 시간 선택 | `SelectedTime`, `MinuteStep`, `Is24HourMode` |
 | `SearchBox` | Enter 검색과 입력 지연 검색 | `Text`, `Placeholder`, `SearchCommand`, `SearchCommandParameter`, `SearchOnTextChanged`, `SearchDelay` |
 | `BusyOverlay` | 콘텐츠 위에 진행 상태 표시 | `Child`, `ChildTemplate`, `IsBusy`, `BusyMessage`, `IsIndeterminate`, `Progress` |
+| `ProgressRing` | 활성 상태에서 회전하는 원형 진행 표시 | `IsActive`, `RingBrush`, `RingThickness` |
 | `ToastHost` | 자동 닫힘을 지원하는 알림 목록 표시 | `Service` |
 | `ThemedMessageBox` | 현재 테마를 따르는 모달 메시지 박스 | `Show(...)`, `MessageBoxButton`, `MessageBoxImage`, `MessageBoxResult` |
 | `ImageViewer` | 확대, 이동, 미니맵, 선·사각형·타원 주석 | `Model`, `ShowMiniMap`, `FitToViewport()` |
@@ -119,6 +120,15 @@ xmlns:controls="clr-namespace:WPF.Lib.Controls.Controls;assembly=WPF.Lib.Control
 </controls:BusyOverlay>
 ```
 
+`ProgressRing`은 별도의 콘텐츠 오버레이가 필요하지 않은 작은 로딩 표시에 사용합니다. `IsActive`가 `False`이면 자동으로 숨겨집니다.
+
+```xaml
+<controls:ProgressRing Width="24"
+                       Height="24"
+                       IsActive="{Binding IsBusy}"
+                       RingThickness="3" />
+```
+
 ## 토스트 알림
 
 `ToastService` 인스턴스를 화면과 뷰 모델이 공유하도록 등록합니다. Microsoft.Extensions.DependencyInjection을 사용한다면 다음과 같이 싱글턴으로 등록할 수 있습니다.
@@ -158,7 +168,7 @@ public sealed class EditorViewModel(IToastService toastService)
 
 `MaximumVisible`의 기본값은 4개입니다. `duration`을 `TimeSpan.Zero` 이하로 지정하면 자동으로 닫히지 않으며, `Dismiss` 또는 `Clear`로 제거할 수 있습니다.
 
-`ToastService`는 생성된 UI Dispatcher를 소유권 기준으로 사용합니다. 백그라운드 호출은 해당 Dispatcher로 전달하며, `Dismiss`, 최대 개수 초과, `Clear`, `Dispose`에서 연관된 타이머를 중지하고 `Tick` 구독을 해제합니다. DI Singleton으로 등록하면 루트 `ServiceProvider.Dispose()`가 마지막 정리를 호출합니다.
+`ToastService`는 생성 시점의 `Dispatcher.CurrentDispatcher`를 캡처하므로 UI 스레드에서 생성해야 합니다. DI Singleton으로 등록할 때도 UI 스레드에서 처음 확인되도록 구성합니다. 백그라운드 호출은 캡처한 Dispatcher로 전달하며, `Dismiss`, 최대 개수 초과, `Clear`, `Dispose`에서 연관된 타이머를 중지하고 `Tick` 구독을 해제합니다. 루트 `ServiceProvider.Dispose()`가 마지막 정리를 호출합니다.
 
 ## 테마 메시지 박스
 
@@ -207,7 +217,7 @@ public ImageModel Image { get; } = new()
 - `Ctrl`+마우스 휠로 확대·축소하며 배율은 0.01에서 10 사이로 제한됩니다.
 - `Pan` 모드에서는 이미지를 이동하고 기존 주석을 선택, 이동, 크기 조절할 수 있습니다. 사각형과 타원은 네 모서리 및 상·하·좌·우 중앙 핸들로 크기를 조절합니다.
 - 선택한 주석은 방향키로 1px, `Shift`+방향키로 10px씩 이동할 수 있습니다.
-- 주석을 이동하거나 크기를 조절할 때 `Alt`를 누르면 ImageViewer 영역과 다른 주석의 좌·중앙·우 및 상·중앙·하 위치에 스냅되며 정렬 가이드가 표시됩니다.
+- 주석을 이동하거나 크기를 조절할 때 `Alt`를 누르면 ImageViewer 영역과 다른 주석의 좌·중앙·우 및 상·중앙·하 위치에 스냅되며 정렬 가이드가 표시됩니다. 이동 중 같은 크기의 다른 주석과 좌·우 또는 상·하 경계가 동시에 일치하면 일치하는 양쪽 가이드를 모두 표시하고, 크기 조절 중에는 현재 조작하여 스냅된 위치의 가이드만 표시합니다.
 - `Line`, `Rectangle`, `Ellipse` 모드에서는 드래그하여 주석을 추가합니다. 추가 후에는 자동으로 `Pan` 모드로 돌아갑니다.
 - `SetDrawingModeCommand`, `ResetScaleCommand`, `DeleteSelectedCommand`, `ClearAnnotationsCommand`로 도구 모음을 구성할 수 있습니다.
 - `UnitsPerPixel`과 `MeasurementUnit`으로 주석 측정값의 단위를 설정할 수 있습니다.
@@ -217,6 +227,8 @@ public ImageModel Image { get; } = new()
   새 주석의 기본값은 `Always`입니다.
 
 주석에 별도 데이터나 동작이 필요하면 `ImageModel.CreateAnnotation`을 재정의하여 사용자 정의 `ImageAnnotation`을 반환할 수 있습니다.
+
+ImageViewer의 내부 편집 상태는 `Enums.cs`의 `ImageViewerEditOperation`으로 구분합니다. `ImageViewer.xaml.cs`는 종속성 속성, 수명주기, 확대·맞춤, 포인터 입력, 주석 편집, 키보드 입력, 스냅, 도형 계산, 뷰포트 탐색 기능별 region으로 구성되어 있습니다.
 
 ## 수명과 메모리
 
@@ -287,9 +299,11 @@ WPF.Lib.Controls/
 │  └─ NestedScrollBehavior.cs
 ├─ Controls/
 │  ├─ BusyOverlay.xaml
+│  ├─ ColorPicker.xaml
 │  ├─ ImageMiniMap.xaml
 │  ├─ ImageViewer.xaml
 │  ├─ NumericUpDown.xaml
+│  ├─ ProgressRing.xaml
 │  ├─ SearchBox.xaml
 │  ├─ ThemedMessageBox.xaml
 │  ├─ TimePicker.xaml
@@ -303,6 +317,7 @@ WPF.Lib.Controls/
 ├─ Services/
 │  └─ ToastService.cs
 ├─ ControlsModuleInitializer.cs
+├─ Enums.cs
 └─ WPF.Lib.Controls.csproj
 ```
 

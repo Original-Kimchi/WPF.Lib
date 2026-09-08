@@ -4,6 +4,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:converters="clr-namespace:WPF.Lib.Controls.Converters"
              xmlns:controls="clr-namespace:WPF.Lib.Controls.Controls"
+             xmlns:lib="clr-namespace:WPF.Lib.Controls"
              xmlns:models="clr-namespace:WPF.Lib.Controls.Models"
              Focusable="True"
              PreviewKeyDown="OnPreviewKeyDown"
@@ -163,43 +164,43 @@
                                         </Style>
                                     </Canvas.Resources>
                                     <Rectangle Canvas.Left="{Binding Start.X}" Canvas.Top="{Binding Start.Y}"
-                                               Width="10" Height="10" Tag="ResizeStart"
+                                               Width="10" Height="10" Tag="{x:Static lib:ImageViewerEditOperation.ResizeStart}"
                                                Cursor="SizeAll" Fill="{DynamicResource SurfaceBrush}" Stroke="{DynamicResource PrimaryBrush}" StrokeThickness="2"
                                                Visibility="{Binding Kind, Converter={StaticResource KindVisibilityConverter}, ConverterParameter=Line}" />
                                     <Rectangle Canvas.Left="{Binding End.X}" Canvas.Top="{Binding End.Y}"
-                                               Width="10" Height="10" Tag="ResizeEnd"
+                                               Width="10" Height="10" Tag="{x:Static lib:ImageViewerEditOperation.ResizeEnd}"
                                                Cursor="SizeAll" Fill="{DynamicResource SurfaceBrush}" Stroke="{DynamicResource PrimaryBrush}" StrokeThickness="2"
                                                Visibility="{Binding Kind, Converter={StaticResource KindVisibilityConverter}, ConverterParameter=Line}" />
                                     <Rectangle Canvas.Left="{Binding Left}" Canvas.Top="{Binding Top}"
-                                               Width="10" Height="10" Tag="ResizeTopLeft"
+                                               Width="10" Height="10" Tag="{x:Static lib:ImageViewerEditOperation.ResizeTopLeft}"
                                                Cursor="SizeNWSE" Fill="{DynamicResource SurfaceBrush}" Stroke="{DynamicResource PrimaryBrush}" StrokeThickness="2"
                                                Visibility="{Binding Kind, Converter={StaticResource KindVisibilityConverter}, ConverterParameter='Rectangle,Ellipse'}" />
                                     <Rectangle Canvas.Left="{Binding Left}" Canvas.Top="{Binding End.Y}"
-                                               Width="10" Height="10" Tag="ResizeBottomLeft"
+                                               Width="10" Height="10" Tag="{x:Static lib:ImageViewerEditOperation.ResizeBottomLeft}"
                                                Cursor="SizeNESW" Fill="{DynamicResource SurfaceBrush}" Stroke="{DynamicResource PrimaryBrush}" StrokeThickness="2"
                                                Visibility="{Binding Kind, Converter={StaticResource KindVisibilityConverter}, ConverterParameter='Rectangle,Ellipse'}" />
                                     <Rectangle Canvas.Left="{Binding End.X}" Canvas.Top="{Binding Top}"
-                                               Width="10" Height="10" Tag="ResizeTopRight"
+                                               Width="10" Height="10" Tag="{x:Static lib:ImageViewerEditOperation.ResizeTopRight}"
                                                Cursor="SizeNESW" Fill="{DynamicResource SurfaceBrush}" Stroke="{DynamicResource PrimaryBrush}" StrokeThickness="2"
                                                Visibility="{Binding Kind, Converter={StaticResource KindVisibilityConverter}, ConverterParameter='Rectangle,Ellipse'}" />
                                     <Rectangle Canvas.Left="{Binding End.X}" Canvas.Top="{Binding End.Y}"
-                                               Width="10" Height="10" Tag="ResizeBottomRight"
+                                               Width="10" Height="10" Tag="{x:Static lib:ImageViewerEditOperation.ResizeBottomRight}"
                                                Cursor="SizeNWSE" Fill="{DynamicResource SurfaceBrush}" Stroke="{DynamicResource PrimaryBrush}" StrokeThickness="2"
                                                Visibility="{Binding Kind, Converter={StaticResource KindVisibilityConverter}, ConverterParameter='Rectangle,Ellipse'}" />
                                     <Rectangle Canvas.Left="{Binding CenterX}" Canvas.Top="{Binding Top}"
-                                               Width="10" Height="10" Tag="ResizeTop"
+                                               Width="10" Height="10" Tag="{x:Static lib:ImageViewerEditOperation.ResizeTop}"
                                                Cursor="SizeNS" Fill="{DynamicResource SurfaceBrush}" Stroke="{DynamicResource PrimaryBrush}" StrokeThickness="2"
                                                Visibility="{Binding Kind, Converter={StaticResource KindVisibilityConverter}, ConverterParameter='Rectangle,Ellipse'}" />
                                     <Rectangle Canvas.Left="{Binding CenterX}" Canvas.Top="{Binding End.Y}"
-                                               Width="10" Height="10" Tag="ResizeBottom"
+                                               Width="10" Height="10" Tag="{x:Static lib:ImageViewerEditOperation.ResizeBottom}"
                                                Cursor="SizeNS" Fill="{DynamicResource SurfaceBrush}" Stroke="{DynamicResource PrimaryBrush}" StrokeThickness="2"
                                                Visibility="{Binding Kind, Converter={StaticResource KindVisibilityConverter}, ConverterParameter='Rectangle,Ellipse'}" />
                                     <Rectangle Canvas.Left="{Binding Left}" Canvas.Top="{Binding CenterY}"
-                                               Width="10" Height="10" Tag="ResizeLeft"
+                                               Width="10" Height="10" Tag="{x:Static lib:ImageViewerEditOperation.ResizeLeft}"
                                                Cursor="SizeWE" Fill="{DynamicResource SurfaceBrush}" Stroke="{DynamicResource PrimaryBrush}" StrokeThickness="2"
                                                Visibility="{Binding Kind, Converter={StaticResource KindVisibilityConverter}, ConverterParameter='Rectangle,Ellipse'}" />
                                     <Rectangle Canvas.Left="{Binding End.X}" Canvas.Top="{Binding CenterY}"
-                                               Width="10" Height="10" Tag="ResizeRight"
+                                               Width="10" Height="10" Tag="{x:Static lib:ImageViewerEditOperation.ResizeRight}"
                                                Cursor="SizeWE" Fill="{DynamicResource SurfaceBrush}" Stroke="{DynamicResource PrimaryBrush}" StrokeThickness="2"
                                                Visibility="{Binding Kind, Converter={StaticResource KindVisibilityConverter}, ConverterParameter='Rectangle,Ellipse'}" />
                                 </Canvas>
@@ -211,7 +212,13 @@
                     <Line x:Name="VerticalSnapGuide"
                           Stroke="{DynamicResource PrimaryBrush}" StrokeDashArray="4,3"
                           Visibility="Collapsed" />
+                    <Line x:Name="AdditionalVerticalSnapGuide"
+                          Stroke="{DynamicResource PrimaryBrush}" StrokeDashArray="4,3"
+                          Visibility="Collapsed" />
                     <Line x:Name="HorizontalSnapGuide"
+                          Stroke="{DynamicResource PrimaryBrush}" StrokeDashArray="4,3"
+                          Visibility="Collapsed" />
+                    <Line x:Name="AdditionalHorizontalSnapGuide"
                           Stroke="{DynamicResource PrimaryBrush}" StrokeDashArray="4,3"
                           Visibility="Collapsed" />
                 </Canvas>

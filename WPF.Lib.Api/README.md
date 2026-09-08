@@ -43,9 +43,9 @@ public sealed class CustomerApi(IApiClient apiClient)
 
 `ApiClient`는 성공 및 오류 응답을 설정된 상한까지만 메모리 버퍼에 읽습니다. 성공 응답은 제한된 버퍼에서 비동기 JSON 역직렬화를 수행하고, 오류 응답도 같은 제한 안에서만 `ApiException.ResponseContent`에 보관합니다. 제한값은 API가 반환하는 정상 응답 크기에 맞춰 가능한 작게 설정합니다.
 
-## 현재 구현의 추가 제한
+## 현재 구현에서 제공하지 않는 보호
 
-- 절대 URI 거부 또는 허용 호스트 검증
+- 요청 URI의 절대 URI 여부 검사와 허용 호스트 검증
 - 로그에 기록하기 전 쿼리 문자열과 민감 헤더 마스킹
 
-사용자 입력에서 만들어진 절대 URI를 전달하지 마십시오. 공통 안전 기준은 [라이브러리 수명·메모리·안전 가이드](../../docs/library-lifecycle-and-safety.md)를 참고합니다.
+따라서 사용자 입력에서 만들어진 절대 URI를 전달하지 말고, 제품 계층에서 호스트와 경로를 검증해야 합니다. 공통 안전 기준은 [라이브러리 수명·메모리·안전 가이드](../../docs/library-lifecycle-and-safety.md)를 참고합니다.

@@ -42,6 +42,9 @@ services.AddWpfServices(options =>
 
 모든 구현은 Singleton으로 등록됩니다. 애플리케이션 종료 시 루트 `ServiceProvider.Dispose()`를 호출해야 DI가 추적하는 `IDisposable` 객체를 정리할 수 있습니다.
 
+`INavigationService`는 제품별 화면 생성과 탐색 기록 정책이 필요하므로 `AddWpfServices`에서 등록하지 않습니다.
+실행 프로젝트에서 `INavigationService` 구현을 만든 뒤 원하는 수명으로 별도 등록합니다.
+
 ## IMessageBoxService 위치
 
 대부분의 계약은 WPF 타입을 노출하지 않으므로 `WPF.Lib.Core/Abstractions`에 있습니다. `IMessageBoxService`는 `System.Windows.MessageBoxButton`, `MessageBoxResult`와 `WPF.Lib.Controls.Models.MessageBoxType`을 공개 API로 사용하므로 WPF 독립적인 Core에 둘 수 없습니다. 따라서 `WPF.Lib.Services/Abstractions`에 둡니다.

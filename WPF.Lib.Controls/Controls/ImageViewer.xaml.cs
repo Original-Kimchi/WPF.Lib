@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
+using WPF.Lib.Controls;
 using WPF.Lib.Controls.Models;
 
 namespace WPF.Lib.Controls.Controls;
@@ -10,6 +11,8 @@ namespace WPF.Lib.Controls.Controls;
 public partial class ImageViewer : UserControl
 {
     private const double SnapThresholdInScreenPixels = 8;
+
+    #region Dependency Properties
 
     public static readonly DependencyProperty ModelProperty = DependencyProperty.Register(
         nameof(Model), typeof(ImageModel), typeof(ImageViewer),
@@ -24,6 +27,10 @@ public partial class ImageViewer : UserControl
         set => SetValue(ShowMiniMapProperty, value);
     }
 
+    #endregion
+
+    #region Fields
+
     private Point _startPoint;
     private Point _panStart;
     private double _horizontalOffset;
@@ -32,10 +39,14 @@ public partial class ImageViewer : UserControl
     private ImageAnnotation? _editedAnnotation;
     private Point _originalStart;
     private Point _originalEnd;
-    private string? _editOperation;
+    private ImageViewerEditOperation? _editOperation;
     private bool _isPanning;
     private bool _fitPending;
     private DispatcherOperation? _fitOperation;
+
+    #endregion
+
+    #region Model and Lifecycle
 
     public ImageViewer()
     {
@@ -160,6 +171,10 @@ public partial class ImageViewer : UserControl
         _fitOperation = null;
     }
 
+    #endregion
+
+    #region Zoom and Fit
+
     private void OnPreviewMouseWheel(object sender, MouseWheelEventArgs e)
     {
         if (Model is null || Keyboard.Modifiers != ModifierKeys.Control)
@@ -204,6 +219,10 @@ public partial class ImageViewer : UserControl
         UpdateModelViewport();
     }
 
+    #endregion
+
+    #region Pointer Interaction
+
     private void OnSurfaceMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
         if (Model?.Source is null)
@@ -223,7 +242,9 @@ public partial class ImageViewer : UserControl
                 _editedAnnotation = annotation;
                 _originalStart = annotation.Start;
                 _originalEnd = annotation.End;
-                _editOperation = element?.Tag as string ?? "Move";
+                _editOperation = element?.Tag is ImageViewerEditOperation operation
+                    ? operation
+                    : ImageViewerEditOperation.Move;
             }
             else
             {
@@ -317,6 +338,10 @@ public partial class ImageViewer : UserControl
         return null;
     }
 
+    #endregion
+
+    #region Annotation Editing
+
     private void EditAnnotation(Point current)
     {
         if (_editedAnnotation is null)
@@ -325,10 +350,12 @@ public partial class ImageViewer : UserControl
         }
 
         var constrainToAxis = Keyboard.Modifiers.HasFlag(ModifierKeys.Shift);
-        if (_editOperation != "Move")
+        if (_editOperation != ImageViewerEditOperation.Move)
         {
-            var allowX = _editOperation is not "ResizeTop" and not "ResizeBottom";
-            var allowY = _editOperation is not "ResizeLeft" and not "ResizeRight";
+            var allowX = _editOperation is not ImageViewerEditOperation.ResizeTop and
+                not ImageViewerEditOperation.ResizeBottom;
+            var allowY = _editOperation is not ImageViewerEditOperation.ResizeLeft and
+                not ImageViewerEditOperation.ResizeRight;
 
             if (constrainToAxis && allowX && allowY)
             {
@@ -352,36 +379,36 @@ public partial class ImageViewer : UserControl
 
         switch (_editOperation)
         {
-            case "ResizeStart":
+            case ImageViewerEditOperation.ResizeStart:
                 _editedAnnotation.Start = current;
                 break;
-            case "ResizeEnd":
+            case ImageViewerEditOperation.ResizeEnd:
                 _editedAnnotation.End = current;
                 break;
-            case "ResizeTopLeft":
+            case ImageViewerEditOperation.ResizeTopLeft:
                 _editedAnnotation.Start = current;
                 break;
-            case "ResizeTopRight":
+            case ImageViewerEditOperation.ResizeTopRight:
                 _editedAnnotation.Start = new Point(_originalStart.X, current.Y);
                 _editedAnnotation.End = new Point(current.X, _originalEnd.Y);
                 break;
-            case "ResizeBottomLeft":
+            case ImageViewerEditOperation.ResizeBottomLeft:
                 _editedAnnotation.Start = new Point(current.X, _originalStart.Y);
                 _editedAnnotation.End = new Point(_originalEnd.X, current.Y);
                 break;
-            case "ResizeBottomRight":
+            case ImageViewerEditOperation.ResizeBottomRight:
                 _editedAnnotation.End = current;
                 break;
-            case "ResizeTop":
+            case ImageViewerEditOperation.ResizeTop:
                 _editedAnnotation.Start = new Point(_originalStart.X, current.Y);
                 break;
-            case "ResizeBottom":
+            case ImageViewerEditOperation.ResizeBottom:
                 _editedAnnotation.End = new Point(_originalEnd.X, current.Y);
                 break;
-            case "ResizeLeft":
+            case ImageViewerEditOperation.ResizeLeft:
                 _editedAnnotation.Start = new Point(current.X, _originalStart.Y);
                 break;
-            case "ResizeRight":
+            case ImageViewerEditOperation.ResizeRight:
                 _editedAnnotation.End = new Point(current.X, _originalEnd.Y);
                 break;
             default:
@@ -416,14 +443,18 @@ public partial class ImageViewer : UserControl
     {
         return _editOperation switch
         {
-            "ResizeStart" => _originalEnd,
-            "ResizeEnd" => _originalStart,
-            "ResizeTopRight" => new Point(_originalEnd.X, _originalStart.Y),
-            "ResizeBottomLeft" => new Point(_originalStart.X, _originalEnd.Y),
-            "ResizeBottomRight" => _originalEnd,
+            ImageViewerEditOperation.ResizeStart => _originalEnd,
+            ImageViewerEditOperation.ResizeEnd => _originalStart,
+            ImageViewerEditOperation.ResizeTopRight => new Point(_originalEnd.X, _originalStart.Y),
+            ImageViewerEditOperation.ResizeBottomLeft => new Point(_originalStart.X, _originalEnd.Y),
+            ImageViewerEditOperation.ResizeBottomRight => _originalEnd,
             _ => _originalStart
         };
     }
+
+    #endregion
+
+    #region Keyboard Input
 
     private void OnPreviewKeyDown(object sender, KeyEventArgs e)
     {
@@ -458,6 +489,10 @@ public partial class ImageViewer : UserControl
         MoveAnnotation(annotation, delta);
         e.Handled = true;
     }
+
+    #endregion
+
+    #region Snapping
 
     private Vector SnapMoveDelta(
         Vector delta,
@@ -611,7 +646,9 @@ public partial class ImageViewer : UserControl
     {
         var thickness = 1 / Math.Max(Model?.Scale ?? 1, 0.01);
         VerticalSnapGuide.StrokeThickness = thickness;
+        AdditionalVerticalSnapGuide.StrokeThickness = thickness;
         HorizontalSnapGuide.StrokeThickness = thickness;
+        AdditionalHorizontalSnapGuide.StrokeThickness = thickness;
 
         VerticalSnapGuide.Visibility = x.HasValue ? Visibility.Visible : Visibility.Collapsed;
         if (x.HasValue)
@@ -622,6 +659,18 @@ public partial class ImageViewer : UserControl
             VerticalSnapGuide.Y2 = ImageSurface.ActualHeight;
         }
 
+        var additionalX = _editOperation == ImageViewerEditOperation.Move && x.HasValue
+            ? FindAdditionalAlignedVerticalEdge(x.Value)
+            : null;
+        AdditionalVerticalSnapGuide.Visibility = additionalX.HasValue ? Visibility.Visible : Visibility.Collapsed;
+        if (additionalX.HasValue)
+        {
+            AdditionalVerticalSnapGuide.X1 = additionalX.Value;
+            AdditionalVerticalSnapGuide.X2 = additionalX.Value;
+            AdditionalVerticalSnapGuide.Y1 = 0;
+            AdditionalVerticalSnapGuide.Y2 = ImageSurface.ActualHeight;
+        }
+
         HorizontalSnapGuide.Visibility = y.HasValue ? Visibility.Visible : Visibility.Collapsed;
         if (y.HasValue)
         {
@@ -630,13 +679,88 @@ public partial class ImageViewer : UserControl
             HorizontalSnapGuide.Y1 = y.Value;
             HorizontalSnapGuide.Y2 = y.Value;
         }
+
+        var additionalY = _editOperation == ImageViewerEditOperation.Move && y.HasValue
+            ? FindAdditionalAlignedHorizontalEdge(y.Value)
+            : null;
+        AdditionalHorizontalSnapGuide.Visibility = additionalY.HasValue ? Visibility.Visible : Visibility.Collapsed;
+        if (additionalY.HasValue)
+        {
+            AdditionalHorizontalSnapGuide.X1 = 0;
+            AdditionalHorizontalSnapGuide.X2 = ImageSurface.ActualWidth;
+            AdditionalHorizontalSnapGuide.Y1 = additionalY.Value;
+            AdditionalHorizontalSnapGuide.Y2 = additionalY.Value;
+        }
+    }
+
+    private double? FindAdditionalAlignedVerticalEdge(double primaryGuide)
+    {
+        if (Model is null || _editedAnnotation is null)
+        {
+            return null;
+        }
+
+        foreach (var target in Model.Annotations.Where(annotation => !ReferenceEquals(annotation, _editedAnnotation)))
+        {
+            if (!AreClose(_editedAnnotation.Left, primaryGuide) &&
+                AreClose(_editedAnnotation.Left, target.Left))
+            {
+                return _editedAnnotation.Left;
+            }
+
+            var editedRight = _editedAnnotation.Left + _editedAnnotation.Width;
+            var targetRight = target.Left + target.Width;
+            if (!AreClose(editedRight, primaryGuide) && AreClose(editedRight, targetRight))
+            {
+                return editedRight;
+            }
+        }
+
+        return null;
+    }
+
+    private double? FindAdditionalAlignedHorizontalEdge(double primaryGuide)
+    {
+        if (Model is null || _editedAnnotation is null)
+        {
+            return null;
+        }
+
+        foreach (var target in Model.Annotations.Where(annotation => !ReferenceEquals(annotation, _editedAnnotation)))
+        {
+            if (!AreClose(_editedAnnotation.Top, primaryGuide) &&
+                AreClose(_editedAnnotation.Top, target.Top))
+            {
+                return _editedAnnotation.Top;
+            }
+
+            var editedBottom = _editedAnnotation.Top + _editedAnnotation.Height;
+            var targetBottom = target.Top + target.Height;
+            if (!AreClose(editedBottom, primaryGuide) && AreClose(editedBottom, targetBottom))
+            {
+                return editedBottom;
+            }
+        }
+
+        return null;
+    }
+
+    private static bool AreClose(double first, double second)
+    {
+        return Math.Abs(first - second) < 0.001;
     }
 
     private void HideSnapGuides()
     {
         VerticalSnapGuide.Visibility = Visibility.Collapsed;
+        AdditionalVerticalSnapGuide.Visibility = Visibility.Collapsed;
         HorizontalSnapGuide.Visibility = Visibility.Collapsed;
+        AdditionalHorizontalSnapGuide.Visibility = Visibility.Collapsed;
     }
+
+    #endregion
+
+    #region Annotation Geometry
 
     private void MoveAnnotation(ImageAnnotation annotation, Vector requestedDelta)
     {
@@ -686,6 +810,10 @@ public partial class ImageViewer : UserControl
             Math.Clamp(point.Y, 0, ImageSurface.ActualHeight));
     }
 
+    #endregion
+
+    #region Viewport Navigation
+
     private void OnScrollChanged(object sender, ScrollChangedEventArgs e)
     {
         UpdateModelViewport();
@@ -719,4 +847,6 @@ public partial class ImageViewer : UserControl
         ImageScrollViewer.ScrollToVerticalOffset(
             imagePoint.Y * Model.Scale - ImageScrollViewer.ViewportHeight / 2);
     }
+
+    #endregion
 }

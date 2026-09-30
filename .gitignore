@@ -1,0 +1,25 @@
+# Build outputs
+[Bb]in/
+[Oo]bj/
+[Dd]ebug/
+[Rr]elease/
+artifacts/
+
+# IDE settings
+.vs/
+.vscode/
+.idea/
+*.user
+*.suo
+*.rsuser
+*.DotSettings.user
+
+# Test and package outputs
+TestResults/
+*.coverage
+*.nupkg
+*.snupkg
+
+# Operating system files
+.DS_Store
+Thumbs.db

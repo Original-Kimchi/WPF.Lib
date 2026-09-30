@@ -31,7 +31,7 @@ public abstract class BaseDialogViewModel : BaseViewModel
 
     public string CancelText
     {
-        get => _cancelText; 
+        get => _cancelText;
         set => SetProperty(ref _cancelText, value);
     }
 

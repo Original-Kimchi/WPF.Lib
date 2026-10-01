@@ -4,8 +4,10 @@ WPF 애플리케이션에서 공통으로 사용할 UI 독립 계약과 모델�
 
 ## 참조
 
+다음 명령은 상위 `WPFControls.UI` 저장소 루트 기준입니다. `WPF.Lib` 독립 저장소에서는 `01.WPF.Lib/` 접두사를 제외합니다.
+
 ```powershell
-dotnet add <프로젝트.csproj> reference WPF.Lib/WPF.Lib.Core/WPF.Lib.Core.csproj
+dotnet add <프로젝트.csproj> reference 01.WPF.Lib/WPF.Lib.Core/WPF.Lib.Core.csproj
 ```
 
 ## 제공 계약

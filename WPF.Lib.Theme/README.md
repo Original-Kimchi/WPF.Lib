@@ -4,10 +4,10 @@
 
 ## 참조 및 초기 설정
 
-저장소 루트에서 프로젝트 참조를 추가합니다.
+다음 명령은 상위 `WPFControls.UI` 저장소 루트 기준입니다. `WPF.Lib` 독립 저장소에서는 `01.WPF.Lib/` 접두사를 제외합니다.
 
 ```powershell
-dotnet add <애플리케이션.csproj> reference WPF.Lib/WPF.Lib.Theme/WPF.Lib.Theme.csproj
+dotnet add <애플리케이션.csproj> reference 01.WPF.Lib/WPF.Lib.Theme/WPF.Lib.Theme.csproj
 ```
 
 `App.xaml`에서 시작 테마 하나를 병합합니다. 각 테마 사전은 `Styles/ModernControls.xaml`을 내부에서 병합하므로 스타일 사전을 따로 추가할 필요가 없습니다.

@@ -4,8 +4,10 @@
 
 ## 참조
 
+다음 명령은 상위 `WPFControls.UI` 저장소 루트 기준입니다. `WPF.Lib` 독립 저장소에서는 `01.WPF.Lib/` 접두사를 제외합니다.
+
 ```powershell
-dotnet add <애플리케이션.csproj> reference WPF.Lib/WPF.Lib.Logging.Log4Net/WPF.Lib.Logging.Log4Net.csproj
+dotnet add <애플리케이션.csproj> reference 01.WPF.Lib/WPF.Lib.Logging.Log4Net/WPF.Lib.Logging.Log4Net.csproj
 ```
 
 ## 설정 파일 배포
@@ -43,7 +45,7 @@ dotnet add <애플리케이션.csproj> reference WPF.Lib/WPF.Lib.Logging.Log4Net
 </root>
 ```
 
-이 구성에서는 Error와 Critical 로그가 일반 로그와 오류 전용 로그에 함께 기록됩니다. 샘플 앱의 전체 롤링 설정은 `WPFControls.UI/log4net.config`에서 확인할 수 있습니다.
+이 구성에서는 Error와 Critical 로그가 일반 로그와 오류 전용 로그에 함께 기록됩니다. 샘플 앱의 전체 롤링 설정은 `WPFControls/WPFControls.UI/log4net.config`에서 확인할 수 있습니다.
 
 ## 등록
 

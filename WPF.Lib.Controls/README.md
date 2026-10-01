@@ -21,10 +21,10 @@
 
 ## 참조 및 테마 설정
 
-저장소 루트에서 애플리케이션 프로젝트에 참조를 추가합니다.
+다음 명령은 상위 `WPFControls.UI` 저장소 루트 기준입니다. `WPF.Lib` 독립 저장소에서는 `01.WPF.Lib/` 접두사를 제외합니다.
 
 ```powershell
-dotnet add <애플리케이션.csproj> reference WPF.Lib/WPF.Lib.Controls/WPF.Lib.Controls.csproj
+dotnet add <애플리케이션.csproj> reference 01.WPF.Lib/WPF.Lib.Controls/WPF.Lib.Controls.csproj
 ```
 
 `WPF.Lib.Controls.Controls`는 `AssemblyInfo.cs`의 `XmlnsDefinition`으로 기본 WPF XAML 네임스페이스에 연결되어 있습니다. 라이브러리를 참조하는 앱에서는 접두사 없이 컨트롤을 사용할 수 있습니다.

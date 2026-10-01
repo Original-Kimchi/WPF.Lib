@@ -4,8 +4,10 @@
 
 ## 참조
 
+다음 명령은 상위 `WPFControls.UI` 저장소 루트 기준입니다. `WPF.Lib` 독립 저장소에서는 `01.WPF.Lib/` 접두사를 제외합니다.
+
 ```powershell
-dotnet add <프로젝트.csproj> reference WPF.Lib/WPF.Lib.MVVM/WPF.Lib.MVVM.csproj
+dotnet add <프로젝트.csproj> reference 01.WPF.Lib/WPF.Lib.MVVM/WPF.Lib.MVVM.csproj
 ```
 
 ## 제공 API

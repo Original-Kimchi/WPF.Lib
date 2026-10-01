@@ -37,16 +37,18 @@
 
 ## 프로젝트 참조
 
-저장소 루트에서 필요한 프로젝트만 추가합니다.
+다음 명령은 이 라이브러리를 서브모듈로 포함한 상위 `WPFControls.UI` 저장소 루트에서 실행하는 기준입니다. `WPF.Lib`를 독립 저장소로 사용한다면 경로에서 `01.WPF.Lib/` 접두사를 제외합니다.
+
+필요한 프로젝트만 추가합니다.
 
 ```powershell
-dotnet add <애플리케이션.csproj> reference WPF.Lib/WPF.Lib.Core/WPF.Lib.Core.csproj
-dotnet add <애플리케이션.csproj> reference WPF.Lib/WPF.Lib.Api/WPF.Lib.Api.csproj
-dotnet add <애플리케이션.csproj> reference WPF.Lib/WPF.Lib.MVVM/WPF.Lib.MVVM.csproj
-dotnet add <애플리케이션.csproj> reference WPF.Lib/WPF.Lib.Theme/WPF.Lib.Theme.csproj
-dotnet add <애플리케이션.csproj> reference WPF.Lib/WPF.Lib.Controls/WPF.Lib.Controls.csproj
-dotnet add <애플리케이션.csproj> reference WPF.Lib/WPF.Lib.Services/WPF.Lib.Services.csproj
-dotnet add <애플리케이션.csproj> reference WPF.Lib/WPF.Lib.Logging.Log4Net/WPF.Lib.Logging.Log4Net.csproj
+dotnet add <애플리케이션.csproj> reference 01.WPF.Lib/WPF.Lib.Core/WPF.Lib.Core.csproj
+dotnet add <애플리케이션.csproj> reference 01.WPF.Lib/WPF.Lib.Api/WPF.Lib.Api.csproj
+dotnet add <애플리케이션.csproj> reference 01.WPF.Lib/WPF.Lib.MVVM/WPF.Lib.MVVM.csproj
+dotnet add <애플리케이션.csproj> reference 01.WPF.Lib/WPF.Lib.Theme/WPF.Lib.Theme.csproj
+dotnet add <애플리케이션.csproj> reference 01.WPF.Lib/WPF.Lib.Controls/WPF.Lib.Controls.csproj
+dotnet add <애플리케이션.csproj> reference 01.WPF.Lib/WPF.Lib.Services/WPF.Lib.Services.csproj
+dotnet add <애플리케이션.csproj> reference 01.WPF.Lib/WPF.Lib.Logging.Log4Net/WPF.Lib.Logging.Log4Net.csproj
 ```
 
 최소 조합의 예시는 다음과 같습니다.
